@@ -8,6 +8,75 @@
   <link rel="preload" href="fonts/Ronzino-BoldOblique.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="preload" href="fonts/Ronzino-Regular.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="stylesheet" href="css/style.css" />
+  <style>
+    /* ── HERO ANIMATION WRAPPER ── */
+    .cv-hero-img-wrap {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      z-index: 0;
+    }
+
+    .cv-hero-img {
+      position: absolute;
+      inset: -4px; /* slight oversize so blur edges don't show white */
+      width: calc(100% + 8px);
+      height: calc(100% + 8px);
+      object-fit: cover;
+      object-position: center center;
+      display: block;
+      /* base animation: slow blur cycle */
+      animation: heroBlur 18s ease-in-out infinite;
+      will-change: filter, transform;
+    }
+
+    /* A: blur cycle — 18s, smooth in/out */
+    @keyframes heroBlur {
+      0%   { filter: blur(0px) brightness(1);   transform: translate(0, 0) scale(1); }
+      20%  { filter: blur(0px) brightness(1);   transform: translate(0, 0) scale(1); }
+      40%  { filter: blur(6px) brightness(0.92); transform: translate(0, 0) scale(1.01); }
+      60%  { filter: blur(6px) brightness(0.92); transform: translate(0, 0) scale(1.01); }
+      80%  { filter: blur(0px) brightness(1);   transform: translate(0, 0) scale(1); }
+      100% { filter: blur(0px) brightness(1);   transform: translate(0, 0) scale(1); }
+    }
+
+    /* B: glitch layer — a semi-transparent clone shifted slightly */
+    .cv-hero-glitch {
+      position: absolute;
+      inset: -4px;
+      width: calc(100% + 8px);
+      height: calc(100% + 8px);
+      object-fit: cover;
+      object-position: center center;
+      display: block;
+      opacity: 0;
+      mix-blend-mode: screen;
+      animation: heroGlitch 18s ease-in-out infinite;
+      will-change: opacity, transform, filter;
+      pointer-events: none;
+    }
+
+    /* B: glitch — subtle horizontal slip, only visible near peak blur */
+    @keyframes heroGlitch {
+      0%   { opacity: 0;    transform: translate(0, 0);     filter: blur(0px) hue-rotate(0deg); }
+      30%  { opacity: 0;    transform: translate(0, 0);     filter: blur(0px) hue-rotate(0deg); }
+      /* glitch begins as blur peaks */
+      38%  { opacity: 0.18; transform: translate(6px, -2px); filter: blur(3px) hue-rotate(8deg); }
+      42%  { opacity: 0.10; transform: translate(-5px, 1px); filter: blur(2px) hue-rotate(-6deg); }
+      46%  { opacity: 0.20; transform: translate(4px, -1px); filter: blur(4px) hue-rotate(10deg); }
+      50%  { opacity: 0.12; transform: translate(-3px, 2px); filter: blur(3px) hue-rotate(-4deg); }
+      58%  { opacity: 0;    transform: translate(0, 0);     filter: blur(0px) hue-rotate(0deg); }
+      100% { opacity: 0;    transform: translate(0, 0);     filter: blur(0px) hue-rotate(0deg); }
+    }
+
+    /* occasional sharp glitch flash — JS-triggered via class */
+    .cv-hero-img.glitch-flash {
+      animation: none;
+      filter: blur(0px) brightness(1.08) contrast(1.1);
+      transform: translate(3px, 0) scale(1);
+      transition: none;
+    }
+  </style>
 </head>
 <body>
 
@@ -15,20 +84,29 @@
 
     <nav class="cv-nav cv-nav--dark">
       <ul>
-        <li><a href="bio.html">Bio</a></li>
-        <li><a href="music.html">Music</a></li>
-        <li><a href="projects.html">Projects</a></li>
-        <li><a href="contact.html">Contact</a></li>
+        <li><a href="bio.html">bio</a></li>
+        <li><a href="music.html">music</a></li>
+        <li><a href="projects.html">projects</a></li>
+        <li><a href="contact.html">contact</a></li>
       </ul>
     </nav>
 
     <section class="cv-hero">
-      <!-- Replace hero.jpg with your photo filename -->
-      <img
-        class="cv-hero-img"
-        src="img/hero.JPG"
-        alt="César Vidal — photo by Orlando Pedroso"
-      />
+      <div class="cv-hero-img-wrap">
+        <img
+          id="heroImg"
+          class="cv-hero-img"
+          src="img/hero.jpg"
+          alt="César Vidal — photo by Orlando Pedroso"
+        />
+        <!-- glitch layer: same image, shifted -->
+        <img
+          class="cv-hero-glitch"
+          src="img/hero.jpg"
+          alt=""
+          aria-hidden="true"
+        />
+      </div>
       <div class="cv-hero-overlay"></div>
       <div class="cv-hero-content">
         <div class="cv-hero-name">césar vidal</div>
@@ -46,6 +124,26 @@
     <span>© 2026 César Vidal</span>
     <span>cesarvidalmusic.art</span>
   </footer>
+
+  <script>
+    // Occasional random micro-glitch flash — fires unpredictably
+    // between every 8–24 seconds, lasts 80–160ms
+    const heroImg = document.getElementById('heroImg');
+
+    function scheduleGlitch() {
+      const delay = 8000 + Math.random() * 16000; // 8–24s
+      setTimeout(() => {
+        const duration = 80 + Math.random() * 80; // 80–160ms
+        heroImg.classList.add('glitch-flash');
+        setTimeout(() => {
+          heroImg.classList.remove('glitch-flash');
+          scheduleGlitch();
+        }, duration);
+      }, delay);
+    }
+
+    scheduleGlitch();
+  </script>
 
 </body>
 </html>
