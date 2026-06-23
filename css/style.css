@@ -2,7 +2,7 @@
    CÉSAR VIDAL — cesarvidalmusic.art
    Global Stylesheet
    ============================================= */
-
+ 
 @font-face {
   font-family: 'Mattone';
   src: url('../fonts/Mattone-Regular.woff2') format('woff2');
@@ -10,12 +10,12 @@
   font-style: normal;
   font-display: swap;
 }
-
+ 
 /* RESET & BASE */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
+ 
 html { font-size: 16px; scroll-behavior: smooth; }
-
+ 
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   background: #ffffff;
@@ -23,10 +23,10 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-
+ 
 a { color: inherit; text-decoration: none; }
 img { display: block; max-width: 100%; }
-
+ 
 /* TOKENS */
 :root {
   --accent: #C8400A;
@@ -39,7 +39,7 @@ img { display: block; max-width: 100%; }
   --pad-x: clamp(1.25rem, 5vw, 3rem);
   --pad-y: clamp(1.5rem, 4vw, 2.5rem);
 }
-
+ 
 /* =============================================
    NAVIGATION
    ============================================= */
@@ -53,12 +53,12 @@ img { display: block; max-width: 100%; }
   padding: clamp(1rem, 3vw, 1.75rem) var(--pad-x);
   height: var(--nav-height);
 }
-
+ 
 .cv-nav--dark a { color: rgba(255,255,255,0.6); }
 .cv-nav--dark a:hover { color: #fff; }
 .cv-nav--light a { color: var(--grey-mid); }
 .cv-nav--light a:hover { color: var(--black); }
-
+ 
 .cv-nav ul {
   display: flex;
   gap: clamp(1.25rem, 3.5vw, 2.25rem);
@@ -73,7 +73,7 @@ img { display: block; max-width: 100%; }
 .cv-nav a.active {
   color: var(--accent);
 }
-
+ 
 /* =============================================
    FOOTER
    ============================================= */
@@ -92,7 +92,7 @@ img { display: block; max-width: 100%; }
   text-transform: uppercase;
   color: #bbb;
 }
-
+ 
 /* =============================================
    ACCENT DOT
    ============================================= */
@@ -104,7 +104,7 @@ img { display: block; max-width: 100%; }
   margin: 0 0.45em;
   vertical-align: middle;
 }
-
+ 
 /* =============================================
    SECTION LABEL
    ============================================= */
@@ -115,7 +115,7 @@ img { display: block; max-width: 100%; }
   color: var(--grey-mid);
   margin-bottom: 1.5rem;
 }
-
+ 
 /* =============================================
    PAGE WRAPPER (for interior pages)
    ============================================= */
@@ -129,7 +129,7 @@ img { display: block; max-width: 100%; }
   flex: 1;
   padding-top: var(--nav-height);
 }
-
+ 
 /* =============================================
    HOME — HERO
    ============================================= */
@@ -138,7 +138,7 @@ img { display: block; max-width: 100%; }
   width: 100%;
   background: #0d0d0d;
 }
-
+ 
 .cv-hero-img {
   display: block;
   width: 100%;
@@ -146,7 +146,7 @@ img { display: block; max-width: 100%; }
   position: relative;
   z-index: 0;
 }
-
+ 
 .cv-hero-overlay {
   position: absolute;
   inset: 0;
@@ -159,7 +159,7 @@ img { display: block; max-width: 100%; }
   );
   z-index: 1;
 }
-
+ 
 .cv-hero-content {
   position: absolute;
   inset: 0;
@@ -169,7 +169,7 @@ img { display: block; max-width: 100%; }
   justify-content: space-between;
   padding: clamp(1rem, 3vw, 1.75rem) var(--pad-x);
 }
-
+ 
 .cv-hero-name {
   font-family: 'Mattone', 'Arial Black', sans-serif;
   font-weight: 400;
@@ -181,7 +181,7 @@ img { display: block; max-width: 100%; }
   text-align: right;
   margin-top: clamp(3rem, 8vw, 5.5rem);
 }
-
+ 
 .cv-hero-bottom {
   display: flex;
   align-items: flex-end;
@@ -190,14 +190,14 @@ img { display: block; max-width: 100%; }
   gap: 0.5rem;
   padding-bottom: clamp(0.5rem, 1.5vw, 1rem);
 }
-
+ 
 .cv-hero-tagline {
   font-size: clamp(9px, 1vw, 11px);
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: rgba(255,255,255,0.45);
 }
-
+ 
 /* =============================================
    BIO PAGE
    ============================================= */
@@ -209,13 +209,13 @@ img { display: block; max-width: 100%; }
   /* Fill remaining viewport height after nav + page-hero */
   min-height: calc(100vh - var(--nav-height) - 80px);
 }
-
+ 
 .cv-bio-text {
   padding: var(--pad-y) var(--pad-x);
   border-right: 0.5px solid var(--grey-light);
   overflow-y: auto;
 }
-
+ 
 .cv-bio-text p {
   font-size: 13px;
   line-height: 1.8;
@@ -223,7 +223,7 @@ img { display: block; max-width: 100%; }
   max-width: 48ch;
 }
 .cv-bio-text p + p { margin-top: 1rem; }
-
+ 
 .cv-bio-photo {
   width: 100%;
   height: 100%;
@@ -231,7 +231,7 @@ img { display: block; max-width: 100%; }
   object-position: center top;
   display: block;
 }
-
+ 
 /* =============================================
    MUSIC / DISCOGRAPHY PAGE
    ============================================= */
@@ -240,7 +240,7 @@ img { display: block; max-width: 100%; }
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
   border-left: 0.5px solid var(--grey-light);
 }
-
+ 
 .cv-album {
   border-right: 0.5px solid var(--grey-light);
   border-bottom: 0.5px solid var(--grey-light);
@@ -248,7 +248,7 @@ img { display: block; max-width: 100%; }
   transition: background 0.2s;
 }
 .cv-album:hover { background: var(--grey-soft); }
-
+ 
 .cv-album-title {
   font-family: 'Mattone', 'Arial Black', sans-serif;
   font-weight: 900;
@@ -281,7 +281,7 @@ img { display: block; max-width: 100%; }
   transition: opacity 0.2s;
 }
 .cv-album-link:hover { opacity: 0.7; }
-
+ 
 /* =============================================
    PROJECTS PAGE
    ============================================= */
@@ -295,7 +295,7 @@ img { display: block; max-width: 100%; }
   transition: background 0.2s;
 }
 .cv-project:hover { background: var(--grey-soft); }
-
+ 
 .cv-project-title {
   font-family: 'Mattone', 'Arial Black', sans-serif;
   font-weight: 900;
@@ -330,7 +330,7 @@ img { display: block; max-width: 100%; }
   transition: color 0.2s, border-color 0.2s;
 }
 .cv-project-link:hover { color: var(--black); border-color: var(--black); }
-
+ 
 /* =============================================
    CONTACT PAGE
    ============================================= */
@@ -374,7 +374,7 @@ img { display: block; max-width: 100%; }
   transition: color 0.2s;
 }
 .cv-contact-list a:hover { color: var(--accent); }
-
+ 
 /* =============================================
    INTERIOR PAGE HERO (title bar)
    ============================================= */
@@ -390,7 +390,7 @@ img { display: block; max-width: 100%; }
   letter-spacing: 0.01em;
   line-height: 1;
 }
-
+ 
 /* =============================================
    RESPONSIVE
    ============================================= */
@@ -410,7 +410,7 @@ img { display: block; max-width: 100%; }
     font-size: clamp(32px, 10vw, 52px);
   }
 }
-
+ 
 @media (max-width: 480px) {
   .cv-nav ul { gap: 1rem; }
   .cv-hero-name { font-size: clamp(36px, 11vw, 60px); }
