@@ -219,26 +219,34 @@ img { display: block; max-width: 100%; }
    ============================================= */
 .cv-bio-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 55fr 45fr;
   gap: 0;
   border-bottom: 0.5px solid var(--grey-light);
-  /* Fill remaining viewport height after nav + page-hero */
-  min-height: calc(100vh - var(--nav-height) - 80px);
+  height: calc(100vh - var(--nav-height) - 52px);
+  overflow: hidden;
 }
 
 .cv-bio-text {
   padding: var(--pad-y) var(--pad-x);
   border-right: 0.5px solid var(--grey-light);
-  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0;
+  overflow: hidden;
 }
 
 .cv-bio-text p {
-  font-size: 13px;
-  line-height: 1.8;
+  font-family: 'Ronzino', sans-serif;
+  font-weight: 400;
+  font-size: clamp(11px, 1.05vw, 14px);
+  line-height: 1.75;
   color: #333;
-  max-width: 48ch;
+  text-align: justify;
+  hyphens: auto;
+  max-width: none;
 }
-.cv-bio-text p + p { margin-top: 1rem; }
+.cv-bio-text p + p { margin-top: 0.75rem; }
 
 .cv-bio-photo {
   width: 100%;
