@@ -9,7 +9,29 @@
   <link rel="preload" href="fonts/Ronzino-Regular.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="stylesheet" href="css/style.css" />
   <style>
-    /* ── HERO ANIMATION WRAPPER ── */
+    /* ── LAYOUT: full viewport, no scroll ── */
+    html, body {
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .cv-home-wrap {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* ── HERO fills all space between nav and footer ── */
+    .cv-hero {
+      position: relative;
+      flex: 1;
+      overflow: hidden;
+      background: #0d0d0d;
+      min-height: 0;
+    }
+
+    /* ── PHOTO ANIMATION ── */
     .cv-hero-img-wrap {
       position: absolute;
       inset: 0;
@@ -19,77 +41,147 @@
 
     .cv-hero-img {
       position: absolute;
-      inset: -4px; /* slight oversize so blur edges don't show white */
-      width: calc(100% + 8px);
-      height: calc(100% + 8px);
+      inset: -6px;
+      width: calc(100% + 12px);
+      height: calc(100% + 12px);
       object-fit: cover;
       object-position: center center;
       display: block;
-      /* base animation: slow blur cycle */
-      animation: heroBlur 18s ease-in-out infinite;
-      will-change: filter, transform;
+      /* A: slow blur cycle — 50s total (25s to blur, 25s back) */
+      animation: heroBlur 50s ease-in-out infinite;
+      will-change: filter;
     }
 
-    /* A: blur cycle — 18s, smooth in/out */
     @keyframes heroBlur {
-      0%   { filter: blur(0px) brightness(1);   transform: translate(0, 0) scale(1); }
-      20%  { filter: blur(0px) brightness(1);   transform: translate(0, 0) scale(1); }
-      40%  { filter: blur(6px) brightness(0.92); transform: translate(0, 0) scale(1.01); }
-      60%  { filter: blur(6px) brightness(0.92); transform: translate(0, 0) scale(1.01); }
-      80%  { filter: blur(0px) brightness(1);   transform: translate(0, 0) scale(1); }
-      100% { filter: blur(0px) brightness(1);   transform: translate(0, 0) scale(1); }
+      0%   { filter: blur(0px) brightness(1); }
+      50%  { filter: blur(9px) brightness(0.88); }
+      100% { filter: blur(0px) brightness(1); }
     }
 
-    /* B: glitch layer — a semi-transparent clone shifted slightly */
+    /* ── GLITCH LAYER (JS-controlled, no CSS animation) ── */
     .cv-hero-glitch {
       position: absolute;
-      inset: -4px;
-      width: calc(100% + 8px);
-      height: calc(100% + 8px);
+      inset: -6px;
+      width: calc(100% + 12px);
+      height: calc(100% + 12px);
       object-fit: cover;
       object-position: center center;
       display: block;
       opacity: 0;
-      mix-blend-mode: screen;
-      animation: heroGlitch 18s ease-in-out infinite;
-      will-change: opacity, transform, filter;
       pointer-events: none;
+      will-change: opacity, transform, filter;
     }
 
-    /* B: glitch — subtle horizontal slip, only visible near peak blur */
-    @keyframes heroGlitch {
-      0%   { opacity: 0;    transform: translate(0, 0);     filter: blur(0px) hue-rotate(0deg); }
-      30%  { opacity: 0;    transform: translate(0, 0);     filter: blur(0px) hue-rotate(0deg); }
-      /* glitch begins as blur peaks */
-      38%  { opacity: 0.18; transform: translate(6px, -2px); filter: blur(3px) hue-rotate(8deg); }
-      42%  { opacity: 0.10; transform: translate(-5px, 1px); filter: blur(2px) hue-rotate(-6deg); }
-      46%  { opacity: 0.20; transform: translate(4px, -1px); filter: blur(4px) hue-rotate(10deg); }
-      50%  { opacity: 0.12; transform: translate(-3px, 2px); filter: blur(3px) hue-rotate(-4deg); }
-      58%  { opacity: 0;    transform: translate(0, 0);     filter: blur(0px) hue-rotate(0deg); }
-      100% { opacity: 0;    transform: translate(0, 0);     filter: blur(0px) hue-rotate(0deg); }
+    /* ── OVERLAY ── */
+    .cv-hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to bottom,
+        rgba(0,0,0,0.52) 0%,
+        rgba(0,0,0,0.08) 40%,
+        rgba(0,0,0,0.0) 65%,
+        rgba(0,0,0,0.18) 100%
+      );
+      z-index: 1;
     }
 
-    /* occasional sharp glitch flash — JS-triggered via class */
-    .cv-hero-img.glitch-flash {
-      animation: none;
-      filter: blur(0px) brightness(1.08) contrast(1.1);
-      transform: translate(3px, 0) scale(1);
-      transition: none;
+    /* ── CONTENT LAYER ── */
+    .cv-hero-content {
+      position: absolute;
+      inset: 0;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: clamp(0.85rem, 2.5vw, 1.5rem) clamp(1.25rem, 4vw, 2.5rem);
+    }
+
+    /* ── NAV (inside hero content) ── */
+    .cv-hero-nav {
+      display: flex;
+      justify-content: flex-end;
+    }
+    .cv-hero-nav ul {
+      display: flex;
+      gap: clamp(1rem, 2.5vw, 1.75rem);
+      list-style: none;
+    }
+    .cv-hero-nav a {
+      font-family: 'Ronzino', sans-serif;
+      font-weight: 400;
+      font-size: clamp(12px, 1.1vw, 15px);
+      letter-spacing: 0.03em;
+      text-transform: lowercase;
+      color: rgba(255,255,255,0.6);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .cv-hero-nav a:hover { color: #fff; }
+
+    /* ── TITLE ── */
+    .cv-hero-name {
+      font-family: 'Ronzino', serif;
+      font-weight: 700;
+      font-style: oblique;
+      font-size: clamp(36px, 7.5vw, 86px);
+      line-height: 1;
+      color: #fff;
+      text-transform: lowercase;
+      letter-spacing: -0.06em;
+      /* moved left: right-align but with right padding so not flush to edge */
+      text-align: right;
+      padding-right: clamp(2rem, 6vw, 5rem);
+      margin-top: 0;
+    }
+
+    /* ── BOTTOM: tagline flush to footer ── */
+    .cv-hero-bottom {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      padding-bottom: 0.25rem;
+    }
+    .cv-hero-tagline {
+      font-family: 'Ronzino', sans-serif;
+      font-size: clamp(9px, 0.9vw, 11px);
+      letter-spacing: 0.16em;
+      text-transform: lowercase;
+      color: rgba(255,255,255,0.45);
+    }
+    .cv-dot {
+      display: inline-block;
+      width: 4px; height: 4px;
+      border-radius: 50%;
+      background: #C8400A;
+      margin: 0 0.4em;
+      vertical-align: middle;
+    }
+
+    /* ── FOOTER ── */
+    .cv-home-footer {
+      flex-shrink: 0;
+      padding: 0.65rem clamp(1.25rem, 4vw, 2.5rem);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 0.5px solid #E0E0E0;
+      background: #fff;
+    }
+    .cv-home-footer span {
+      font-family: 'Ronzino', sans-serif;
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: lowercase;
+      color: #bbb;
     }
   </style>
 </head>
 <body>
 
-  <div style="position:relative;">
-
-    <nav class="cv-nav cv-nav--dark">
-      <ul>
-        <li><a href="bio.html">bio</a></li>
-        <li><a href="music.html">music</a></li>
-        <li><a href="projects.html">projects</a></li>
-        <li><a href="contact.html">contact</a></li>
-      </ul>
-    </nav>
+  <div class="cv-home-wrap">
 
     <section class="cv-hero">
       <div class="cv-hero-img-wrap">
@@ -99,8 +191,8 @@
           src="img/hero.jpg"
           alt="César Vidal — photo by Orlando Pedroso"
         />
-        <!-- glitch layer: same image, shifted -->
         <img
+          id="glitchImg"
           class="cv-hero-glitch"
           src="img/hero.jpg"
           alt=""
@@ -108,41 +200,85 @@
         />
       </div>
       <div class="cv-hero-overlay"></div>
+
       <div class="cv-hero-content">
+
+        <div class="cv-hero-nav">
+          <ul>
+            <li><a href="bio.html">bio</a></li>
+            <li><a href="music.html">music</a></li>
+            <li><a href="projects.html">projects</a></li>
+            <li><a href="https://syos.co/en/blogs/our-artists/cesar-vidal" target="_blank" rel="noopener">syos artist</a></li>
+            <li><a href="gonzalez-reeds.html">gonzalez reeds</a></li>
+            <li><a href="contact.html">contact</a></li>
+          </ul>
+        </div>
+
         <div class="cv-hero-name">césar vidal</div>
+
         <div class="cv-hero-bottom">
           <span class="cv-hero-tagline">
-            Saxophonist<span class="cv-dot"></span>Composer<span class="cv-dot"></span>Improviser
+            saxophonist<span class="cv-dot"></span>composer<span class="cv-dot"></span>improviser
           </span>
         </div>
+
       </div>
     </section>
 
+    <footer class="cv-home-footer">
+      <span>© 2026 César Vidal</span>
+      <span>cesarvidalmusic.art</span>
+    </footer>
+
   </div>
 
-  <footer class="cv-footer">
-    <span>© 2026 César Vidal</span>
-    <span>cesarvidalmusic.art</span>
-  </footer>
-
   <script>
-    // Occasional random micro-glitch flash — fires unpredictably
-    // between every 8–24 seconds, lasts 80–160ms
-    const heroImg = document.getElementById('heroImg');
+    // ── GLITCH: fully JS-driven, random timing, independent of blur cycle ──
+    const glitch = document.getElementById('glitchImg');
 
-    function scheduleGlitch() {
-      const delay = 8000 + Math.random() * 16000; // 8–24s
+    // Each glitch event: random delay 12–40s, random intensity, random duration
+    function runGlitch() {
+      const delay = 12000 + Math.random() * 28000; // 12–40s between glitches
+
       setTimeout(() => {
-        const duration = 80 + Math.random() * 80; // 80–160ms
-        heroImg.classList.add('glitch-flash');
-        setTimeout(() => {
-          heroImg.classList.remove('glitch-flash');
-          scheduleGlitch();
-        }, duration);
+        // Sequence of 3–5 rapid frames
+        const frames = 3 + Math.floor(Math.random() * 3);
+        let f = 0;
+
+        function nextFrame() {
+          if (f >= frames) {
+            // End: fade glitch out
+            glitch.style.transition = 'opacity 0.4s ease';
+            glitch.style.opacity = '0';
+            glitch.style.transform = 'translate(0,0)';
+            glitch.style.filter = 'none';
+            setTimeout(runGlitch, 0); // schedule next
+            return;
+          }
+
+          glitch.style.transition = 'none';
+          // Random shift: more exaggerated than before
+          const tx = (Math.random() - 0.5) * 40; // ±20px horizontal
+          const ty = (Math.random() - 0.5) * 10; // ±5px vertical
+          const op = 0.35 + Math.random() * 0.45; // 0.35–0.80 opacity
+          const hue = (Math.random() - 0.5) * 30; // ±15deg hue shift
+          const blur = Math.random() * 5;          // 0–5px blur on glitch
+
+          glitch.style.opacity = op;
+          glitch.style.transform = `translate(${tx}px, ${ty}px)`;
+          glitch.style.filter = `blur(${blur}px) hue-rotate(${hue}deg) contrast(1.2)`;
+
+          f++;
+          // Each frame lasts 60–180ms
+          setTimeout(nextFrame, 60 + Math.random() * 120);
+        }
+
+        nextFrame();
       }, delay);
     }
 
-    scheduleGlitch();
+    // First glitch fires after 6–15s so page feels settled first
+    setTimeout(runGlitch, 6000 + Math.random() * 9000);
   </script>
 
 </body>
