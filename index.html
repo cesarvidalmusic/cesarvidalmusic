@@ -9,11 +9,7 @@
   <link rel="preload" href="fonts/Ronzino-Regular.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="stylesheet" href="css/style.css" />
   <style>
-    /* ── LAYOUT: full viewport, no scroll ── */
-    html, body {
-      height: 100%;
-      overflow: hidden;
-    }
+    html, body { height: 100%; overflow: hidden; }
 
     .cv-home-wrap {
       display: flex;
@@ -22,7 +18,6 @@
       overflow: hidden;
     }
 
-    /* ── HERO fills all space between nav and footer ── */
     .cv-hero {
       position: relative;
       flex: 1;
@@ -31,14 +26,13 @@
       min-height: 0;
     }
 
-    /* ── PHOTO ANIMATION ── */
+    /* PHOTO */
     .cv-hero-img-wrap {
       position: absolute;
       inset: 0;
       overflow: hidden;
       z-index: 0;
     }
-
     .cv-hero-img {
       position: absolute;
       inset: -6px;
@@ -47,38 +41,22 @@
       object-fit: cover;
       object-position: center center;
       display: block;
-      /* A: slow blur cycle — 50s total (25s to blur, 25s back) */
       animation: heroBlur 50s ease-in-out infinite;
       will-change: filter;
     }
-
     @keyframes heroBlur {
       0%   { filter: blur(0px) brightness(1); }
       50%  { filter: blur(9px) brightness(0.88); }
       100% { filter: blur(0px) brightness(1); }
     }
 
-    /* ── GLITCH LAYER (JS-controlled, no CSS animation) ── */
-    .cv-hero-glitch {
-      position: absolute;
-      inset: -6px;
-      width: calc(100% + 12px);
-      height: calc(100% + 12px);
-      object-fit: cover;
-      object-position: center center;
-      display: block;
-      opacity: 0;
-      pointer-events: none;
-      will-change: opacity, transform, filter;
-    }
-
-    /* ── OVERLAY ── */
+    /* OVERLAY */
     .cv-hero-overlay {
       position: absolute;
       inset: 0;
       background: linear-gradient(
         to bottom,
-        rgba(0,0,0,0.52) 0%,
+        rgba(0,0,0,0.55) 0%,
         rgba(0,0,0,0.08) 40%,
         rgba(0,0,0,0.0) 65%,
         rgba(0,0,0,0.18) 100%
@@ -86,25 +64,27 @@
       z-index: 1;
     }
 
-    /* ── CONTENT LAYER ── */
+    /* CONTENT — left aligned */
     .cv-hero-content {
       position: absolute;
       inset: 0;
       z-index: 10;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
-      padding: clamp(0.85rem, 2.5vw, 1.5rem) clamp(1.25rem, 4vw, 2.5rem);
+      justify-content: flex-start;
+      /* left padding small so nav/title are close to left edge */
+      padding: clamp(0.85rem, 2.5vw, 1.5rem) clamp(0.5rem, 2vw, 1.25rem);
     }
 
-    /* ── NAV (inside hero content) ── */
+    /* NAV — left aligned */
     .cv-hero-nav {
       display: flex;
-      justify-content: flex-end;
+      justify-content: flex-start;
+      flex-shrink: 0;
     }
     .cv-hero-nav ul {
       display: flex;
-      gap: clamp(1rem, 2.5vw, 1.75rem);
+      gap: clamp(1.5rem, 2.8vw, 2.5rem);
       list-style: none;
     }
     .cv-hero-nav a {
@@ -119,7 +99,7 @@
     }
     .cv-hero-nav a:hover { color: #fff; }
 
-    /* ── TITLE ── */
+    /* TITLE — left aligned, close to nav, first letter aligns with nav start */
     .cv-hero-name {
       font-family: 'Ronzino', serif;
       font-weight: 700;
@@ -129,20 +109,22 @@
       color: #fff;
       text-transform: lowercase;
       letter-spacing: -0.06em;
-      /* moved left: right-align but with right padding so not flush to edge */
-      text-align: right;
-      padding-right: clamp(2rem, 6vw, 5rem);
-      margin-top: 0;
+      text-align: left;
+      margin-top: clamp(0.3rem, 1vw, 0.75rem);
+      flex-shrink: 0;
     }
 
-    /* ── BOTTOM: tagline flush to footer ── */
+    /* spacer pushes tagline to bottom */
+    .cv-hero-spacer { flex: 1; }
+
     .cv-hero-bottom {
       display: flex;
       align-items: flex-end;
-      justify-content: space-between;
+      justify-content: flex-start;
       flex-wrap: wrap;
       gap: 0.5rem;
       padding-bottom: 0.25rem;
+      flex-shrink: 0;
     }
     .cv-hero-tagline {
       font-family: 'Ronzino', sans-serif;
@@ -160,10 +142,10 @@
       vertical-align: middle;
     }
 
-    /* ── FOOTER ── */
+    /* FOOTER */
     .cv-home-footer {
       flex-shrink: 0;
-      padding: 0.65rem clamp(1.25rem, 4vw, 2.5rem);
+      padding: 0.65rem clamp(0.5rem, 2vw, 1.25rem);
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -186,23 +168,14 @@
     <section class="cv-hero">
       <div class="cv-hero-img-wrap">
         <img
-          id="heroImg"
           class="cv-hero-img"
           src="img/hero.jpg"
           alt="César Vidal — photo by Orlando Pedroso"
-        />
-        <img
-          id="glitchImg"
-          class="cv-hero-glitch"
-          src="img/hero.jpg"
-          alt=""
-          aria-hidden="true"
         />
       </div>
       <div class="cv-hero-overlay"></div>
 
       <div class="cv-hero-content">
-
         <div class="cv-hero-nav">
           <ul>
             <li><a href="bio.html">bio</a></li>
@@ -216,12 +189,13 @@
 
         <div class="cv-hero-name">césar vidal</div>
 
+        <div class="cv-hero-spacer"></div>
+
         <div class="cv-hero-bottom">
           <span class="cv-hero-tagline">
             saxophonist<span class="cv-dot"></span>composer<span class="cv-dot"></span>improviser
           </span>
         </div>
-
       </div>
     </section>
 
@@ -231,55 +205,6 @@
     </footer>
 
   </div>
-
-  <script>
-    // ── GLITCH: fully JS-driven, random timing, independent of blur cycle ──
-    const glitch = document.getElementById('glitchImg');
-
-    // Each glitch event: random delay 12–40s, random intensity, random duration
-    function runGlitch() {
-      const delay = 12000 + Math.random() * 28000; // 12–40s between glitches
-
-      setTimeout(() => {
-        // Sequence of 3–5 rapid frames
-        const frames = 3 + Math.floor(Math.random() * 3);
-        let f = 0;
-
-        function nextFrame() {
-          if (f >= frames) {
-            // End: fade glitch out
-            glitch.style.transition = 'opacity 0.4s ease';
-            glitch.style.opacity = '0';
-            glitch.style.transform = 'translate(0,0)';
-            glitch.style.filter = 'none';
-            setTimeout(runGlitch, 0); // schedule next
-            return;
-          }
-
-          glitch.style.transition = 'none';
-          // Random shift: more exaggerated than before
-          const tx = (Math.random() - 0.5) * 40; // ±20px horizontal
-          const ty = (Math.random() - 0.5) * 10; // ±5px vertical
-          const op = 0.35 + Math.random() * 0.45; // 0.35–0.80 opacity
-          const hue = (Math.random() - 0.5) * 30; // ±15deg hue shift
-          const blur = Math.random() * 5;          // 0–5px blur on glitch
-
-          glitch.style.opacity = op;
-          glitch.style.transform = `translate(${tx}px, ${ty}px)`;
-          glitch.style.filter = `blur(${blur}px) hue-rotate(${hue}deg) contrast(1.2)`;
-
-          f++;
-          // Each frame lasts 60–180ms
-          setTimeout(nextFrame, 60 + Math.random() * 120);
-        }
-
-        nextFrame();
-      }, delay);
-    }
-
-    // First glitch fires after 6–15s so page feels settled first
-    setTimeout(runGlitch, 6000 + Math.random() * 9000);
-  </script>
 
 </body>
 </html>

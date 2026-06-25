@@ -9,7 +9,6 @@
   <link rel="preload" href="fonts/Ronzino-Regular.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="stylesheet" href="css/style.css" />
   <style>
-    /* ── NO SCROLL on page ── */
     html, body { height: 100%; overflow: hidden; }
 
     .cv-page {
@@ -27,40 +26,42 @@
       padding-top: 0;
     }
 
-    /* ── PAGE TITLE: compact ── */
     .cv-page-hero {
-      padding: 0.5rem clamp(1.25rem, 4vw, 2.5rem);
+      padding: 0.5rem clamp(0.5rem, 2vw, 1.25rem);
       border-bottom: 0.5px solid #E0E0E0;
       flex-shrink: 0;
     }
 
-    /* ── BIO GRID: fills remaining space exactly ── */
     .cv-bio-grid {
       flex: 1;
       display: grid;
       grid-template-columns: 55fr 45fr;
       min-height: 0;
-      border-bottom: none;
+      overflow: hidden;
     }
 
-    /* ── TEXT COLUMN: clip overflow, no scrollbar visible ── */
+    /* Text column: clips overflow so scrollbar never shows */
     .cv-bio-text {
-      padding: clamp(1rem, 2vw, 1.5rem) clamp(1.25rem, 4vw, 2.5rem);
-      border-right: 0.5px solid #E0E0E0;
-      overflow: hidden;         /* hide scrollbar */
       position: relative;
+      border-right: 0.5px solid #E0E0E0;
+      overflow: hidden;
     }
 
-    /* ── SCROLLING INNER TRACK ── */
+    /* The scrolling track — positioned absolutely so we control it fully */
     .cv-bio-track {
       position: absolute;
       top: 0;
-      left: clamp(1.25rem, 4vw, 2.5rem);
-      right: clamp(1.25rem, 4vw, 2.5rem);
+      left: 0;
+      right: 0;
       will-change: transform;
     }
 
-    .cv-bio-track p {
+    /* Each unit = one block + one separator. We pad inside the block. */
+    .cv-bio-unit {
+      padding: clamp(1rem, 2vw, 1.5rem) clamp(1.25rem, 4vw, 2.5rem);
+    }
+
+    .cv-bio-unit p {
       font-family: 'Ronzino', sans-serif;
       font-weight: 400;
       font-size: clamp(10.5px, 0.95vw, 13px);
@@ -70,19 +71,18 @@
       hyphens: auto;
       margin-bottom: 0.85rem;
     }
-    .cv-bio-track p:last-child { margin-bottom: 0; }
+    .cv-bio-unit p:last-child { margin-bottom: 0; }
 
-    .cv-bio-separator {
+    .cv-bio-sep {
+      text-align: center;
       font-family: 'Ronzino', sans-serif;
       font-size: 11px;
       color: #ccc;
-      letter-spacing: 0.08em;
-      text-align: center;
-      margin: 1.5rem 0;
+      letter-spacing: 0.1em;
+      padding: 1rem clamp(1.25rem, 4vw, 2.5rem);
       user-select: none;
     }
 
-    /* ── PHOTO ── */
     .cv-bio-photo {
       width: 100%;
       height: 100%;
@@ -91,10 +91,9 @@
       display: block;
     }
 
-    /* ── FOOTER ── */
     .cv-bio-footer {
       flex-shrink: 0;
-      padding: 0.55rem clamp(1.25rem, 4vw, 2.5rem);
+      padding: 0.55rem clamp(0.5rem, 2vw, 1.25rem);
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -133,23 +132,9 @@
 
       <div class="cv-bio-grid">
 
-        <div class="cv-bio-text" id="bioTextWrap">
+        <div class="cv-bio-text" id="bioWrap">
           <div class="cv-bio-track" id="bioTrack">
-
-            <!-- TEXT BLOCK (repeated below for loop) -->
-            <div class="cv-bio-block" id="bioBlock">
-              <p>César Vidal is a Chilean saxophonist, composer, and improviser based in Amsterdam. His artistic practice explores the relationship between acoustic and electronic sound, with a particular interest in the hybrid space created between the saxophone and digital processes. Through improvisation, he investigates how sound sources of different natures can develop a shared language, bringing together acoustic and electronic elements into a common sonic environment.</p>
-              <p>He studied classical composition at the University of Chile, working with renowned Chilean and international composers, before completing a Master's degree in Jazz Saxophone at the Conservatorium van Amsterdam, where he studied with leading Dutch musicians such as Ben van Gelder and Simon Rigter.</p>
-              <p>Throughout his career, Vidal has collaborated with musicians from the Chilean and international scenes, participating in acclaimed recordings such as <em>Chincol</em> (2021) by Juan Pablo Salvo and <em>CODEX Big Band</em> (2022) by Alfredo Tauber, both recipients of the Pulsar Award for Best Jazz Artist, the most important music recognition in the Chilean music industry. He has also contributed as a sideman to numerous jazz recordings and developed a diverse discography of his own, including <em>SPAM</em> (2026), <em>NUBES</em> (2025), and <em>aleas</em> (2026).</p>
-              <p>Vidal has performed at festivals and venues across Chile and Europe, including BIMHUIS (Amsterdam), JazzBer and Getxo Jazz (Basque Country), La Fête de la Musique (Geneva), and Jazzahead (Bremen). He leads and co-leads several projects, including César Vidal &amp; Artikulation Band, a contemporary jazz ensemble with electronics that won second prize at the Getxo Jazz Ensemble Competition 2025 and opened for Grammy Award-winning vocalist Cécile McLorin Salvant.</p>
-              <p>He is also the co-founder of Des Visages, a saxophone and electronics duo focused on improvisation and sound exploration. The project has released two recordings and has toured across Europe, performing in cities such as London, Amsterdam, Copenhagen, Paris, Bern, Marseille, and Geneva.</p>
-            </div>
-
-            <!-- SEPARATOR -->
-            <div class="cv-bio-separator">— — — — — — — — — — —</div>
-
-            <!-- REPEAT (clone injected by JS below) -->
-
+            <!-- Units injected by JS so loop is always clean -->
           </div>
         </div>
 
@@ -171,48 +156,62 @@
   </div>
 
   <script>
-    const wrap  = document.getElementById('bioTextWrap');
-    const track = document.getElementById('bioTrack');
-    const block = document.getElementById('bioBlock');
+    const BIO_TEXT = `
+      <p>César Vidal is a Chilean saxophonist, composer, and improviser based in Amsterdam. His artistic practice explores the relationship between acoustic and electronic sound, with a particular interest in the hybrid space created between the saxophone and digital processes. Through improvisation, he investigates how sound sources of different natures can develop a shared language, bringing together acoustic and electronic elements into a common sonic environment.</p>
+      <p>He studied classical composition at the University of Chile, working with renowned Chilean and international composers, before completing a Master's degree in Jazz Saxophone at the Conservatorium van Amsterdam, where he studied with leading Dutch musicians such as Ben van Gelder and Simon Rigter.</p>
+      <p>Throughout his career, Vidal has collaborated with musicians from the Chilean and international scenes, participating in acclaimed recordings such as <em>Chincol</em> (2021) by Juan Pablo Salvo and <em>CODEX Big Band</em> (2022) by Alfredo Tauber, both recipients of the Pulsar Award for Best Jazz Artist, the most important music recognition in the Chilean music industry. He has also contributed as a sideman to numerous jazz recordings and developed a diverse discography of his own, including <em>SPAM</em> (2026), <em>NUBES</em> (2025), and <em>aleas</em> (2026).</p>
+      <p>Vidal has performed at festivals and venues across Chile and Europe, including BIMHUIS (Amsterdam), JazzBer and Getxo Jazz (Basque Country), La Fête de la Musique (Geneva), and Jazzahead (Bremen). He leads and co-leads several projects, including César Vidal &amp; Artikulation Band, a contemporary jazz ensemble with electronics that won second prize at the Getxo Jazz Ensemble Competition 2025 and opened for Grammy Award-winning vocalist Cécile McLorin Salvant.</p>
+      <p>He is also the co-founder of Des Visages, a saxophone and electronics duo focused on improvisation and sound exploration. The project has released two recordings and has toured across Europe, performing in cities such as London, Amsterdam, Copenhagen, Paris, Bern, Marseille, and Geneva.</p>
+    `;
 
-    // Clone the block + separator and append for seamless loop
-    function buildLoop() {
-      const sep   = document.querySelector('.cv-bio-separator');
-      const clone = block.cloneNode(true);
-      clone.removeAttribute('id');
-      const sep2  = sep.cloneNode(true);
-      track.appendChild(clone);
-      track.appendChild(sep2);
-      // One more clone so there's always content visible
-      const clone2 = block.cloneNode(true);
-      clone2.removeAttribute('id');
-      track.appendChild(clone2);
+    const SEP_HTML = `<div class="cv-bio-sep">— — — — — — — — — — —</div>`;
+
+    function makeUnit() {
+      const unit = document.createElement('div');
+      unit.className = 'cv-bio-unit';
+      unit.innerHTML = BIO_TEXT;
+      return unit;
     }
 
-    buildLoop();
+    const track = document.getElementById('bioTrack');
 
-    // Scroll speed: px per second — slow enough to read comfortably
-    const SPEED = 28; // px/s — adjust if needed
+    // Build: unit A + sep + unit B + sep
+    // We scroll through unit A + sep (= loopHeight), then silently reset.
+    // Unit B ensures content is always visible during the reset.
+    const unitA = makeUnit();
+    const sep1  = document.createElement('div');
+    sep1.innerHTML = SEP_HTML;
+
+    const unitB = makeUnit();
+    const sep2  = document.createElement('div');
+    sep2.innerHTML = SEP_HTML;
+
+    track.appendChild(unitA);
+    track.appendChild(sep1);
+    track.appendChild(unitB);
+    track.appendChild(sep2);
+
+    // Speed: px per second. Lower = slower.
+    const SPEED = 14;
 
     let pos = 0;
-    let lastTime = null;
     let loopHeight = 0;
+    let lastTime = null;
 
-    function getLoopHeight() {
-      // Height of one full text block + separator = the loop unit
-      return block.offsetHeight + document.querySelector('.cv-bio-separator').offsetHeight;
+    function measure() {
+      // loopHeight = height of exactly one unit + one separator
+      loopHeight = unitA.offsetHeight + sep1.firstElementChild.offsetHeight;
     }
 
-    function tick(timestamp) {
-      if (!lastTime) lastTime = timestamp;
-      const delta = (timestamp - lastTime) / 1000; // seconds
-      lastTime = timestamp;
+    function tick(ts) {
+      if (!lastTime) lastTime = ts;
+      const dt = (ts - lastTime) / 1000;
+      lastTime = ts;
 
-      if (!loopHeight) loopHeight = getLoopHeight();
+      pos += SPEED * dt;
 
-      pos += SPEED * delta;
-
-      // When we've scrolled one full loop unit, reset silently
+      // Silent reset: when we've scrolled exactly one loop unit,
+      // snap back — visually seamless because unitB looks identical to unitA
       if (pos >= loopHeight) {
         pos -= loopHeight;
       }
@@ -221,11 +220,11 @@
       requestAnimationFrame(tick);
     }
 
-    // Small delay so layout is fully painted before we measure
+    // Wait for fonts + layout to settle before measuring
     setTimeout(() => {
-      loopHeight = getLoopHeight();
+      measure();
       requestAnimationFrame(tick);
-    }, 100);
+    }, 200);
   </script>
 
 </body>
