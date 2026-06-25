@@ -192,7 +192,7 @@
     track.appendChild(sep2);
 
     // Speed: px per second. Lower = slower.
-    const SPEED = 14;
+    const SPEED = 10;
 
     let pos = 0;
     let loopHeight = 0;
@@ -220,11 +220,11 @@
       requestAnimationFrame(tick);
     }
 
-    // Wait for fonts + layout to settle before measuring
+    // 3 second pause before scroll begins, then measure and start
     setTimeout(() => {
       measure();
       requestAnimationFrame(tick);
-    }, 200);
+    }, 3200);
   </script>
 
 </body>
