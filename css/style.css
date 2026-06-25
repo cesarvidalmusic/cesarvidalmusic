@@ -55,9 +55,9 @@ img { display: block; max-width: 100%; }
   top: 0; left: 0; right: 0;
   z-index: 100;
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-start;
   align-items: center;
-  padding: clamp(1rem, 3vw, 1.75rem) var(--pad-x);
+  padding: clamp(1rem, 3vw, 1.75rem) clamp(0.5rem, 2vw, 1.25rem);
   height: var(--nav-height);
 }
 
@@ -68,7 +68,7 @@ img { display: block; max-width: 100%; }
 
 .cv-nav ul {
   display: flex;
-  gap: clamp(1.25rem, 3.5vw, 2.25rem);
+  gap: clamp(1.5rem, 2.8vw, 2.5rem);
   list-style: none;
 }
 .cv-nav a {
