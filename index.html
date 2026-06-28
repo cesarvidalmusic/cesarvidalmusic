@@ -39,7 +39,7 @@
       width: calc(100% + 12px);
       height: calc(100% + 12px);
       object-fit: cover;
-      object-position: 35% center;
+      object-position: 20% center;
       display: block;
       animation: heroBlur 50s ease-in-out infinite;
       will-change: filter;
@@ -122,14 +122,17 @@
       justify-content: space-between;
       flex-wrap: wrap;
       gap: 0.5rem;
-      padding-bottom: 0.25rem;
+      /* override content padding so tagline aligns with footer text */
+      margin-left: calc(-1 * clamp(2rem, 4vw, 3.5rem));
+      margin-right: calc(-1 * clamp(2rem, 4vw, 3.5rem));
+      padding: 0 clamp(0.5rem, 2vw, 1.25rem) 0.25rem;
       flex-shrink: 0;
     }
     .cv-hero-tagline {
       font-family: 'Ronzino', sans-serif;
       font-size: clamp(9px, 0.9vw, 11px);
       letter-spacing: 0.16em;
-      text-transform: lowercase;
+      /* no text-transform so proper nouns stay capitalized */
       color: rgba(255,255,255,0.45);
     }
     .cv-dot {
@@ -181,6 +184,7 @@
             <li><a href="music-projects.html">music & projects</a></li>
             <li><a href="https://syos.co/en/blogs/our-artists/cesar-vidal" target="_blank" rel="noopener">syos artist</a></li>
             <li><a href="gonzalez-reeds.html">gonzalez reeds</a></li>
+            <li><a href="merch.html">merch</a></li>
             <li><a href="contact.html">contact</a></li>
           </ul>
         </div>
