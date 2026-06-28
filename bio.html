@@ -58,7 +58,7 @@
 
     /* Each unit = one block + one separator. We pad inside the block. */
     .cv-bio-unit {
-      padding: clamp(0.75rem, 1.5vw, 1rem) clamp(1.25rem, 4vw, 2.5rem);
+      padding: clamp(0.75rem, 1.5vw, 1rem) var(--pad-x);
     }
 
     .cv-bio-unit p {
@@ -80,7 +80,7 @@
       font-size: 10px;
       color: #ccc;
       letter-spacing: 0.1em;
-      padding: 0.5rem clamp(1.25rem, 4vw, 2.5rem);
+      padding: 0.5rem var(--pad-x);
       user-select: none;
     }
 
