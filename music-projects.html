@@ -51,6 +51,7 @@
 
     .cv-mp-card {
       display: flex;
+      flex-direction: column;
       align-items: flex-start;
       justify-content: flex-start;
       padding: 1.25rem 1.25rem;
@@ -60,13 +61,23 @@
       text-decoration: none;
       color: #0A0A0A;
       transition: background 0.2s;
+      gap: 0.85rem;
     }
     .cv-mp-card:hover { background: #F2F2F0; }
+
+    .cv-mp-cover {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+      flex-shrink: 0;
+    }
 
     .cv-mp-card-title {
       font-family: 'Ronzino', sans-serif;
       font-weight: 400;
-      font-size: clamp(15px, 1.6vw, 22px);
+      font-size: clamp(13px, 1.4vw, 19px);
       line-height: 1.2;
       letter-spacing: 0.01em;
     }
@@ -115,40 +126,88 @@
       <!-- COL 1: UP -->
       <div class="cv-mp-col">
         <div class="cv-mp-track" id="track0">
-          <a href="des-visages.html" class="cv-mp-card"><span class="cv-mp-card-title">Des Visages</span></a>
-          <a href="nubes.html" class="cv-mp-card"><span class="cv-mp-card-title"><em>NUBES</em></span></a>
-          <a href="spam.html" class="cv-mp-card"><span class="cv-mp-card-title"><em>SPAM</em></span></a>
-          <a href="artikulation-band.html" class="cv-mp-card"><span class="cv-mp-card-title">César Vidal & Artikulation Band</span></a>
+          <a href="des-visages.html" class="cv-mp-card">
+            <img class="cv-mp-cover" src="img/cover-des-visages.jpg" alt="Des Visages" />
+            <span class="cv-mp-card-title">Des Visages</span>
+          </a>
+          <a href="nubes.html" class="cv-mp-card">
+            <img class="cv-mp-cover" src="img/cover-nubes.jpg" alt="NUBES" />
+            <span class="cv-mp-card-title"><em>NUBES</em></span>
+          </a>
+          <a href="spam.html" class="cv-mp-card">
+            <img class="cv-mp-cover" src="img/cover-spam.jpg" alt="SPAM" />
+            <span class="cv-mp-card-title"><em>SPAM</em></span>
+          </a>
+          <a href="artikulation-band.html" class="cv-mp-card">
+            <img class="cv-mp-cover" src="img/cover-artikulation-band.jpg" alt="César Vidal & Artikulation Band" />
+            <span class="cv-mp-card-title">César Vidal & Artikulation Band</span>
+          </a>
         </div>
       </div>
 
       <!-- COL 2: DOWN -->
       <div class="cv-mp-col">
         <div class="cv-mp-track" id="track1">
-          <a href="artikulation-band.html" class="cv-mp-card"><span class="cv-mp-card-title">César Vidal & Artikulation Band</span></a>
-          <a href="des-visages-ep.html" class="cv-mp-card"><span class="cv-mp-card-title"><em>Des Visages (EP)</em></span></a>
-          <a href="aleas.html" class="cv-mp-card"><span class="cv-mp-card-title"><em>aleas</em></span></a>
-          <a href="des-visages.html" class="cv-mp-card"><span class="cv-mp-card-title">Des Visages</span></a>
+          <a href="artikulation-band.html" class="cv-mp-card">
+            <img class="cv-mp-cover" src="img/cover-artikulation-band.jpg" alt="César Vidal & Artikulation Band" />
+            <span class="cv-mp-card-title">César Vidal & Artikulation Band</span>
+          </a>
+          <a href="des-visages-ep.html" class="cv-mp-card">
+            <img class="cv-mp-cover" src="img/cover-des-visages-ep.jpg" alt="Des Visages (EP)" />
+            <span class="cv-mp-card-title"><em>Des Visages (EP)</em></span>
+          </a>
+          <a href="aleas.html" class="cv-mp-card">
+            <img class="cv-mp-cover" src="img/cover-aleas.jpg" alt="aleas" />
+            <span class="cv-mp-card-title"><em>aleas</em></span>
+          </a>
+          <a href="des-visages.html" class="cv-mp-card">
+            <img class="cv-mp-cover" src="img/cover-des-visages.jpg" alt="Des Visages" />
+            <span class="cv-mp-card-title">Des Visages</span>
+          </a>
         </div>
       </div>
 
       <!-- COL 3: UP -->
       <div class="cv-mp-col">
         <div class="cv-mp-track" id="track2">
-          <a href="nubes.html" class="cv-mp-card"><span class="cv-mp-card-title"><em>NUBES</em></span></a>
-          <a href="flor-de-loto.html" class="cv-mp-card"><span class="cv-mp-card-title"><em>Flor de Loto</em></span></a>
-          <a href="des-visages-ep.html" class="cv-mp-card"><span class="cv-mp-card-title"><em>Des Visages (EP)</em></span></a>
-          <a href="spam.html" class="cv-mp-card"><span class="cv-mp-card-title"><em>SPAM</em></span></a>
+          <a href="nubes.html" class="cv-mp-card">
+            <img class="cv-mp-cover" src="img/cover-nubes.jpg" alt="NUBES" />
+            <span class="cv-mp-card-title"><em>NUBES</em></span>
+          </a>
+          <a href="flor-de-loto.html" class="cv-mp-card">
+            <img class="cv-mp-cover" src="img/cover-flor-de-loto.jpg" alt="Flor de Loto" />
+            <span class="cv-mp-card-title"><em>Flor de Loto</em></span>
+          </a>
+          <a href="des-visages-ep.html" class="cv-mp-card">
+            <img class="cv-mp-cover" src="img/cover-des-visages-ep.jpg" alt="Des Visages (EP)" />
+            <span class="cv-mp-card-title"><em>Des Visages (EP)</em></span>
+          </a>
+          <a href="spam.html" class="cv-mp-card">
+            <img class="cv-mp-cover" src="img/cover-spam.jpg" alt="SPAM" />
+            <span class="cv-mp-card-title"><em>SPAM</em></span>
+          </a>
         </div>
       </div>
 
       <!-- COL 4: DOWN -->
       <div class="cv-mp-col">
         <div class="cv-mp-track" id="track3">
-          <a href="aleas.html" class="cv-mp-card"><span class="cv-mp-card-title"><em>aleas</em></span></a>
-          <a href="flor-de-loto.html" class="cv-mp-card"><span class="cv-mp-card-title"><em>Flor de Loto</em></span></a>
-          <a href="des-visages.html" class="cv-mp-card"><span class="cv-mp-card-title">Des Visages</span></a>
-          <a href="artikulation-band.html" class="cv-mp-card"><span class="cv-mp-card-title">César Vidal & Artikulation Band</span></a>
+          <a href="aleas.html" class="cv-mp-card">
+            <img class="cv-mp-cover" src="img/cover-aleas.jpg" alt="aleas" />
+            <span class="cv-mp-card-title"><em>aleas</em></span>
+          </a>
+          <a href="flor-de-loto.html" class="cv-mp-card">
+            <img class="cv-mp-cover" src="img/cover-flor-de-loto.jpg" alt="Flor de Loto" />
+            <span class="cv-mp-card-title"><em>Flor de Loto</em></span>
+          </a>
+          <a href="des-visages.html" class="cv-mp-card">
+            <img class="cv-mp-cover" src="img/cover-des-visages.jpg" alt="Des Visages" />
+            <span class="cv-mp-card-title">Des Visages</span>
+          </a>
+          <a href="artikulation-band.html" class="cv-mp-card">
+            <img class="cv-mp-cover" src="img/cover-artikulation-band.jpg" alt="César Vidal & Artikulation Band" />
+            <span class="cv-mp-card-title">César Vidal & Artikulation Band</span>
+          </a>
         </div>
       </div>
 
