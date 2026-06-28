@@ -115,9 +115,8 @@
     <nav class="cv-nav cv-nav--light">
       <ul>
         <li><a href="index.html">home</a></li>
-        <li><a href="bio.html" class="active">bio</a></li>
-        <li><a href="music.html">music</a></li>
-        <li><a href="projects.html">projects</a></li>
+        <li><a href="bio.html">bio</a></li>
+        <li><a href="music-projects.html">music &amp; projects</a></li>
         <li><a href="https://syos.co/en/blogs/our-artists/cesar-vidal" target="_blank" rel="noopener">syos artist</a></li>
         <li><a href="gonzalez-reeds.html">gonzalez reeds</a></li>
         <li><a href="contact.html">contact</a></li>
@@ -138,11 +137,23 @@
           </div>
         </div>
 
-        <img
-          class="cv-bio-photo"
-          src="img/bio-photo.JPG"
-          alt="César Vidal — photo by Orlando Pedroso"
-        />
+        <div style="position:relative; overflow:hidden;">
+          <img
+            class="cv-bio-photo"
+            src="img/bio-photo.JPG"
+            alt="César Vidal — photo by Orlando Pedroso"
+          />
+          <span style="
+            position:absolute;
+            bottom: clamp(0.5rem, 1.5vw, 1rem);
+            right: clamp(0.75rem, 2vw, 1.25rem);
+            font-family:'Ronzino',sans-serif;
+            font-size: clamp(9px, 0.9vw, 11px);
+            letter-spacing: 0.16em;
+            text-transform: lowercase;
+            color: rgba(255,255,255,0.45);
+          ">photo by Orlando Pedroso</span>
+        </div>
 
       </div>
 
