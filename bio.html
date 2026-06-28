@@ -27,7 +27,7 @@
     }
 
     .cv-page-hero {
-      padding: 0.5rem clamp(1.25rem, 4vw, 2.5rem);
+      padding: 0.75rem var(--pad-x);
       border-bottom: 0.5px solid #E0E0E0;
       flex-shrink: 0;
     }
@@ -58,28 +58,29 @@
 
     /* Each unit = one block + one separator. We pad inside the block. */
     .cv-bio-unit {
-      padding: clamp(1rem, 2vw, 1.5rem) clamp(1.25rem, 4vw, 2.5rem);
+      padding: clamp(0.75rem, 1.5vw, 1rem) clamp(1.25rem, 4vw, 2.5rem);
     }
 
     .cv-bio-unit p {
       font-family: 'Ronzino', sans-serif;
       font-weight: 400;
       font-size: clamp(10.5px, 0.95vw, 13px);
-      line-height: 1.78;
+      line-height: 1.58;
+      letter-spacing: -0.01em;
       color: #333;
       text-align: justify;
       hyphens: auto;
-      margin-bottom: 0.85rem;
+      margin-bottom: 0.6rem;
     }
     .cv-bio-unit p:last-child { margin-bottom: 0; }
 
     .cv-bio-sep {
       text-align: center;
       font-family: 'Ronzino', sans-serif;
-      font-size: 11px;
+      font-size: 10px;
       color: #ccc;
       letter-spacing: 0.1em;
-      padding: 1rem clamp(1.25rem, 4vw, 2.5rem);
+      padding: 0.5rem clamp(1.25rem, 4vw, 2.5rem);
       user-select: none;
     }
 

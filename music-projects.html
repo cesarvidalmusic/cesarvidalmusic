@@ -17,7 +17,6 @@
       flex-direction: column;
       overflow: hidden;
     }
-
     .cv-page-content {
       flex: 1;
       display: flex;
@@ -26,61 +25,43 @@
       padding-top: 0;
     }
 
-    /* PAGE TITLE — same style as bio */
-    .cv-mp-hero {
-      padding: 0.5rem clamp(1.25rem, 4vw, 2.5rem);
-      border-bottom: 0.5px solid #E0E0E0;
-      flex-shrink: 0;
-    }
-
     /* COLUMNS AREA */
     .cv-mp-stage {
       flex: 1;
       min-height: 0;
-      /* horizontal margins ~1cm each side, matching title left and nav right */
       padding: 0 clamp(1.25rem, 4vw, 2.5rem);
       display: flex;
       gap: 0;
       overflow: hidden;
-      position: relative;
     }
 
-    /* Each column: equal width, clips its cards */
     .cv-mp-col {
       flex: 1;
       position: relative;
       overflow: hidden;
       border-left: 0.5px solid #E0E0E0;
     }
-    .cv-mp-col:last-child {
-      border-right: 0.5px solid #E0E0E0;
-    }
+    .cv-mp-col:last-child { border-right: 0.5px solid #E0E0E0; }
 
-    /* The scrolling track inside each column */
     .cv-mp-track {
       position: absolute;
-      left: 0;
-      right: 0;
+      left: 0; right: 0;
       will-change: transform;
     }
 
-    /* Each card: full column width, bordered bottom, square-ish */
     .cv-mp-card {
       display: flex;
       align-items: flex-start;
       justify-content: flex-start;
-      padding: 1rem 1.25rem;
+      padding: 1.25rem 1.25rem;
       border-bottom: 0.5px solid #E0E0E0;
-      /* height = roughly 1/2 the viewport minus header — so ~2 cards visible */
-      height: 42vh;
+      height: 52vh;
       box-sizing: border-box;
       text-decoration: none;
       color: #0A0A0A;
       transition: background 0.2s;
     }
-    .cv-mp-card:hover {
-      background: #F2F2F0;
-    }
+    .cv-mp-card:hover { background: #F2F2F0; }
 
     .cv-mp-card-title {
       font-family: 'Ronzino', sans-serif;
@@ -88,13 +69,9 @@
       font-size: clamp(15px, 1.6vw, 22px);
       line-height: 1.2;
       letter-spacing: 0.01em;
-      text-transform: lowercase;
     }
-    .cv-mp-card-title em {
-      font-style: italic;
-    }
+    .cv-mp-card-title em { font-style: italic; }
 
-    /* FOOTER */
     .cv-mp-footer {
       flex-shrink: 0;
       padding: 0.65rem clamp(1.25rem, 4vw, 2.5rem);
@@ -113,7 +90,6 @@
   </style>
 </head>
 <body>
-
 <div class="cv-page">
 
   <nav class="cv-nav cv-nav--light">
@@ -130,14 +106,14 @@
 
   <main class="cv-page-content">
 
-    <div class="cv-mp-hero">
+    <div class="cv-page-hero">
       <h1 class="cv-page-title">music & projects</h1>
     </div>
 
     <div class="cv-mp-stage" id="stage">
 
-      <!-- COL 1: moves UP -->
-      <div class="cv-mp-col" id="col0">
+      <!-- COL 1: UP -->
+      <div class="cv-mp-col">
         <div class="cv-mp-track" id="track0">
           <a href="des-visages.html" class="cv-mp-card"><span class="cv-mp-card-title">Des Visages</span></a>
           <a href="nubes.html" class="cv-mp-card"><span class="cv-mp-card-title"><em>NUBES</em></span></a>
@@ -146,8 +122,8 @@
         </div>
       </div>
 
-      <!-- COL 2: moves DOWN -->
-      <div class="cv-mp-col" id="col1">
+      <!-- COL 2: DOWN -->
+      <div class="cv-mp-col">
         <div class="cv-mp-track" id="track1">
           <a href="artikulation-band.html" class="cv-mp-card"><span class="cv-mp-card-title">César Vidal & Artikulation Band</span></a>
           <a href="des-visages-ep.html" class="cv-mp-card"><span class="cv-mp-card-title"><em>Des Visages (EP)</em></span></a>
@@ -156,8 +132,8 @@
         </div>
       </div>
 
-      <!-- COL 3: moves UP -->
-      <div class="cv-mp-col" id="col2">
+      <!-- COL 3: UP -->
+      <div class="cv-mp-col">
         <div class="cv-mp-track" id="track2">
           <a href="nubes.html" class="cv-mp-card"><span class="cv-mp-card-title"><em>NUBES</em></span></a>
           <a href="flor-de-loto.html" class="cv-mp-card"><span class="cv-mp-card-title"><em>Flor de Loto</em></span></a>
@@ -166,8 +142,8 @@
         </div>
       </div>
 
-      <!-- COL 4: moves DOWN -->
-      <div class="cv-mp-col" id="col3">
+      <!-- COL 4: DOWN -->
+      <div class="cv-mp-col">
         <div class="cv-mp-track" id="track3">
           <a href="aleas.html" class="cv-mp-card"><span class="cv-mp-card-title"><em>aleas</em></span></a>
           <a href="flor-de-loto.html" class="cv-mp-card"><span class="cv-mp-card-title"><em>Flor de Loto</em></span></a>
@@ -177,7 +153,6 @@
       </div>
 
     </div>
-
   </main>
 
   <footer class="cv-mp-footer">
@@ -188,39 +163,39 @@
 </div>
 
 <script>
-  // Slightly faster than bio text (bio = 10px/s)
   const SPEED = 18; // px/s
+  // 1=up, -1=down
+  const DIRS = [1, -1, 1, -1];
 
-  // col directions: 0=up, 1=down, 2=up, 3=down
-  const DIRS = [1, -1, 1, -1]; // 1=up (subtract), -1=down (add)
-
-  const tracks = [
+  const trackEls = [
     document.getElementById('track0'),
     document.getElementById('track1'),
     document.getElementById('track2'),
     document.getElementById('track3'),
   ];
 
-  // Clone each track's cards to make seamless loop
-  // Strategy: duplicate the card list so we have 2x cards,
-  // loop height = height of original set
   const loopHeights = [0, 0, 0, 0];
   const positions   = [0, 0, 0, 0];
 
   function buildLoops() {
-    tracks.forEach((track, i) => {
+    trackEls.forEach((track, i) => {
+      // Clone all cards for seamless loop
       const origCards = Array.from(track.children);
-      // Clone all cards and append
-      origCards.forEach(card => {
-        const clone = card.cloneNode(true);
-        track.appendChild(clone);
-      });
-      // loopHeight = total height of original set of cards
-      loopHeights[i] = origCards.reduce((sum, c) => sum + c.offsetHeight, 0);
+      origCards.forEach(card => track.appendChild(card.cloneNode(true)));
 
-      // For DOWN columns, start at negative loopHeight so first card enters from top
-      if (DIRS[i] === -1) {
-        positions[i] = -loopHeights[i];
+      // loopHeight = one full set of cards
+      loopHeights[i] = origCards.reduce((s, c) => s + c.offsetHeight, 0);
+
+      // Random starting offset so columns aren't in sync
+      const randomOffset = Math.random() * loopHeights[i];
+
+      if (DIRS[i] === 1) {
+        // UP: start at random position within first loop
+        positions[i] = randomOffset;
+      } else {
+        // DOWN: position track above viewport by loopHeight, then random offset
+        positions[i] = randomOffset;
+        // For DOWN columns we negate in the transform
       }
     });
   }
@@ -232,30 +207,31 @@
     const dt = (ts - lastTime) / 1000;
     lastTime = ts;
 
-    tracks.forEach((track, i) => {
+    trackEls.forEach((track, i) => {
       if (!loopHeights[i]) return;
 
-      positions[i] += DIRS[i] * SPEED * dt;
-
-      // UP columns (dir=1): reset when scrolled one full loop
-      if (DIRS[i] === 1 && positions[i] >= loopHeights[i]) {
-        positions[i] -= loopHeights[i];
+      if (DIRS[i] === 1) {
+        // UP: increment position, reset when past one loop
+        positions[i] += SPEED * dt;
+        if (positions[i] >= loopHeights[i]) positions[i] -= loopHeights[i];
+        track.style.transform = `translateY(${-positions[i]}px)`;
+      } else {
+        // DOWN: decrement position, reset when past one loop
+        positions[i] += SPEED * dt;
+        if (positions[i] >= loopHeights[i]) positions[i] -= loopHeights[i];
+        // Negate: this moves the track downward from its clone
+        track.style.transform = `translateY(${positions[i] - loopHeights[i]}px)`;
       }
-      // DOWN columns (dir=-1): reset when scrolled back one full loop
-      if (DIRS[i] === -1 && positions[i] <= -loopHeights[i] * 2) {
-        positions[i] += loopHeights[i];
-      }
-
-      track.style.transform = `translateY(${-positions[i]}px)`;
     });
 
     requestAnimationFrame(tick);
   }
 
+  // Wait for layout to paint
   setTimeout(() => {
     buildLoops();
     requestAnimationFrame(tick);
-  }, 200);
+  }, 150);
 </script>
 
 </body>
