@@ -39,7 +39,7 @@
       width: calc(100% + 12px);
       height: calc(100% + 12px);
       object-fit: cover;
-      object-position: 20% center;
+      object-position: 75% center;
       display: block;
       animation: heroBlur 50s ease-in-out infinite;
       will-change: filter;
@@ -113,27 +113,29 @@
       flex-shrink: 0;
     }
 
-    /* spacer pushes tagline to bottom */
+    /* spacer pushes nothing — bottom is now absolute */
     .cv-hero-spacer { flex: 1; }
 
-    .cv-hero-bottom {
-      display: flex;
-      align-items: flex-end;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      /* override content padding so tagline aligns with footer text */
-      margin-left: calc(-1 * clamp(2rem, 4vw, 3.5rem));
-      margin-right: calc(-1 * clamp(2rem, 4vw, 3.5rem));
-      padding: 0 clamp(0.5rem, 2vw, 1.25rem) 0.25rem;
-      flex-shrink: 0;
-    }
-    .cv-hero-tagline {
+    /* Bottom credits: absolutely positioned like bio photo credit */
+    .cv-hero-tagline-left {
+      position: absolute;
+      bottom: clamp(0.5rem, 1.5vw, 1rem);
+      left: clamp(0.5rem, 2vw, 1.25rem);
       font-family: 'Ronzino', sans-serif;
       font-size: clamp(9px, 0.9vw, 11px);
       letter-spacing: 0.16em;
-      /* no text-transform so proper nouns stay capitalized */
       color: rgba(255,255,255,0.45);
+      z-index: 11;
+    }
+    .cv-hero-tagline-right {
+      position: absolute;
+      bottom: clamp(0.5rem, 1.5vw, 1rem);
+      right: clamp(0.75rem, 2vw, 1.25rem);
+      font-family: 'Ronzino', sans-serif;
+      font-size: clamp(9px, 0.9vw, 11px);
+      letter-spacing: 0.16em;
+      color: rgba(255,255,255,0.45);
+      z-index: 11;
     }
     .cv-dot {
       display: inline-block;
@@ -144,7 +146,6 @@
       vertical-align: middle;
     }
 
-    /* FOOTER */
     .cv-home-footer {
       flex-shrink: 0;
       padding: 0.65rem clamp(0.5rem, 2vw, 1.25rem);
@@ -193,13 +194,14 @@
 
         <div class="cv-hero-spacer"></div>
 
-        <div class="cv-hero-bottom">
-          <span class="cv-hero-tagline">
-            saxophonist<span class="cv-dot"></span>composer<span class="cv-dot"></span>improviser
-          </span>
-          <span class="cv-hero-tagline">photo by Orlando Pedroso</span>
-        </div>
       </div>
+
+      <!-- Credits: absolutely positioned over the hero, same style as bio -->
+      <span class="cv-hero-tagline-left">
+        saxophonist<span class="cv-dot"></span>composer<span class="cv-dot"></span>improviser
+      </span>
+      <span class="cv-hero-tagline-right">photo by Orlando Pedroso</span>
+
     </section>
 
     <footer class="cv-home-footer">
