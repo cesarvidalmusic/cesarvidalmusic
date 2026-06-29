@@ -68,14 +68,19 @@
       z-index: 1;
     }
     /* HOVER: scale up + color change */
+    .cv-mp-card {
+     transition: background 0.35s ease, transform 0.35s ease;
+    }
+
     .cv-mp-card:hover {
+    background: var(--hover-color);
     transform: scale(1.03);
     z-index: 2;
     }
 
-    .cv-mp-card-title {
-    transition: color 0.35s ease;
-    }
+.cv-mp-card-title {
+  transition: color 0.35s ease;
+}
 
     .cv-mp-cover {
       width: 100%;
@@ -329,37 +334,58 @@
 ];
 
 
-document.querySelectorAll('.cv-mp-card').forEach(card => {
+document.addEventListener("mouseover", (e) => {
 
-  const title = card.querySelector('.cv-mp-card-title');
+  const card = e.target.closest(".cv-mp-card");
 
-  card.addEventListener('mouseenter', () => {
-
-    const randomColor =
-      HOVER_COLORS[
-        Math.floor(Math.random() * HOVER_COLORS.length)
-      ];
-
-    card.style.background = randomColor;
+  if (!card) return;
 
 
-    if (
-      randomColor === "#242017" ||
-      randomColor === "#2c5544"
-    ) {
-
-      title.style.color = "#ffffff";
-
-    } else {
-
-      title.style.color = "#0A0A0A";
-
-    }
-
-  });
+  const color =
+    HOVER_COLORS[
+      Math.floor(Math.random() * HOVER_COLORS.length)
+    ];
 
 
-  card.addEventListener('mouseleave', () => {
+  card.style.setProperty(
+    "--hover-color",
+    color
+  );
+
+
+  const title = card.querySelector(".cv-mp-card-title");
+
+
+  if (
+    color === "#242017" ||
+    color === "#2c5544"
+  ) {
+
+    title.style.color = "#ffffff";
+
+  } else {
+
+    title.style.color = "#0A0A0A";
+
+  }
+
+});
+
+
+document.addEventListener("mouseout", (e) => {
+
+  const card = e.target.closest(".cv-mp-card");
+
+  if (!card) return;
+
+
+  const title = card.querySelector(".cv-mp-card-title");
+
+  card.style.removeProperty("--hover-color");
+
+  title.style.color = "";
+
+});
 
     card.style.background = "";
 
