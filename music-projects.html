@@ -109,6 +109,17 @@
       text-transform: lowercase;
       color: #bbb;
     }
+    /* Move title bar down without changing the whole page */
+.cv-page-hero {
+  padding-top: calc(var(--nav-height) + 0.75rem);
+  flex-shrink: 0;
+}
+
+/* Keep page fixed and reduce only the project area */
+.cv-mp-stage {
+  height: calc(100vh - (var(--nav-height) * 2) - 52px);
+  flex: none;
+}
   </style>
 </head>
 <body>
@@ -135,7 +146,7 @@
 
     <div class="cv-mp-stage" id="stage">
 
-      <!-- COL 1: UP — speed 18px/s (base) -->
+      <!-- COL 1: UP — speed 22px/s -->
       <div class="cv-mp-col">
         <div class="cv-mp-track" id="track0">
           <a href="des-visages.html" class="cv-mp-card">
@@ -157,7 +168,7 @@
         </div>
       </div>
 
-      <!-- COL 2: DOWN — speed 22px/s -->
+      <!-- COL 2: DOWN — speed 30px/s -->
       <div class="cv-mp-col">
         <div class="cv-mp-track" id="track1">
           <a href="artikulation-band.html" class="cv-mp-card">
@@ -179,7 +190,7 @@
         </div>
       </div>
 
-      <!-- COL 3: UP — speed 26px/s -->
+      <!-- COL 3: UP — speed 18px/s -->
       <div class="cv-mp-col">
         <div class="cv-mp-track" id="track2">
           <a href="nubes.html" class="cv-mp-card">
@@ -201,7 +212,7 @@
         </div>
       </div>
 
-      <!-- COL 4: DOWN — speed 30px/s -->
+      <!-- COL 4: DOWN — speed 26px/s -->
       <div class="cv-mp-col">
         <div class="cv-mp-track" id="track3">
           <a href="aleas.html" class="cv-mp-card">
