@@ -82,7 +82,7 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
-      object-position: center top;
+      object-position: center bottom;
       display: block;
     }
 
@@ -100,6 +100,16 @@
       letter-spacing: 0.12em;
       text-transform: lowercase;
       color: #bbb;
+    }
+        /* Move bio title bar down without affecting page height */
+    .cv-page-hero {
+      padding-top: calc(var(--nav-height) + 0.75rem);
+      flex-shrink: 0;
+    }
+
+    /* Reduce only the bio area height so the whole page stays fixed */
+    .cv-bio-grid {
+      height: calc(100vh - (var(--nav-height) * 2) - 52px);
     }
   </style>
 </head>
