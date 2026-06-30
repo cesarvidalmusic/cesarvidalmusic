@@ -44,10 +44,12 @@
     .cv-mp-col:last-child { border-right: 0.5px solid #E0E0E0; }
 
     .cv-mp-track {
-      position: absolute;
-      left: 0; right: 0;
-      will-change: transform;
-    }
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  will-change: transform;
+}
 
     /* CARD */
     .cv-mp-card {
@@ -195,7 +197,10 @@
 <script>
   const SPEEDS = [22, 30, 18, 26];
 
+  // 1 = up, -1 = down
   const DIRS = [1, -1, 1, -1];
+
+  const stageEl = document.getElementById("stage");
 
   const trackEls = [
     document.getElementById("track0"),
@@ -264,7 +269,7 @@
     "#2c5544"
   ];
 
-  const positions = [0, 0, 0, 0];
+  const offsets = [0, 0, 0, 0];
 
   let cardHeight = 0;
   let lastTime = null;
@@ -282,35 +287,7 @@
   }
 
 
-  function getUsedProjects() {
-    return Array
-      .from(document.querySelectorAll(".cv-mp-card"))
-      .map(card => card.dataset.project)
-      .filter(Boolean);
-  }
-
-
-  function getRandomAvailableProject() {
-    const used = getUsedProjects();
-
-    let available = PROJECTS.filter(project => {
-      return !used.includes(project.title);
-    });
-
-    if (available.length === 0) {
-      available = PROJECTS;
-    }
-
-    return available[
-      Math.floor(Math.random() * available.length)
-    ];
-  }
-
-
-  function createCard(project) {
-    const card = document.createElement("a");
-
-    card.className = "cv-mp-card";
+  function setCardProject(card, project) {
     card.href = project.link;
     card.dataset.project = project.title;
 
@@ -321,6 +298,16 @@
       </span>
     `;
 
+    card.style.removeProperty("--hover-color");
+  }
+
+
+  function createCard(project) {
+    const card = document.createElement("a");
+
+    card.className = "cv-mp-card";
+
+    setCardProject(card, project);
     addHover(card);
 
     return card;
@@ -353,93 +340,64 @@
   }
 
 
-  function buildInitialGallery() {
-    const deck = shuffle(PROJECTS);
-    let deckIndex = 0;
+  function getVisibleCards() {
+    const stageRect = stageEl.getBoundingClientRect();
 
-    trackEls.forEach((track, i) => {
-      track.innerHTML = "";
+    return Array
+      .from(document.querySelectorAll(".cv-mp-card"))
+      .filter(card => {
+        const rect = card.getBoundingClientRect();
 
-      for (let j = 0; j < 2; j++) {
-        const project = deck[deckIndex % deck.length];
-        deckIndex++;
-
-        track.appendChild(
-          createCard(project)
+        return (
+          rect.top < stageRect.bottom &&
+          rect.bottom > stageRect.top
         );
-      }
+      });
+  }
 
-      if (DIRS[i] === -1) {
-        positions[i] = -cardHeight;
+
+  function getVisibleProjectTitles(excludeCard = null) {
+    return getVisibleCards()
+      .filter(card => card !== excludeCard)
+      .map(card => card.dataset.project)
+      .filter(Boolean);
+  }
+
+
+  function pickProject(blockedTitles = []) {
+    let available = PROJECTS.filter(project => {
+      return !blockedTitles.includes(project.title);
+    });
+
+    if (available.length === 0) {
+      available = PROJECTS;
+    }
+
+    return available[
+      Math.floor(Math.random() * available.length)
+    ];
+  }
+
+
+  function fixVisibleDuplicates() {
+    const visibleCards = getVisibleCards();
+    const used = [];
+
+    visibleCards.forEach(card => {
+      const currentTitle = card.dataset.project;
+
+      if (used.includes(currentTitle)) {
+        const newProject = pickProject(used);
+        setCardProject(card, newProject);
+        used.push(newProject.title);
       } else {
-        positions[i] = 0;
+        used.push(currentTitle);
       }
-
-      track.style.transform = `translateY(${positions[i]}px)`;
     });
   }
 
 
-  function recycleUp(track, i) {
-    const firstCard = track.firstElementChild;
-
-    if (!firstCard) return;
-
-    track.removeChild(firstCard);
-
-    const newProject = getRandomAvailableProject();
-
-    track.appendChild(
-      createCard(newProject)
-    );
-
-    positions[i] += cardHeight;
-  }
-
-
-  function recycleDown(track, i) {
-    const lastCard = track.lastElementChild;
-
-    if (!lastCard) return;
-
-    track.removeChild(lastCard);
-
-    const newProject = getRandomAvailableProject();
-
-    track.insertBefore(
-      createCard(newProject),
-      track.firstElementChild
-    );
-
-    positions[i] -= cardHeight;
-  }
-
-
-  function animate(ts) {
-    if (!lastTime) lastTime = ts;
-
-    const dt = (ts - lastTime) / 1000;
-    lastTime = ts;
-
-    trackEls.forEach((track, i) => {
-      positions[i] += SPEEDS[i] * dt * DIRS[i];
-
-      if (DIRS[i] === 1 && positions[i] <= -cardHeight) {
-        recycleUp(track, i);
-      }
-
-      if (DIRS[i] === -1 && positions[i] >= 0) {
-        recycleDown(track, i);
-      }
-
-      track.style.transform = `translateY(${positions[i]}px)`;
-    });
-
-    requestAnimationFrame(animate);
-  }
-
-
-  function startGallery() {
+  function measureCardHeight() {
     const testCard = createCard(PROJECTS[0]);
 
     testCard.style.visibility = "hidden";
@@ -450,8 +408,117 @@
 
     trackEls[0].removeChild(testCard);
 
-    buildInitialGallery();
+    if (!cardHeight || cardHeight < 100) {
+      cardHeight = Math.round(window.innerHeight * 0.75);
+    }
+  }
 
+
+  function buildInitialGallery() {
+    const deck = shuffle(PROJECTS);
+    let index = 0;
+
+    trackEls.forEach((track, i) => {
+      track.innerHTML = "";
+
+      for (let j = 0; j < 3; j++) {
+        const project = deck[index % deck.length];
+        index++;
+
+        track.appendChild(
+          createCard(project)
+        );
+      }
+
+      offsets[i] = 0;
+
+      applyTransform(i);
+    });
+
+    fixVisibleDuplicates();
+  }
+
+
+  function applyTransform(i) {
+    let y;
+
+    if (DIRS[i] === 1) {
+      y = -offsets[i];
+    } else {
+      y = offsets[i] - cardHeight;
+    }
+
+    trackEls[i].style.transform = `translateY(${y}px)`;
+  }
+
+
+  function recycleColumn(i) {
+    const track = trackEls[i];
+
+    if (DIRS[i] === 1) {
+      const firstCard = track.firstElementChild;
+
+      if (firstCard) {
+        track.removeChild(firstCard);
+      }
+
+      const blocked = getVisibleProjectTitles();
+      const newProject = pickProject(blocked);
+
+      track.appendChild(
+        createCard(newProject)
+      );
+
+      offsets[i] -= cardHeight;
+    } else {
+      const lastCard = track.lastElementChild;
+
+      if (lastCard) {
+        track.removeChild(lastCard);
+      }
+
+      const blocked = getVisibleProjectTitles();
+      const newProject = pickProject(blocked);
+
+      track.insertBefore(
+        createCard(newProject),
+        track.firstElementChild
+      );
+
+      offsets[i] -= cardHeight;
+    }
+
+    fixVisibleDuplicates();
+  }
+
+
+  function animate(ts) {
+    if (!lastTime) {
+      lastTime = ts;
+    }
+
+    const dt = (ts - lastTime) / 1000;
+    lastTime = ts;
+
+    trackEls.forEach((track, i) => {
+      offsets[i] += SPEEDS[i] * dt;
+
+      while (offsets[i] >= cardHeight) {
+        recycleColumn(i);
+      }
+
+      applyTransform(i);
+    });
+
+    fixVisibleDuplicates();
+
+    requestAnimationFrame(animate);
+  }
+
+
+  function startGallery() {
+    measureCardHeight();
+    buildInitialGallery();
     requestAnimationFrame(animate);
   }
 
