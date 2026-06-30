@@ -360,10 +360,10 @@ return card;
 function fillColumns(){
 
 
+let globalUsed = [];
+
+
 trackEls.forEach(track=>{
-
-
-let used=[];
 
 
 for(let i=0;i<8;i++){
@@ -371,16 +371,16 @@ for(let i=0;i<8;i++){
 
 let available =
 PROJECTS.filter(
-p=>!used.includes(p.title)
+p=>!globalUsed.includes(p.title)
 );
 
 
 
-if(available.length===0){
+if(available.length === 0){
 
-used=[];
+globalUsed = [];
 
-available=PROJECTS;
+available = PROJECTS;
 
 }
 
@@ -392,13 +392,15 @@ Math.floor(Math.random()*available.length)
 ];
 
 
-used.push(project.title);
+
+globalUsed.push(project.title);
 
 
 
 track.appendChild(
 createCard(project)
 );
+
 
 
 }
@@ -408,7 +410,6 @@ createCard(project)
 
 
 }
-
 
 
 function buildLoops(){
