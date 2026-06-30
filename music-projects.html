@@ -294,10 +294,66 @@ ${project.italic ? "<em>"+project.title+"</em>" : project.title}
 `;
 
 
-return card;
+
+card.addEventListener("mouseenter",()=>{
+
+
+const color =
+HOVER_COLORS[
+Math.floor(Math.random()*HOVER_COLORS.length)
+];
+
+
+card.style.setProperty(
+"--hover-color",
+color
+);
+
+
+
+const title =
+card.querySelector(".cv-mp-card-title");
+
+
+
+if(
+color === "#242017" ||
+color === "#2c5544"
+){
+
+title.style.color="#ffffff";
+
+}else{
+
+title.style.color="#0A0A0A";
 
 }
 
+
+});
+
+
+
+card.addEventListener("mouseleave",()=>{
+
+
+card.style.removeProperty("--hover-color");
+
+
+const title =
+card.querySelector(".cv-mp-card-title");
+
+
+title.style.color="";
+
+
+});
+
+
+return card;
+
+
+}
 
 
 
@@ -307,13 +363,37 @@ function fillColumns(){
 trackEls.forEach(track=>{
 
 
+let used=[];
+
+
 for(let i=0;i<8;i++){
 
 
+let available =
+PROJECTS.filter(
+p=>!used.includes(p.title)
+);
+
+
+
+if(available.length===0){
+
+used=[];
+
+available=PROJECTS;
+
+}
+
+
+
 let project =
-PROJECTS[
-Math.floor(Math.random()*PROJECTS.length)
+available[
+Math.floor(Math.random()*available.length)
 ];
+
+
+used.push(project.title);
+
 
 
 track.appendChild(
@@ -328,7 +408,6 @@ createCard(project)
 
 
 }
-
 
 
 
