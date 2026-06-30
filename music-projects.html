@@ -379,24 +379,6 @@
   }
 
 
-  function fixVisibleDuplicates() {
-    const visibleCards = getVisibleCards();
-    const used = [];
-
-    visibleCards.forEach(card => {
-      const currentTitle = card.dataset.project;
-
-      if (used.includes(currentTitle)) {
-        const newProject = pickProject(used);
-        setCardProject(card, newProject);
-        used.push(newProject.title);
-      } else {
-        used.push(currentTitle);
-      }
-    });
-  }
-
-
   function measureCardHeight() {
     const testCard = createCard(PROJECTS[0]);
 
@@ -421,7 +403,7 @@
     trackEls.forEach((track, i) => {
       track.innerHTML = "";
 
-      for (let j = 0; j < 3; j++) {
+      for (let j = 0; j < 2; j++) {
         const project = deck[index % deck.length];
         index++;
 
@@ -435,7 +417,7 @@
       applyTransform(i);
     });
 
-    fixVisibleDuplicates();
+  
   }
 
 
@@ -488,7 +470,7 @@
       offsets[i] -= cardHeight;
     }
 
-    fixVisibleDuplicates();
+  
   }
 
 
@@ -510,7 +492,6 @@
       applyTransform(i);
     });
 
-    fixVisibleDuplicates();
 
     requestAnimationFrame(animate);
   }
