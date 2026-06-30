@@ -194,18 +194,29 @@
 
 <script>
   // Each column has its own speed (px/s), slightly different
-  const SPEEDS = [18, 22, 26, 30];
+  const SPEEDS = [18,22,26,30];
 
-const DIRS = [1, -1, 1, -1];
+const DIRS = [1,-1,1,-1];
+
+
+const trackEls = [
+document.getElementById("track0"),
+document.getElementById("track1"),
+document.getElementById("track2"),
+document.getElementById("track3")
+];
+
 
 
 const PROJECTS = [
+
 
 {
 title:"Des Visages",
 image:"img/cover-des-visages.jpg",
 link:"des-visages.html"
 },
+
 
 {
 title:"NUBES",
@@ -214,6 +225,7 @@ link:"nubes.html",
 italic:true
 },
 
+
 {
 title:"SPAM",
 image:"img/cover-spam.jpg",
@@ -221,17 +233,20 @@ link:"spam.html",
 italic:true
 },
 
+
 {
 title:"César Vidal & Artikulation Band",
 image:"img/cover-artikulation-band.jpg",
 link:"artikulation-band.html"
 },
 
+
 {
 title:"Solo Project",
 image:"img/cover-solo-project.jpg",
 link:"solo-project.html"
 },
+
 
 {
 title:"Des Visages (EP)",
@@ -240,12 +255,14 @@ link:"des-visages-ep.html",
 italic:true
 },
 
+
 {
 title:"aleas",
 image:"img/cover-aleas.jpg",
 link:"aleas.html",
 italic:true
 },
+
 
 {
 title:"Flor de Loto",
@@ -254,20 +271,10 @@ link:"flor-de-loto.html",
 italic:true
 }
 
+
 ];
 
 
-const trackEls = [
-document.getElementById('track0'),
-document.getElementById('track1'),
-document.getElementById('track2'),
-document.getElementById('track3')
-];
-
-
-const loopHeights = [0,0,0,0];
-
-const positions = [0,0,0,0];
 
 
 
@@ -276,14 +283,18 @@ function createCard(project){
 
 const card=document.createElement("a");
 
+
 card.className="cv-mp-card";
+
 
 card.href=project.link;
 
 
-card.innerHTML=`
+
+card.innerHTML = `
 
 <img class="cv-mp-cover" src="${project.image}">
+
 
 <span class="cv-mp-card-title">
 
@@ -295,6 +306,237 @@ ${project.italic ? "<em>"+project.title+"</em>" : project.title}
 
 
 
+addHover(card);
+
+
+
+return card;
+
+
+}
+
+
+
+
+
+
+
+function getVisibleProjects(){
+
+
+let visible=[];
+
+
+document.querySelectorAll(".cv-mp-card")
+.forEach(card=>{
+
+
+const rect=card.getBoundingClientRect();
+
+
+
+if(
+rect.top < window.innerHeight &&
+rect.bottom > 0
+){
+
+
+visible.push(card.dataset.project);
+
+
+}
+
+
+
+});
+
+
+return visible;
+
+
+}
+
+
+
+
+
+
+function randomProject(){
+
+
+const visible=getVisibleProjects();
+
+
+
+let available =
+PROJECTS.filter(
+p=>!visible.includes(p.title)
+);
+
+
+
+return available[
+Math.floor(Math.random()*available.length)
+];
+
+
+}
+
+
+
+
+
+
+
+function fillInitial(){
+
+
+trackEls.forEach((track,i)=>{
+
+
+for(let j=0;j<3;j++){
+
+
+const card=createCard(
+randomProject()
+);
+
+
+card.dataset.project =
+card.querySelector(".cv-mp-card-title").innerText;
+
+
+
+track.appendChild(card);
+
+
+}
+
+
+});
+
+
+}
+
+
+
+
+
+
+
+const positions=[0,0,0,0];
+
+
+
+function animate(ts){
+
+
+if(!animate.last)
+animate.last=ts;
+
+
+const dt =
+(ts-animate.last)/1000;
+
+
+animate.last=ts;
+
+
+
+trackEls.forEach((track,i)=>{
+
+
+
+positions[i]+=SPEEDS[i]*dt*DIRS[i];
+
+
+
+track.style.transform =
+`translateY(${positions[i]}px)`;
+
+
+
+
+
+const cards =
+Array.from(track.children);
+
+
+
+cards.forEach(card=>{
+
+
+const rect =
+card.getBoundingClientRect();
+
+
+
+if(
+rect.bottom < -50 ||
+rect.top > window.innerHeight + 50
+){
+
+
+track.removeChild(card);
+
+
+
+const newCard =
+createCard(randomProject());
+
+
+newCard.dataset.project =
+newCard.querySelector(".cv-mp-card-title").innerText;
+
+
+
+if(DIRS[i]===1){
+
+track.appendChild(newCard);
+
+}
+else{
+
+track.insertBefore(
+newCard,
+track.firstChild
+);
+
+
+}
+
+
+}
+
+
+
+});
+
+
+
+});
+
+
+
+requestAnimationFrame(animate);
+
+
+}
+
+
+const HOVER_COLORS = [
+"#242017",
+"#2c5544",
+"#ed6551",
+"#efd06f",
+"#f8efdd"
+];
+
+
+
+function addHover(card){
+
+
 card.addEventListener("mouseenter",()=>{
 
 
@@ -302,6 +544,7 @@ const color =
 HOVER_COLORS[
 Math.floor(Math.random()*HOVER_COLORS.length)
 ];
+
 
 
 card.style.setProperty(
@@ -323,14 +566,18 @@ color === "#2c5544"
 
 title.style.color="#ffffff";
 
+
 }else{
 
+
 title.style.color="#0A0A0A";
+
 
 }
 
 
 });
+
 
 
 
@@ -340,144 +587,17 @@ card.addEventListener("mouseleave",()=>{
 card.style.removeProperty("--hover-color");
 
 
-const title =
-card.querySelector(".cv-mp-card-title");
-
-
-title.style.color="";
+card.querySelector(".cv-mp-card-title").style.color="";
 
 
 });
 
 
-return card;
+
+fillInitial();
 
 
-}
-
-
-
-function fillColumns(){
-
-
-let globalUsed = [];
-
-
-trackEls.forEach(track=>{
-
-
-for(let i=0;i<8;i++){
-
-
-let available =
-PROJECTS.filter(
-p=>!globalUsed.includes(p.title)
-);
-
-
-
-if(available.length === 0){
-
-globalUsed = [];
-
-available = PROJECTS;
-
-}
-
-
-
-let project =
-available[
-Math.floor(Math.random()*available.length)
-];
-
-
-
-globalUsed.push(project.title);
-
-
-
-track.appendChild(
-createCard(project)
-);
-
-
-
-}
-
-
-});
-
-
-}
-
-
-function buildLoops(){
-
-
-fillColumns();
-
-
-trackEls.forEach((track,i)=>{
-
-
-const cards =
-Array.from(track.children);
-
-
-cards.forEach(card=>{
-
-
-track.appendChild(
-card.cloneNode(true)
-);
-
-
-});
-
-
-loopHeights[i]=cards.reduce(
-(sum,c)=>sum+c.offsetHeight,
-0
-);
-
-
-positions[i]=Math.random()*loopHeights[i];
-
-
-});
-
-
-}
-  let lastTime = null;
-
-  function tick(ts) {
-    if (!lastTime) lastTime = ts;
-    const dt = (ts - lastTime) / 1000;
-    lastTime = ts;
-
-    trackEls.forEach((track, i) => {
-      if (!loopHeights[i]) return;
-
-      positions[i] += SPEEDS[i] * dt;
-      if (positions[i] >= loopHeights[i]) positions[i] -= loopHeights[i];
-
-      if (DIRS[i] === 1) {
-        // UP: translate negative (scroll upward)
-        track.style.transform = `translateY(${-positions[i]}px)`;
-      } else {
-        // DOWN: translate positive from bottom (scroll downward)
-        track.style.transform = `translateY(${positions[i] - loopHeights[i]}px)`;
-      }
-    });
-
-    requestAnimationFrame(tick);
-  }
-
-  setTimeout(() => {
-    buildLoops();
-    requestAnimationFrame(tick);
-  }, 150);
+requestAnimationFrame(animate);
 const HOVER_COLORS = [
   "#242017",
   "#2c5544",
