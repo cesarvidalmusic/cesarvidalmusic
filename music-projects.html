@@ -1,30 +1,392 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Music & Projects — César Vidal</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Music & Projects — César Vidal." />
+  <title>Music & Projects — César Vidal</title>
+  <link rel="preload" href="fonts/Ronzino-BoldOblique.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="fonts/Ronzino-Regular.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    html, body { height: 100%; overflow: hidden; }
+
+    .cv-page {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .cv-page-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      padding-top: 0;
+    }
+
+    /* COLUMNS AREA */
+    .cv-mp-stage {
+      flex: 1;
+      min-height: 0;
+      padding: 0 var(--pad-x);
+      display: flex;
+      gap: 0;
+      overflow: hidden;
+    }
+
+    .cv-mp-col {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+      border-left: 0.5px solid #E0E0E0;
+    }
+    .cv-mp-col:last-child { border-right: 0.5px solid #E0E0E0; }
+
+    .cv-mp-track {
+      position: absolute;
+      left: 0; right: 0;
+      will-change: transform;
+    }
+
+    /* CARD */
+    .cv-mp-card {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 1rem 1rem;
+      border-bottom: 0.5px solid #E0E0E0;
+      height: 75vh;
+      box-sizing: border-box;
+      text-decoration: none;
+      color: #0A0A0A;
+      gap: 0.75rem;
+      /* transition for both scale and background */
+      transition: background 0.35s ease, transform 0.35s ease;
+      transform-origin: center center;
+      position: relative;
+      z-index: 1;
+    }
+    /* HOVER: scale up + color change */
+    .cv-mp-card {
+     transition: background 0.35s ease, transform 0.35s ease;
+    }
+
+    .cv-mp-card:hover {
+    background: var(--hover-color);
+    transform: scale(1.03);
+    z-index: 2;
+    }
+
+.cv-mp-card-title {
+  transition: color 0.35s ease;
+}
+
+    .cv-mp-cover {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+      flex-shrink: 0;
+    }
+
+    .cv-mp-card-title {
+      font-family: 'Ronzino', sans-serif;
+      font-weight: 400;
+      font-size: clamp(12px, 1.2vw, 17px);
+      line-height: 1.25;
+      letter-spacing: 0.01em;
+      color: #0A0A0A;
+    }
+    .cv-mp-card-title em { font-style: italic; }
+
+    /* FOOTER */
+    .cv-mp-footer {
+      flex-shrink: 0;
+      padding: 0.65rem var(--pad-x);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 0.5px solid #E0E0E0;
+    }
+    .cv-mp-footer span {
+      font-family: 'Ronzino', sans-serif;
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: lowercase;
+      color: #bbb;
+    }
+    /* Move title bar down without changing the whole page */
+.cv-page-hero {
+  padding-top: calc(var(--nav-height) + 0.75rem);
+  flex-shrink: 0;
+}
+
+/* Keep page fixed and reduce only the project area */
+.cv-mp-stage {
+  height: calc(100vh - (var(--nav-height) * 2) - 52px);
+  flex: none;
+}
+  </style>
 </head>
 <body>
-<!-- This file was generated as a placeholder. -->
-<script>
-// Fix for hover color flickering:
-// use mouseenter/mouseleave instead of mouseover/mouseout.
-const HOVER_COLORS = ["#242017","#2c5544","#ed6551","#efd06f","#f8efdd"];
+<div class="cv-page">
 
-document.querySelectorAll(".cv-mp-card").forEach(card => {
-  card.addEventListener("mouseenter", () => {
-    const color = HOVER_COLORS[Math.floor(Math.random()*HOVER_COLORS.length)];
-    card.style.setProperty("--hover-color", color);
-    const title = card.querySelector(".cv-mp-card-title");
-    if (color === "#242017" || color === "#2c5544") title.style.color="#fff";
-    else title.style.color="#0A0A0A";
-  });
-  card.addEventListener("mouseleave", () => {
-    card.style.removeProperty("--hover-color");
-    const title = card.querySelector(".cv-mp-card-title");
-    if (title) title.style.color="";
-  });
+  <nav class="cv-nav cv-nav--light">
+    <ul>
+      <li><a href="index.html">home</a></li>
+      <li><a href="bio.html">bio</a></li>
+      <li><a href="music-projects.html" class="active">music &amp; projects</a></li>
+      <li><a href="https://syos.co/en/blogs/our-artists/cesar-vidal" target="_blank" rel="noopener">syos artist</a></li>
+      <li><a href="gonzalez-reeds.html">gonzalez reeds</a></li>
+      <li><a href="merch.html">merch</a></li>
+      <li><a href="contact.html">contact</a></li>
+    </ul>
+  </nav>
+
+  <main class="cv-page-content">
+
+    <!-- Title uses global cv-page-hero — same as contact/gonzalez-reeds -->
+    <div class="cv-page-hero">
+      <h1 class="cv-page-title">music & projects</h1>
+    </div>
+
+    <div class="cv-mp-stage" id="stage">
+
+      <!-- COL 1: UP — speed 22px/s -->
+      <div class="cv-mp-col">
+        <div class="cv-mp-track" id="track0">
+          <a href="des-visages.html" class="cv-mp-card">
+            <img class="cv-mp-cover" src="img/cover-des-visages.jpg" alt="Des Visages" />
+            <span class="cv-mp-card-title">Des Visages</span>
+          </a>
+          <a href="nubes.html" class="cv-mp-card">
+            <img class="cv-mp-cover" src="img/cover-nubes.jpg" alt="NUBES" />
+            <span class="cv-mp-card-title"><em>NUBES</em></span>
+          </a>
+          <a href="spam.html" class="cv-mp-card">
+            <img class="cv-mp-cover" src="img/cover-spam.jpg" alt="SPAM" />
+            <span class="cv-mp-card-title"><em>SPAM</em></span>
+          </a>
+          <a href="artikulation-band.html" class="cv-mp-card">
+            <img class="cv-mp-cover" src="img/cover-artikulation-band.jpg" alt="César Vidal & Artikulation Band" />
+            <span class="cv-mp-card-title">César Vidal & Artikulation Band</span>
+          </a>
+          <a href="solo-project.html" class="cv-mp-card">
+          <img class="cv-mp-cover" src="img/cover-solo-project.jpg" alt="Solo Project" />
+          <span class="cv-mp-card-title">Solo Project</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- COL 2: DOWN — speed 30px/s -->
+      <div class="cv-mp-col">
+        <div class="cv-mp-track" id="track1">
+          <a href="artikulation-band.html" class="cv-mp-card">
+            <img class="cv-mp-cover" src="img/cover-artikulation-band.jpg" alt="César Vidal & Artikulation Band" />
+            <span class="cv-mp-card-title">César Vidal & Artikulation Band</span>
+          </a>
+          <a href="des-visages-ep.html" class="cv-mp-card">
+            <img class="cv-mp-cover" src="img/cover-des-visages-ep.jpg" alt="Des Visages (EP)" />
+            <span class="cv-mp-card-title"><em>Des Visages (EP)</em></span>
+          </a>
+          <a href="solo-project.html" class="cv-mp-card">
+          <img class="cv-mp-cover" src="img/cover-solo-project.jpg" alt="Solo Project" />
+          <span class="cv-mp-card-title">Solo Project</span>
+          </a>
+          <a href="aleas.html" class="cv-mp-card">
+            <img class="cv-mp-cover" src="img/cover-aleas.jpg" alt="aleas" />
+            <span class="cv-mp-card-title"><em>aleas</em></span>
+          </a>
+          <a href="des-visages.html" class="cv-mp-card">
+            <img class="cv-mp-cover" src="img/cover-des-visages.jpg" alt="Des Visages" />
+            <span class="cv-mp-card-title">Des Visages</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- COL 3: UP — speed 18px/s -->
+      <div class="cv-mp-col">
+        <div class="cv-mp-track" id="track2">
+          <a href="nubes.html" class="cv-mp-card">
+            <img class="cv-mp-cover" src="img/cover-nubes.jpg" alt="NUBES" />
+            <span class="cv-mp-card-title"><em>NUBES</em></span>
+          </a>
+          <a href="flor-de-loto.html" class="cv-mp-card">
+            <img class="cv-mp-cover" src="img/cover-flor-de-loto.jpg" alt="Flor de Loto" />
+            <span class="cv-mp-card-title"><em>Flor de Loto</em></span>
+          </a>
+          <a href="solo-project.html" class="cv-mp-card">
+          <img class="cv-mp-cover" src="img/cover-solo-project.jpg" alt="Solo Project" />
+          <span class="cv-mp-card-title">Solo Project</span>
+          </a>
+          <a href="des-visages-ep.html" class="cv-mp-card">
+            <img class="cv-mp-cover" src="img/cover-des-visages-ep.jpg" alt="Des Visages (EP)" />
+            <span class="cv-mp-card-title"><em>Des Visages (EP)</em></span>
+          </a>
+          <a href="spam.html" class="cv-mp-card">
+            <img class="cv-mp-cover" src="img/cover-spam.jpg" alt="SPAM" />
+            <span class="cv-mp-card-title"><em>SPAM</em></span>
+          </a>
+        </div>
+      </div>
+
+      <!-- COL 4: DOWN — speed 26px/s -->
+      <div class="cv-mp-col">
+        <div class="cv-mp-track" id="track3">
+          <a href="aleas.html" class="cv-mp-card">
+            <img class="cv-mp-cover" src="img/cover-aleas.jpg" alt="aleas" />
+            <span class="cv-mp-card-title"><em>aleas</em></span>
+          </a>
+          <a href="solo-project.html" class="cv-mp-card">
+          <img class="cv-mp-cover" src="img/cover-solo-project.jpg" alt="Solo Project" />
+          <span class="cv-mp-card-title">Solo Project</span>
+          </a>
+          <a href="flor-de-loto.html" class="cv-mp-card">
+            <img class="cv-mp-cover" src="img/cover-flor-de-loto.jpg" alt="Flor de Loto" />
+            <span class="cv-mp-card-title"><em>Flor de Loto</em></span>
+          </a>
+          <a href="des-visages.html" class="cv-mp-card">
+            <img class="cv-mp-cover" src="img/cover-des-visages.jpg" alt="Des Visages" />
+            <span class="cv-mp-card-title">Des Visages</span>
+          </a>
+          <a href="artikulation-band.html" class="cv-mp-card">
+            <img class="cv-mp-cover" src="img/cover-artikulation-band.jpg" alt="César Vidal & Artikulation Band" />
+            <span class="cv-mp-card-title">César Vidal & Artikulation Band</span>
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="cv-mp-footer">
+    <span>© 2026 César Vidal</span>
+    <span>cesarvidalmusic.art</span>
+  </footer>
+
+</div>
+
+<script>
+  // Each column has its own speed (px/s), slightly different
+  const SPEEDS = [18, 22, 26, 30];
+  // Directions: 1=up, -1=down
+  const DIRS   = [1, -1, 1, -1];
+
+  const trackEls = [
+    document.getElementById('track0'),
+    document.getElementById('track1'),
+    document.getElementById('track2'),
+    document.getElementById('track3'),
+  ];
+
+  const loopHeights = [0, 0, 0, 0];
+  const positions   = [0, 0, 0, 0];
+
+  function buildLoops() {
+    trackEls.forEach((track, i) => {
+      const origCards = Array.from(track.children);
+      // Duplicate cards for seamless loop
+      origCards.forEach(card => track.appendChild(card.cloneNode(true)));
+      loopHeights[i] = origCards.reduce((s, c) => s + c.offsetHeight, 0);
+
+      // Random start offset so columns are never in sync
+      positions[i] = Math.random() * loopHeights[i];
+    });
+  }
+
+  let lastTime = null;
+
+  function tick(ts) {
+    if (!lastTime) lastTime = ts;
+    const dt = (ts - lastTime) / 1000;
+    lastTime = ts;
+
+    trackEls.forEach((track, i) => {
+      if (!loopHeights[i]) return;
+
+      positions[i] += SPEEDS[i] * dt;
+      if (positions[i] >= loopHeights[i]) positions[i] -= loopHeights[i];
+
+      if (DIRS[i] === 1) {
+        // UP: translate negative (scroll upward)
+        track.style.transform = `translateY(${-positions[i]}px)`;
+      } else {
+        // DOWN: translate positive from bottom (scroll downward)
+        track.style.transform = `translateY(${positions[i] - loopHeights[i]}px)`;
+      }
+    });
+
+    requestAnimationFrame(tick);
+  }
+
+  setTimeout(() => {
+    buildLoops();
+    requestAnimationFrame(tick);
+  }, 150);
+  const HOVER_COLORS = [
+  "#242017",
+  "#2c5544",
+  "#ed6551",
+  "#efd06f",
+  "#f8efdd"
+];
+
+
+document.addEventListener("mouseover", (e) => {
+
+  const card = e.target.closest(".cv-mp-card");
+
+  if (!card) return;
+
+
+  const color =
+    HOVER_COLORS[
+      Math.floor(Math.random() * HOVER_COLORS.length)
+    ];
+
+
+  card.style.setProperty(
+    "--hover-color",
+    color
+  );
+
+
+  const title = card.querySelector(".cv-mp-card-title");
+
+
+  if (
+    color === "#242017" ||
+    color === "#2c5544"
+  ) {
+
+    title.style.color = "#ffffff";
+
+  } else {
+
+    title.style.color = "#0A0A0A";
+
+  }
+
+});
+
+
+document.addEventListener("mouseout", (e) => {
+
+  const card = e.target.closest(".cv-mp-card");
+
+  if (!card) return;
+
+
+  const title = card.querySelector(".cv-mp-card-title");
+
+  card.style.removeProperty("--hover-color");
+
+  title.style.color = "";
+
 });
 </script>
+
 </body>
 </html>
