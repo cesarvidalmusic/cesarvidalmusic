@@ -325,7 +325,7 @@
     buildLoops();
     requestAnimationFrame(tick);
   }, 150);
-  const HOVER_COLORS = [
+const HOVER_COLORS = [
   "#242017",
   "#2c5544",
   "#ed6551",
@@ -334,58 +334,59 @@
 ];
 
 
-document.addEventListener("mouseenter", (e) => {
-
-  const card = e.target.closest(".cv-mp-card");
-
-  if (!card) return;
+document.querySelectorAll(".cv-mp-card").forEach(card => {
 
 
-  const color =
-    HOVER_COLORS[
-      Math.floor(Math.random() * HOVER_COLORS.length)
-    ];
+  card.addEventListener("mouseenter", () => {
 
 
-  card.style.setProperty(
-    "--hover-color",
-    color
-  );
+    const color =
+      HOVER_COLORS[
+        Math.floor(Math.random() * HOVER_COLORS.length)
+      ];
 
 
-  const title = card.querySelector(".cv-mp-card-title");
+    card.style.setProperty(
+      "--hover-color",
+      color
+    );
 
 
-  if (
-    color === "#242017" ||
-    color === "#2c5544"
-  ) {
-
-    title.style.color = "#ffffff";
-
-  } else {
-
-    title.style.color = "#0A0A0A";
-
-  }
-
-}, true);
+    const title = card.querySelector(".cv-mp-card-title");
 
 
-document.addEventListener("mouseleave", (e) => {
+    if (
+      color === "#242017" ||
+      color === "#2c5544"
+    ) {
 
-  const card = e.target.closest(".cv-mp-card");
+      title.style.color = "#ffffff";
 
-  if (!card) return;
+    } else {
+
+      title.style.color = "#0A0A0A";
+
+    }
 
 
-  const title = card.querySelector(".cv-mp-card-title");
+  });
 
-  card.style.removeProperty("--hover-color");
 
-  title.style.color = "";
+  card.addEventListener("mouseleave", () => {
 
-}, true);
+
+    const title = card.querySelector(".cv-mp-card-title");
+
+
+    card.style.removeProperty("--hover-color");
+
+    title.style.color = "";
+
+
+  });
+
+
+});
 </script>
 
 </body>
