@@ -334,7 +334,7 @@
 ];
 
 
-document.addEventListener("mouseover", (e) => {
+document.addEventListener("mouseenter", (e) => {
 
   const card = e.target.closest(".cv-mp-card");
 
@@ -369,10 +369,10 @@ document.addEventListener("mouseover", (e) => {
 
   }
 
-});
+}, true);
 
 
-document.addEventListener("mouseout", (e) => {
+document.addEventListener("mouseleave", (e) => {
 
   const card = e.target.closest(".cv-mp-card");
 
@@ -385,7 +385,7 @@ document.addEventListener("mouseout", (e) => {
 
   title.style.color = "";
 
-});
+}, true);
 </script>
 
 </body>
