@@ -65,14 +65,14 @@
     }
 
     /* CONTENT — right aligned with moderate padding */
-     .cv-hero-content {
-     position: absolute;
-     inset: 0;
-     z-index: 10;
-     display: flex;
-     flex-direction: column;
-     justify-content: flex-start;
-     padding: clamp(0.45rem, 1.3vw, 0.9rem) clamp(2rem, 4vw, 3.5rem);
+    .cv-hero-content {
+    position: absolute;
+    inset: 0;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: clamp(0.8rem, 2.15vw, 1.35rem) clamp(1.85rem, 3.7vw, 3.25rem);
     }
     
     /* NAV — right aligned */
@@ -87,23 +87,23 @@
       list-style: none;
     }
       .cv-hero-nav a {
-  font-family: 'Ronzino', sans-serif;
-  font-weight: 400;
-  font-size: 14px;
-  letter-spacing: 0.04em;
-  text-transform: lowercase;
-  color: rgba(255,255,255,0.6);
-  text-decoration: none;
-  display: inline-block;
-  transform-origin: center center;
-  transition: color 0.35s ease, transform 0.35s ease;
-}
+      font-family: 'Ronzino', sans-serif;
+      font-weight: 400;
+      font-size: 14px;
+      letter-spacing: 0.04em;
+      text-transform: lowercase;
+      color: rgba(255,255,255,0.6);
+      text-decoration: none;
+      display: inline-block;
+      transform-origin: center center;
+      transition: color 0.35s ease, transform 0.35s ease, text-shadow 0.35s ease;
+     }
 
-.cv-hero-nav a:hover {
-  color: #C8400A;
-  transform: scale(1.18);
-  font-weight: 700;
-}
+      .cv-hero-nav a:hover {
+      color: #C8400A;
+      transform: scale(1.18);
+      text-shadow: 0.35px 0 currentColor, -0.35px 0 currentColor;
+     }
 
     /* TITLE — right aligned, end of "vidal" lines up with end of "contact" */
     .cv-hero-name {
