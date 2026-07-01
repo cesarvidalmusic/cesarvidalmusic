@@ -17,6 +17,13 @@
   font-style: normal;
   font-display: swap;
 }
+@font-face {
+  font-family: 'Ronzino';
+  src: url('../fonts/Ronzino-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
 
 /* RESET & BASE */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -454,6 +461,7 @@ img { display: block; max-width: 100%; }
   display: inline-block;
   transform-origin: center center;
   line-height: 1;
+  font-weight: 400;
   transition: color 0.35s ease, transform 0.35s ease;
 }
 
@@ -469,8 +477,10 @@ img { display: block; max-width: 100%; }
 .cv-nav--dark a:hover {
   color: var(--accent);
   transform: scale(1.18);
+  font-weight: 700;
 }
 
 .cv-nav a.active {
   color: var(--accent);
+  font-weight: 700;
 }
