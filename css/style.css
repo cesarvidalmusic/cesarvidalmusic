@@ -448,3 +448,29 @@ img { display: block; max-width: 100%; }
   .cv-nav ul { gap: 1rem; }
   .cv-hero-name { font-size: clamp(36px, 11vw, 60px); }
 }
+
+/* NAV HOVER OVERRIDE — stronger menu hover */
+.cv-nav a {
+  display: inline-block;
+  transform-origin: center center;
+  line-height: 1;
+  transition: color 0.35s ease, transform 0.35s ease;
+}
+
+.cv-nav--light a {
+  color: var(--black);
+}
+
+.cv-nav--dark a {
+  color: rgba(255,255,255,0.6);
+}
+
+.cv-nav--light a:hover,
+.cv-nav--dark a:hover {
+  color: var(--accent);
+  transform: scale(1.18);
+}
+
+.cv-nav a.active {
+  color: var(--accent);
+}
