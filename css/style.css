@@ -456,13 +456,13 @@ img { display: block; max-width: 100%; }
   .cv-hero-name { font-size: clamp(36px, 11vw, 60px); }
 }
 
-/* NAV HOVER OVERRIDE — stronger menu hover */
+/* NAV HOVER OVERRIDE — stable hover without layout shift */
 .cv-nav a {
   display: inline-block;
   transform-origin: center center;
   line-height: 1;
   font-weight: 400;
-  transition: color 0.35s ease, transform 0.35s ease;
+  transition: color 0.35s ease, transform 0.35s ease, text-shadow 0.35s ease;
 }
 
 .cv-nav--light a {
@@ -477,10 +477,10 @@ img { display: block; max-width: 100%; }
 .cv-nav--dark a:hover {
   color: var(--accent);
   transform: scale(1.18);
-  font-weight: 700;
+  text-shadow: 0.35px 0 currentColor, -0.35px 0 currentColor;
 }
 
 .cv-nav a.active {
   color: var(--accent);
-  font-weight: 700;
+  text-shadow: 0.35px 0 currentColor, -0.35px 0 currentColor;
 }
