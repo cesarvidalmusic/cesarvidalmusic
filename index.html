@@ -85,17 +85,23 @@
       gap: clamp(1.5rem, 2.8vw, 2.5rem);
       list-style: none;
     }
-    .cv-hero-nav a {
+      .cv-hero-nav a {
       font-family: 'Ronzino', sans-serif;
       font-weight: 400;
-      font-size: clamp(12px, 1.1vw, 15px);
-      letter-spacing: 0.03em;
+      font-size: 14px;
+      letter-spacing: 0.04em;
       text-transform: lowercase;
       color: rgba(255,255,255,0.6);
       text-decoration: none;
-      transition: color 0.2s;
+      display: inline-block;
+      transform-origin: center center;
+      transition: color 0.35s ease, transform 0.35s ease;
     }
-    .cv-hero-nav a:hover { color: #fff; }
+
+      .cv-hero-nav a:hover {
+      color: #C8400A;
+      transform: scale(1.08);
+    }
 
     /* TITLE — right aligned, end of "vidal" lines up with end of "contact" */
     .cv-hero-name {
