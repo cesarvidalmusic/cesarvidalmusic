@@ -78,37 +78,6 @@
     padding-left: clamp(2rem, 4vw, 3.5rem);
     }
     
-    /* NAV — right aligned */
-      .cv-hero-nav {
-      display: flex;
-      justify-content: flex-end;
-      flex-shrink: 0;
-      transform: translate(-8px, -7px);
-    }
-    .cv-hero-nav ul {
-      display: flex;
-      gap: clamp(1.5rem, 2.8vw, 2.5rem);
-      list-style: none;
-    }
-      .cv-hero-nav a {
-      font-family: 'Ronzino', sans-serif;
-      font-weight: 400;
-      font-size: 14px;
-      letter-spacing: 0.04em;
-      text-transform: lowercase;
-      color: rgba(255,255,255,0.6);
-      text-decoration: none;
-      display: inline-block;
-      transform-origin: center center;
-      transition: color 0.35s ease, transform 0.35s ease, text-shadow 0.35s ease;
-     }
-
-      .cv-hero-nav a:hover {
-      color: #C8400A;
-      transform: scale(1.18);
-      text-shadow: 0.35px 0 currentColor, -0.35px 0 currentColor;
-     }
-
     /* TITLE — right aligned, end of "vidal" lines up with end of "contact" */
     .cv-hero-name {
       font-family: 'Ronzino', serif;
@@ -189,17 +158,18 @@
       </div>
       <div class="cv-hero-overlay"></div>
 
+      <nav class="cv-nav cv-nav--dark cv-home-main-nav">
+  <ul>
+    <li><a href="bio.html">bio</a></li>
+    <li><a href="music-projects.html">music &amp; projects</a></li>
+    <li><a href="https://syos.co/en/blogs/our-artists/cesar-vidal" target="_blank" rel="noopener">syos artist</a></li>
+    <li><a href="gonzalez-reeds.html">gonzalez reeds</a></li>
+    <li><a href="merch.html">merch</a></li>
+    <li><a href="contact.html">contact</a></li>
+  </ul>
+</nav>
       <div class="cv-hero-content">
-        <div class="cv-hero-nav">
-          <ul>
-            <li><a href="bio.html">bio</a></li>
-            <li><a href="music-projects.html">music & projects</a></li>
-            <li><a href="https://syos.co/en/blogs/our-artists/cesar-vidal" target="_blank" rel="noopener">syos artist</a></li>
-            <li><a href="gonzalez-reeds.html">gonzalez reeds</a></li>
-            <li><a href="merch.html">merch</a></li>
-            <li><a href="contact.html">contact</a></li>
-          </ul>
-        </div>
+        
 
         <div class="cv-hero-name">césar vidal</div>
 
