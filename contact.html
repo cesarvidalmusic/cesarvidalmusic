@@ -12,29 +12,14 @@
   html, body {
     height: 100%;
     overflow: hidden;
+    background: #000;
   }
 
   .cv-page {
+    position: relative;
     height: 100vh;
     overflow: hidden;
-  }
-
-  .cv-page-content {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    min-height: 0;
-  }
-
-  .cv-footer {
-    flex-shrink: 0;
-  }
-
-  .cv-contact-video-section {
-    position: relative;
-    flex: 1;
-    min-height: 0;
-    overflow: hidden;
+    background: transparent;
   }
 
   .cv-contact-bg-video {
@@ -45,15 +30,49 @@
     object-fit: cover;
     object-position: center center;
     z-index: 0;
+    pointer-events: none;
+  }
+
+  .cv-nav {
+    background: transparent;
+  }
+
+  .cv-nav.cv-nav--dark a {
+    color: rgba(255,255,255,0.72);
+  }
+
+  .cv-nav.cv-nav--dark a:hover {
+    color: var(--accent);
+  }
+
+  .cv-nav a.active {
+    color: var(--accent);
+  }
+
+  .cv-page-content {
+    position: relative;
+    z-index: 2;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    padding-top: var(--nav-height);
+  }
+
+  .cv-page-hero {
+    display: none;
+    border-bottom: 0;
+  }
+
+  .cv-contact-video-section {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
   }
 
   .cv-contact-video-section::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: rgba(255,255,255,0.28);
-    z-index: 1;
-    pointer-events: none;
+    display: none;
   }
 
   .cv-contact-wrap {
@@ -61,13 +80,48 @@
     z-index: 2;
     padding-top: 2.5rem;
   }
+
+  .cv-contact-list {
+    border-top: 0.5px solid rgba(255,255,255,0.38);
+  }
+
+  .cv-contact-list li {
+    border-bottom: 0.5px solid rgba(255,255,255,0.38);
+  }
+
+  .cv-contact-list .platform {
+    color: rgba(255,255,255,0.65);
+  }
+
+  .cv-contact-list a {
+    color: rgba(255,255,255,0.92);
+  }
+
+  .cv-contact-list a:hover {
+    color: var(--accent);
+  }
+
+  .cv-footer {
+    position: relative;
+    z-index: 2;
+    background: transparent;
+    border-top: 0;
+  }
+
+  .cv-footer span {
+    color: rgba(255,255,255,0.55);
+  }
 </style>
 </head>
 <body>
 
   <div class="cv-page">
 
-    <nav class="cv-nav cv-nav--light">
+<video class="cv-contact-bg-video" autoplay muted loop playsinline preload="auto">
+  <source src="videos/contact-bg.mp4" type="video/mp4">
+</video>
+    
+    <nav class="cv-nav cv-nav--dark">
       <ul>
         <li><a href="index.html">home</a></li>
         <li><a href="bio.html">bio</a></li>
