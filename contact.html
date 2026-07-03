@@ -100,16 +100,25 @@
     color: var(--accent);
   }
 
-  .cv-footer {
-    position: relative;
-    z-index: 2;
-    background: transparent;
-    border-top: 0;
-  }
+ .cv-footer {
+  position: relative;
+  z-index: 2;
+  flex-shrink: 0;
+  padding: 0.55rem clamp(0.5rem, 2vw, 1.25rem);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 0.5px solid #E0E0E0;
+  background: #fff;
+}
 
-  .cv-footer span {
-    color: rgba(255,255,255,0.58);
-  }
+.cv-footer span {
+  font-family: 'Ronzino', sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: lowercase;
+  color: #bbb;
+}
 </style>
 </head>
 <body>
