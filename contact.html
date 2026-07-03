@@ -60,10 +60,15 @@
     background: transparent;
   }
 
-  .cv-page-hero {
-    display: none;
-    border-bottom: 0;
-  }
+ .cv-page-hero {
+  display: block;
+  border-bottom: 0;
+  background: transparent;
+}
+
+.cv-page-title {
+  color: #ffffff;
+}
 
   .cv-contact-video-section {
     position: relative;
@@ -74,7 +79,7 @@
     background: transparent;
   }
 
-  .cv-contact-wrap {
+ .cv-contact-wrap {
   position: relative;
   z-index: 3;
   height: 100%;
@@ -84,21 +89,24 @@
 }
 
 .cv-contact-bars {
+  --contact-edge: clamp(2rem, 4vw, 3.5rem);
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: clamp(1.6rem, 3vh, 2.4rem);
-  padding: clamp(1.5rem, 3vh, 2.5rem) 0;
+  gap: 1cm;
+  padding: clamp(1rem, 2vh, 2rem) 0;
 }
 
 .cv-contact-bar {
   position: relative;
   display: flex;
   align-items: center;
-  height: clamp(34px, 4.8vh, 42px);
-  padding: 0 1.25rem;
+  height: clamp(38px, 5vh, 48px);
+  padding: 0 1.4rem;
   text-decoration: none;
-  clip-path: polygon(18px 0, 100% 0, calc(100% - 18px) 100%, 0 100%);
+  background: transparent;
+  overflow: visible;
+  isolation: isolate;
   transition: transform 0.25s ease, filter 0.25s ease;
 }
 
@@ -106,10 +114,19 @@
   content: "";
   position: absolute;
   inset: 0;
-  clip-path: inherit;
-  background: rgba(165,165,165,0.55);
-  transform: translate(10px, 8px);
-  z-index: -1;
+  background: rgba(185,185,185,0.75);
+  clip-path: polygon(38px 0, 100% 0, calc(100% - 38px) 100%, 0 100%);
+  transform: translate(18px, 10px);
+  z-index: 0;
+}
+
+.cv-contact-bar::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--bar-color);
+  clip-path: polygon(38px 0, 100% 0, calc(100% - 38px) 100%, 0 100%);
+  z-index: 1;
 }
 
 .cv-contact-bar:hover {
@@ -117,46 +134,51 @@
   filter: brightness(1.04);
 }
 
-.cv-contact-bar--left {
-  margin-left: clamp(3rem, 7vw, 6rem);
+.cv-contact-bar--end-right {
+  margin-left: auto;
+  margin-right: var(--contact-edge);
 }
 
-.cv-contact-bar--right {
-  margin-left: auto;
-  margin-right: clamp(3rem, 7vw, 6rem);
+.cv-contact-bar--start-left {
+  margin-left: var(--contact-edge);
+  margin-right: auto;
+}
+
+.cv-contact-bar--long {
+  width: min(72vw, 900px);
+}
+
+.cv-contact-bar--short {
+  width: min(50vw, 640px);
 }
 
 .cv-contact-bar--1 {
-  width: min(57vw, 710px);
-  background: #242017;
+  --bar-color: #242017;
 }
 
 .cv-contact-bar--2 {
-  width: min(50vw, 620px);
-  background: #2c5544;
+  --bar-color: #2c5544;
 }
 
 .cv-contact-bar--3 {
-  width: min(58vw, 720px);
-  background: #ed6551;
+  --bar-color: #ed6551;
 }
 
 .cv-contact-bar--4 {
-  width: min(50vw, 620px);
-  background: #efd06f;
+  --bar-color: #efd06f;
 }
 
 .cv-contact-bar--5 {
-  width: min(57vw, 710px);
-  background: #f8efdd;
+  --bar-color: #242017;
 }
 
 .cv-contact-bar--6 {
-  width: min(50vw, 620px);
-  background: #ed6551;
+  --bar-color: #2c5544;
 }
 
 .cv-contact-bar-text {
+  position: relative;
+  z-index: 2;
   font-family: 'Ronzino', sans-serif;
   font-size: clamp(12px, 1.15vw, 15px);
   letter-spacing: 0.06em;
@@ -223,27 +245,27 @@
   <div class="cv-contact-wrap">
     <div class="cv-contact-bars">
 
-      <a class="cv-contact-bar cv-contact-bar--left cv-contact-bar--1" href="mailto:cesararturovidarojas@gmail.com">
+      <a class="cv-contact-bar cv-contact-bar--end-right cv-contact-bar--long cv-contact-bar--1" href="mailto:cesararturovidarojas@gmail.com">
         <span class="cv-contact-bar-text cv-contact-bar-text--light">email — cesararturovidarojas@gmail.com</span>
       </a>
 
-      <a class="cv-contact-bar cv-contact-bar--right cv-contact-bar--2" href="https://instagram.com/cesarvidalsax" target="_blank" rel="noopener">
+      <a class="cv-contact-bar cv-contact-bar--start-left cv-contact-bar--short cv-contact-bar--2" href="https://instagram.com/cesarvidalsax" target="_blank" rel="noopener">
         <span class="cv-contact-bar-text cv-contact-bar-text--light">instagram — @cesarvidalsax ↗</span>
       </a>
 
-      <a class="cv-contact-bar cv-contact-bar--left cv-contact-bar--3" href="https://wa.me/31684089701" target="_blank" rel="noopener">
+      <a class="cv-contact-bar cv-contact-bar--end-right cv-contact-bar--long cv-contact-bar--3" href="https://wa.me/31684089701" target="_blank" rel="noopener">
         <span class="cv-contact-bar-text cv-contact-bar-text--light">whatsapp me — +31 6 84089701 ↗</span>
       </a>
 
-      <a class="cv-contact-bar cv-contact-bar--right cv-contact-bar--4" href="https://cesarvidalmusic.bandcamp.com" target="_blank" rel="noopener">
+      <a class="cv-contact-bar cv-contact-bar--start-left cv-contact-bar--short cv-contact-bar--4" href="https://cesarvidalmusic.bandcamp.com" target="_blank" rel="noopener">
         <span class="cv-contact-bar-text cv-contact-bar-text--dark">bandcamp — cesarvidalmusic.bandcamp.com ↗</span>
       </a>
 
-      <a class="cv-contact-bar cv-contact-bar--left cv-contact-bar--5" href="#" target="_blank" rel="noopener">
-        <span class="cv-contact-bar-text cv-contact-bar-text--dark">apple music — césar vidal on apple music ↗</span>
+      <a class="cv-contact-bar cv-contact-bar--end-right cv-contact-bar--long cv-contact-bar--5" href="#" target="_blank" rel="noopener">
+        <span class="cv-contact-bar-text cv-contact-bar-text--light">apple music — césar vidal on apple music ↗</span>
       </a>
 
-      <a class="cv-contact-bar cv-contact-bar--right cv-contact-bar--6" href="#" target="_blank" rel="noopener">
+      <a class="cv-contact-bar cv-contact-bar--start-left cv-contact-bar--short cv-contact-bar--6" href="#" target="_blank" rel="noopener">
         <span class="cv-contact-bar-text cv-contact-bar-text--light">youtube — césar vidal on youtube ↗</span>
       </a>
 
@@ -251,7 +273,6 @@
   </div>
 
 </section>
-
     </main>
 
     <footer class="cv-footer">
