@@ -105,20 +105,22 @@
 
     /* FOOTER */
     .cv-mp-footer {
-      flex-shrink: 0;
-      padding: 0.65rem var(--pad-x);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-top: 0.5px solid #E0E0E0;
-    }
-    .cv-mp-footer span {
-      font-family: 'Ronzino', sans-serif;
-      font-size: 10px;
-      letter-spacing: 0.12em;
-      text-transform: lowercase;
-      color: #bbb;
-    }
+    flex-shrink: 0;
+  padding: 0.55rem clamp(0.5rem, 2vw, 1.25rem);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 0.5px solid #E0E0E0;
+  background: #fff;
+}
+
+.cv-mp-footer span {
+  font-family: 'Ronzino', sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: lowercase;
+  color: #bbb;
+} 
     /* Move title bar down without changing the whole page */
 .cv-page-hero {
   padding-top: calc(var(--nav-height) + 0.75rem);
