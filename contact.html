@@ -75,31 +75,102 @@
   }
 
   .cv-contact-wrap {
-    position: relative;
-    z-index: 3;
-    padding-top: 2.5rem;
-  }
+  position: relative;
+  z-index: 3;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  padding: 0;
+}
 
-  .cv-contact-list {
-    border-top: 0.5px solid rgba(255,255,255,0.45);
-  }
+.cv-contact-bars {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.6rem, 3vh, 2.4rem);
+  padding: clamp(1.5rem, 3vh, 2.5rem) 0;
+}
 
-  .cv-contact-list li {
-    border-bottom: 0.5px solid rgba(255,255,255,0.45);
-  }
+.cv-contact-bar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: clamp(34px, 4.8vh, 42px);
+  padding: 0 1.25rem;
+  text-decoration: none;
+  clip-path: polygon(18px 0, 100% 0, calc(100% - 18px) 100%, 0 100%);
+  transition: transform 0.25s ease, filter 0.25s ease;
+}
 
-  .cv-contact-list .platform {
-    color: rgba(255,255,255,0.7);
-  }
+.cv-contact-bar::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  clip-path: inherit;
+  background: rgba(165,165,165,0.55);
+  transform: translate(10px, 8px);
+  z-index: -1;
+}
 
-  .cv-contact-list a {
-    color: rgba(255,255,255,0.95);
-  }
+.cv-contact-bar:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.04);
+}
 
-  .cv-contact-list a:hover {
-    color: var(--accent);
-  }
+.cv-contact-bar--left {
+  margin-left: clamp(3rem, 7vw, 6rem);
+}
 
+.cv-contact-bar--right {
+  margin-left: auto;
+  margin-right: clamp(3rem, 7vw, 6rem);
+}
+
+.cv-contact-bar--1 {
+  width: min(57vw, 710px);
+  background: #242017;
+}
+
+.cv-contact-bar--2 {
+  width: min(50vw, 620px);
+  background: #2c5544;
+}
+
+.cv-contact-bar--3 {
+  width: min(58vw, 720px);
+  background: #ed6551;
+}
+
+.cv-contact-bar--4 {
+  width: min(50vw, 620px);
+  background: #efd06f;
+}
+
+.cv-contact-bar--5 {
+  width: min(57vw, 710px);
+  background: #f8efdd;
+}
+
+.cv-contact-bar--6 {
+  width: min(50vw, 620px);
+  background: #ed6551;
+}
+
+.cv-contact-bar-text {
+  font-family: 'Ronzino', sans-serif;
+  font-size: clamp(12px, 1.15vw, 15px);
+  letter-spacing: 0.06em;
+  text-transform: lowercase;
+  white-space: nowrap;
+}
+
+.cv-contact-bar-text--light {
+  color: rgba(255,255,255,0.94);
+}
+
+.cv-contact-bar-text--dark {
+  color: #111;
+}
  .cv-footer {
   position: relative;
   z-index: 2;
@@ -149,29 +220,34 @@
 
       <section class="cv-contact-video-section">
 
-      <div class="cv-contact-wrap">
-      <ul class="cv-contact-list">
-      <li>
-        <span class="platform">email</span>
-        <a href="mailto:cesararturovidarojas@gmail.com">cesararturovidarojas@gmail.com</a>
-      </li>
-      <li>
-        <span class="platform">instagram</span>
-        <a href="https://instagram.com/cesarvidalsax" target="_blank" rel="noopener">@cesarvidalsax ↗</a>
-      </li>
-      <li>
-        <span class="platform">bandcamp</span>
-        <a href="https://cesarvidalmusic.bandcamp.com" target="_blank" rel="noopener">cesarvidalmusic.bandcamp.com ↗</a>
-      </li>
-      <li>
-        <span class="platform">apple music</span>
-        <a href="#" target="_blank" rel="noopener">César Vidal on Apple Music ↗</a>
-      </li>
-      <li>
-        <span class="platform">youtube</span>
-        <a href="#" target="_blank" rel="noopener">César Vidal on YouTube ↗</a>
-      </li>
-    </ul>
+  <div class="cv-contact-wrap">
+    <div class="cv-contact-bars">
+
+      <a class="cv-contact-bar cv-contact-bar--left cv-contact-bar--1" href="mailto:cesararturovidarojas@gmail.com">
+        <span class="cv-contact-bar-text cv-contact-bar-text--light">email — cesararturovidarojas@gmail.com</span>
+      </a>
+
+      <a class="cv-contact-bar cv-contact-bar--right cv-contact-bar--2" href="https://instagram.com/cesarvidalsax" target="_blank" rel="noopener">
+        <span class="cv-contact-bar-text cv-contact-bar-text--light">instagram — @cesarvidalsax ↗</span>
+      </a>
+
+      <a class="cv-contact-bar cv-contact-bar--left cv-contact-bar--3" href="https://wa.me/31684089701" target="_blank" rel="noopener">
+        <span class="cv-contact-bar-text cv-contact-bar-text--light">whatsapp me — +31 6 84089701 ↗</span>
+      </a>
+
+      <a class="cv-contact-bar cv-contact-bar--right cv-contact-bar--4" href="https://cesarvidalmusic.bandcamp.com" target="_blank" rel="noopener">
+        <span class="cv-contact-bar-text cv-contact-bar-text--dark">bandcamp — cesarvidalmusic.bandcamp.com ↗</span>
+      </a>
+
+      <a class="cv-contact-bar cv-contact-bar--left cv-contact-bar--5" href="#" target="_blank" rel="noopener">
+        <span class="cv-contact-bar-text cv-contact-bar-text--dark">apple music — césar vidal on apple music ↗</span>
+      </a>
+
+      <a class="cv-contact-bar cv-contact-bar--right cv-contact-bar--6" href="#" target="_blank" rel="noopener">
+        <span class="cv-contact-bar-text cv-contact-bar-text--light">youtube — césar vidal on youtube ↗</span>
+      </a>
+
+    </div>
   </div>
 
 </section>
