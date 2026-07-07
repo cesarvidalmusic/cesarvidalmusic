@@ -89,7 +89,7 @@
 }
 
 .cv-contact-bars {
-  --contact-side-gap: 2cm;
+  --contact-side-gap: var(--pad-x);
   --contact-bar-width: min(58vw, 1080px);
   width: 100%;
   display: flex;
@@ -109,41 +109,21 @@
   background: transparent;
   overflow: visible;
   isolation: isolate;
+  box-sizing: border-box;
   transition: transform 0.25s ease, filter 0.25s ease;
 }
 
-.cv-contact-bar::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: rgba(190,190,190,0.42);
-  clip-path: polygon(12px 0, 100% 0, calc(100% - 12px) 100%, 0 100%);
-  transform: translate(5px, 4px);
-  z-index: 0;
-}
-
-.cv-contact-bar::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: var(--bar-color);
-  clip-path: polygon(12px 0, 100% 0, calc(100% - 12px) 100%, 0 100%);
-  z-index: 1;
-}
-
-.cv-contact-bar:hover {
-  transform: translateY(-2px);
-  filter: brightness(1.04);
-}
-
 .cv-contact-bar--left-group {
+  align-self: flex-start;
   margin-left: var(--contact-side-gap);
+  margin-right: 0;
 }
 
 .cv-contact-bar--right-group {
-  margin-left: calc(100% - var(--contact-side-gap) - var(--contact-bar-width));
+  align-self: flex-end;
+  margin-left: 0;
+  margin-right: var(--contact-side-gap);
 }
-
 .cv-contact-bar--1 {
   --bar-color: rgba(36,32,23,0.76);
 }
