@@ -79,7 +79,7 @@
     background: transparent;
   }
 
- .cv-contact-wrap {
+.cv-contact-wrap {
   position: relative;
   z-index: 3;
   height: 100%;
@@ -103,6 +103,7 @@
   display: flex;
   align-items: center;
   width: var(--contact-bar-width);
+  max-width: calc(100vw - (var(--contact-side-gap) * 2));
   height: clamp(38px, 5vh, 48px);
   padding: 0 1.4rem;
   text-decoration: none;
@@ -110,20 +111,44 @@
   overflow: visible;
   isolation: isolate;
   box-sizing: border-box;
+  flex: none;
   transition: transform 0.25s ease, filter 0.25s ease;
 }
 
+.cv-contact-bar::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(190,190,190,0.38);
+  clip-path: polygon(12px 0, 100% 0, calc(100% - 12px) 100%, 0 100%);
+  transform: translate(5px, 4px);
+  z-index: 0;
+}
+
+.cv-contact-bar::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--bar-color);
+  clip-path: polygon(12px 0, 100% 0, calc(100% - 12px) 100%, 0 100%);
+  z-index: 1;
+}
+
+.cv-contact-bar:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.04);
+}
+
 .cv-contact-bar--left-group {
-  align-self: flex-start;
   margin-left: var(--contact-side-gap);
-  margin-right: 0;
+  margin-right: auto;
 }
 
 .cv-contact-bar--right-group {
-  align-self: flex-end;
-  margin-left: 0;
+  margin-left: auto;
   margin-right: var(--contact-side-gap);
 }
+
 .cv-contact-bar--1 {
   --bar-color: rgba(36,32,23,0.76);
 }
@@ -147,6 +172,7 @@
 .cv-contact-bar--6 {
   --bar-color: rgba(44,85,68,0.76);
 }
+
 .cv-contact-bar-text {
   position: relative;
   z-index: 2;
