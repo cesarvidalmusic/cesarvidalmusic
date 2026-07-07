@@ -82,6 +82,8 @@
 .cv-contact-wrap {
   position: relative;
   z-index: 3;
+  width: 100%;
+  max-width: none;
   height: 100%;
   display: flex;
   align-items: center;
@@ -89,9 +91,11 @@
 }
 
 .cv-contact-bars {
-  --contact-side-gap: var(--pad-x);
+  --contact-left-gap: var(--pad-x);
+  --contact-right-gap: clamp(2rem, 4vw, 3.5rem);
   --contact-bar-width: min(58vw, 1080px);
   width: 100%;
+  max-width: none;
   display: flex;
   flex-direction: column;
   gap: 1cm;
@@ -103,7 +107,7 @@
   display: flex;
   align-items: center;
   width: var(--contact-bar-width);
-  max-width: calc(100vw - (var(--contact-side-gap) * 2));
+  max-width: calc(100vw - var(--contact-left-gap) - var(--contact-right-gap));
   height: clamp(38px, 5vh, 48px);
   padding: 0 1.4rem;
   text-decoration: none;
@@ -140,13 +144,15 @@
 }
 
 .cv-contact-bar--left-group {
-  margin-left: var(--contact-side-gap);
-  margin-right: auto;
+  align-self: flex-start;
+  margin-left: var(--contact-left-gap);
+  margin-right: 0;
 }
 
 .cv-contact-bar--right-group {
-  margin-left: auto;
-  margin-right: var(--contact-side-gap);
+  align-self: flex-end;
+  margin-left: 0;
+  margin-right: var(--contact-right-gap);
 }
 
 .cv-contact-bar--1 {
