@@ -89,7 +89,8 @@
 }
 
 .cv-contact-bars {
-  --contact-edge: clamp(2rem, 4vw, 3.5rem);
+  --contact-side-gap: 2cm;
+  --contact-bar-width: min(58vw, 1080px);
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -101,6 +102,7 @@
   position: relative;
   display: flex;
   align-items: center;
+  width: var(--contact-bar-width);
   height: clamp(38px, 5vh, 48px);
   padding: 0 1.4rem;
   text-decoration: none;
@@ -114,9 +116,9 @@
   content: "";
   position: absolute;
   inset: 0;
-  background: rgba(185,185,185,0.75);
-  clip-path: polygon(38px 0, 100% 0, calc(100% - 38px) 100%, 0 100%);
-  transform: translate(18px, 10px);
+  background: rgba(190,190,190,0.42);
+  clip-path: polygon(12px 0, 100% 0, calc(100% - 12px) 100%, 0 100%);
+  transform: translate(5px, 4px);
   z-index: 0;
 }
 
@@ -125,7 +127,7 @@
   position: absolute;
   inset: 0;
   background: var(--bar-color);
-  clip-path: polygon(38px 0, 100% 0, calc(100% - 38px) 100%, 0 100%);
+  clip-path: polygon(12px 0, 100% 0, calc(100% - 12px) 100%, 0 100%);
   z-index: 1;
 }
 
@@ -134,48 +136,37 @@
   filter: brightness(1.04);
 }
 
-.cv-contact-bar--end-right {
-  margin-left: auto;
-  margin-right: var(--contact-edge);
+.cv-contact-bar--left-group {
+  margin-left: var(--contact-side-gap);
 }
 
-.cv-contact-bar--start-left {
-  margin-left: var(--contact-edge);
-  margin-right: auto;
-}
-
-.cv-contact-bar--long {
-  width: min(72vw, 900px);
-}
-
-.cv-contact-bar--short {
-  width: min(50vw, 640px);
+.cv-contact-bar--right-group {
+  margin-left: calc(100% - var(--contact-side-gap) - var(--contact-bar-width));
 }
 
 .cv-contact-bar--1 {
-  --bar-color: #242017;
+  --bar-color: rgba(36,32,23,0.76);
 }
 
 .cv-contact-bar--2 {
-  --bar-color: #2c5544;
+  --bar-color: rgba(44,85,68,0.76);
 }
 
 .cv-contact-bar--3 {
-  --bar-color: #ed6551;
+  --bar-color: rgba(237,101,81,0.76);
 }
 
 .cv-contact-bar--4 {
-  --bar-color: #efd06f;
+  --bar-color: rgba(239,208,111,0.76);
 }
 
 .cv-contact-bar--5 {
-  --bar-color: #242017;
+  --bar-color: rgba(36,32,23,0.76);
 }
 
 .cv-contact-bar--6 {
-  --bar-color: #2c5544;
+  --bar-color: rgba(44,85,68,0.76);
 }
-
 .cv-contact-bar-text {
   position: relative;
   z-index: 2;
@@ -245,30 +236,29 @@
   <div class="cv-contact-wrap">
     <div class="cv-contact-bars">
 
-      <a class="cv-contact-bar cv-contact-bar--end-right cv-contact-bar--long cv-contact-bar--1" href="mailto:cesararturovidarojas@gmail.com">
-        <span class="cv-contact-bar-text cv-contact-bar-text--light">email — cesararturovidarojas@gmail.com</span>
-      </a>
+      <a class="cv-contact-bar cv-contact-bar--left-group cv-contact-bar--1" href="mailto:cesararturovidarojas@gmail.com">
+  <span class="cv-contact-bar-text cv-contact-bar-text--light">email — cesararturovidarojas@gmail.com</span>
+</a>
 
-      <a class="cv-contact-bar cv-contact-bar--start-left cv-contact-bar--short cv-contact-bar--2" href="https://instagram.com/cesarvidalsax" target="_blank" rel="noopener">
-        <span class="cv-contact-bar-text cv-contact-bar-text--light">instagram — @cesarvidalsax ↗</span>
-      </a>
+<a class="cv-contact-bar cv-contact-bar--right-group cv-contact-bar--2" href="https://instagram.com/cesarvidalsax" target="_blank" rel="noopener">
+  <span class="cv-contact-bar-text cv-contact-bar-text--light">instagram — @cesarvidalsax ↗</span>
+</a>
 
-      <a class="cv-contact-bar cv-contact-bar--end-right cv-contact-bar--long cv-contact-bar--3" href="https://wa.me/31684089701" target="_blank" rel="noopener">
-        <span class="cv-contact-bar-text cv-contact-bar-text--light">whatsapp me — +31 6 84089701 ↗</span>
-      </a>
+<a class="cv-contact-bar cv-contact-bar--left-group cv-contact-bar--3" href="https://wa.me/31684089701" target="_blank" rel="noopener">
+  <span class="cv-contact-bar-text cv-contact-bar-text--light">whatsapp me — +31 6 84089701 ↗</span>
+</a>
 
-      <a class="cv-contact-bar cv-contact-bar--start-left cv-contact-bar--short cv-contact-bar--4" href="https://cesarvidalmusic.bandcamp.com" target="_blank" rel="noopener">
-        <span class="cv-contact-bar-text cv-contact-bar-text--dark">bandcamp — cesarvidalmusic.bandcamp.com ↗</span>
-      </a>
+<a class="cv-contact-bar cv-contact-bar--right-group cv-contact-bar--4" href="https://cesarvidal.bandcamp.com/" target="_blank" rel="noopener">
+  <span class="cv-contact-bar-text cv-contact-bar-text--dark">bandcamp — cesarvidal.bandcamp.com ↗</span>
+</a>
 
-      <a class="cv-contact-bar cv-contact-bar--end-right cv-contact-bar--long cv-contact-bar--5" href="#" target="_blank" rel="noopener">
-        <span class="cv-contact-bar-text cv-contact-bar-text--light">apple music — césar vidal on apple music ↗</span>
-      </a>
+<a class="cv-contact-bar cv-contact-bar--left-group cv-contact-bar--5" href="https://music.apple.com/cl/artist/c%C3%A9sar-vidal/1794980592" target="_blank" rel="noopener">
+  <span class="cv-contact-bar-text cv-contact-bar-text--light">apple music — césar vidal on apple music ↗</span>
+</a>
 
-      <a class="cv-contact-bar cv-contact-bar--start-left cv-contact-bar--short cv-contact-bar--6" href="#" target="_blank" rel="noopener">
-        <span class="cv-contact-bar-text cv-contact-bar-text--light">youtube — césar vidal on youtube ↗</span>
-      </a>
-
+<a class="cv-contact-bar cv-contact-bar--right-group cv-contact-bar--6" href="https://youtube.com/@cesarvidalsax?si=Vrq0HSzG9foZ14mA" target="_blank" rel="noopener">
+  <span class="cv-contact-bar-text cv-contact-bar-text--light">youtube — césar vidal on youtube ↗</span>
+</a>
     </div>
   </div>
 
