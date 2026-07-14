@@ -214,46 +214,46 @@
   const PROJECTS = [
     {
       title: "Des Visages",
-      image: "img/cover-des-visages.jpg",
+      image: "img/cover-des-visages.webp",
       link: "des-visages.html"
     },
     {
       title: "NUBES",
-      image: "img/cover-nubes.jpg",
+      image: "img/cover-nubes.webp",
       link: "nubes.html",
       italic: true
     },
     {
       title: "SPAM",
-      image: "img/cover-spam.jpg",
+      image: "img/cover-spam.webp",
       link: "spam.html",
       italic: true
     },
     {
       title: "César Vidal & Artikulation Band",
-      image: "img/cover-artikulation-band.jpg",
+      image: "img/cover-artikulation-band.webp",
       link: "artikulation-band.html"
     },
     {
       title: "Solo Project",
-      image: "img/cover-solo-project.jpg",
+      image: "img/cover-solo-project.webp",
       link: "solo-project.html"
     },
     {
       title: "Des Visages (EP)",
-      image: "img/cover-des-visages-ep.jpg",
+      image: "img/cover-des-visages-ep.webp",
       link: "des-visages-ep.html",
       italic: true
     },
     {
       title: "aleas",
-      image: "img/cover-aleas.jpg",
+      image: "img/cover-aleas.webp",
       link: "aleas.html",
       italic: true
     },
     {
       title: "Flor de Loto",
-      image: "img/cover-flor-de-loto.jpg",
+      image: "img/cover-flor-de-loto.webp",
       link: "flor-de-loto.html",
       italic: true
     }
@@ -294,7 +294,7 @@
     card.dataset.project = project.title;
 
     card.innerHTML = `
-      <img class="cv-mp-cover" src="${project.image}" alt="${project.title}" />
+      <img class="cv-mp-cover" src="${project.image}" alt="${project.title}" loading="lazy" decoding="async" />
       <span class="cv-mp-card-title">
         ${project.italic ? "<em>" + project.title + "</em>" : project.title}
       </span>
