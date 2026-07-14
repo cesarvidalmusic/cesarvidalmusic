@@ -9,109 +9,125 @@
   <link rel="preload" href="fonts/Ronzino-Regular.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="stylesheet" href="css/style.css" />
   <style>
-    html, body { height: 100%; overflow: hidden; }
+  html, body {
+    height: 100%;
+    overflow: hidden;
+  }
 
-    .cv-page {
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-    }
+  .cv-page {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: #fff;
+  }
 
-    .cv-page-content {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      min-height: 0;
-      padding-top: 0;
-    }
+  .cv-page-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    padding-top: 0;
+  }
 
-    .cv-bio-grid {
-      flex: 1;
-      display: grid;
-      grid-template-columns: 55fr 45fr;
-      min-height: 0;
-      overflow: hidden;
-    }
+  .cv-page-hero {
+    padding-top: calc(var(--nav-height) + 0.75rem);
+    flex-shrink: 0;
+  }
 
-    /* Text column: clips overflow so scrollbar never shows */
-    .cv-bio-text {
-      position: relative;
-      border-right: 0.5px solid #E0E0E0;
-      overflow: hidden;
-    }
+  .cv-bio-layout {
+    flex: none;
+    height: calc(100vh - (var(--nav-height) * 2) - 52px);
+    display: grid;
+    grid-template-columns: 50% 50%;
+    min-height: 0;
+    overflow: hidden;
+  }
 
-    /* The scrolling track — positioned absolutely so we control it fully */
-    .cv-bio-track {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      will-change: transform;
-    }
+  .cv-bio-image-panel {
+    position: relative;
+    overflow: hidden;
+    min-height: 0;
+  }
 
-    /* Each unit = one block + one separator. We pad inside the block. */
-    .cv-bio-unit {
-      padding: clamp(0.75rem, 1.5vw, 1rem) var(--pad-x);
-    }
+  .cv-bio-picture {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
 
-    .cv-bio-unit p {
-      font-family: 'Ronzino', sans-serif;
-      font-weight: 400;
-      font-size: clamp(10.5px, 0.95vw, 13px);
-      line-height: 1.58;
-      letter-spacing: -0.01em;
-      color: #333;
-      text-align: justify;
-      hyphens: auto;
-      margin-bottom: 0.6rem;
-    }
-    .cv-bio-unit p:last-child { margin-bottom: 0; }
+  .cv-bio-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center center;
+    display: block;
+  }
 
-    .cv-bio-sep {
-      text-align: center;
-      font-family: 'Ronzino', sans-serif;
-      font-size: 10px;
-      color: #ccc;
-      letter-spacing: 0.1em;
-      padding: 0.5rem var(--pad-x);
-      user-select: none;
-    }
+  .cv-bio-credit {
+    position: absolute;
+    bottom: clamp(0.5rem, 1.5vw, 1rem);
+    left: clamp(0.75rem, 2vw, 1.25rem);
+    font-family: 'Ronzino', sans-serif;
+    font-size: clamp(9px, 0.9vw, 11px);
+    letter-spacing: 0.16em;
+    color: rgba(255,255,255,0.45);
+    text-transform: lowercase;
+  }
 
-    .cv-bio-photo {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: center bottom;
-      display: block;
-    }
+  .cv-bio-text-panel {
+    min-height: 0;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+    padding: clamp(1.6rem, 3vw, 2.5rem) var(--pad-x) clamp(1rem, 2vw, 1.5rem) clamp(2rem, 4vw, 4rem);
+    box-sizing: border-box;
+    overflow: hidden;
+    border-left: 0.5px solid #E0E0E0;
+  }
 
-    .cv-bio-footer {
-      flex-shrink: 0;
-      padding: 0.55rem clamp(0.5rem, 2vw, 1.25rem);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-top: 0.5px solid #E0E0E0;
-    }
-    .cv-bio-footer span {
-      font-family: 'Ronzino', sans-serif;
-      font-size: 10px;
-      letter-spacing: 0.12em;
-      text-transform: lowercase;
-      color: #bbb;
-    }
-        /* Move bio title bar down without affecting page height */
-    .cv-page-hero {
-      padding-top: calc(var(--nav-height) + 0.75rem);
-      flex-shrink: 0;
-    }
+  .cv-bio-copy {
+    max-width: 820px;
+    margin-left: auto;
+    font-family: 'Ronzino', sans-serif;
+    color: #0A0A0A;
+    text-align: right;
+  }
 
-    /* Reduce only the bio area height so the whole page stays fixed */
-    .cv-bio-grid {
-      height: calc(100vh - (var(--nav-height) * 2) - 52px);
-    }
-  </style>
+  .cv-bio-copy p {
+    margin: 0 0 1.15rem 0;
+    font-size: clamp(13.5px, 1.05vw, 18px);
+    line-height: 1.38;
+    letter-spacing: -0.015em;
+  }
+
+  .cv-bio-copy p:last-child {
+    margin-bottom: 0;
+  }
+
+  .cv-bio-copy em {
+    font-style: italic;
+    font-weight: 700;
+  }
+
+  .cv-bio-footer {
+    flex-shrink: 0;
+    padding: 0.55rem clamp(0.5rem, 2vw, 1.25rem);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 0.5px solid #E0E0E0;
+    background: #fff;
+  }
+
+  .cv-bio-footer span {
+    font-family: 'Ronzino', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: lowercase;
+    color: #bbb;
+  }
+</style>
 </head>
 <body>
 
@@ -131,117 +147,52 @@
 
     <main class="cv-page-content">
 
-      <div class="cv-page-hero">
-        <h1 class="cv-page-title">bio</h1>
+  <div class="cv-page-hero">
+    <h1 class="cv-page-title">bio</h1>
+  </div>
+
+  <section class="cv-bio-layout">
+
+    <div class="cv-bio-image-panel">
+      <picture class="cv-bio-picture">
+        <source srcset="img/bio-photo.webp" type="image/webp">
+        <img
+          class="cv-bio-photo"
+          src="img/bio-photo.JPG"
+          alt="César Vidal — photo by Orlando Pedroso"
+          decoding="async"
+          fetchpriority="high"
+        />
+      </picture>
+
+      <span class="cv-bio-credit">photo by Orlando Pedroso</span>
+    </div>
+
+    <article class="cv-bio-text-panel">
+      <div class="cv-bio-copy">
+
+        <p>César Vidal is a Chilean saxophonist, composer, and improviser based in Amsterdam. His artistic practice explores the relationship between acoustic and electronic sound, with a particular interest in the hybrid space created between the saxophone and digital processes. Through improvisation, he investigates how sound sources of different natures can develop a shared language, bringing together acoustic and electronic elements into a common sonic environment.</p>
+
+        <p>He studied classical composition at the University of Chile, working with renowned Chilean and international composers, before completing a Master's degree in Jazz Saxophone at the Conservatorium van Amsterdam, where he studied with leading Dutch musicians such as Ben van Gelder and Simon Rigter.</p>
+
+        <p>Throughout his career, Vidal has collaborated with musicians from the Chilean and international scenes, participating in acclaimed recordings such as <strong><em>Chincol</em></strong> (2021) by Juan Pablo Salvo and <strong><em>CODEX Big Band</em></strong> (2022) by Alfredo Tauber, both recipients of the Pulsar Award for Best Jazz Artist, the most important music recognition in the Chilean music industry. He has also contributed as a sideman to numerous jazz recordings and developed a diverse discography of his own, including <strong><em>SPAM</em></strong> (2026), <strong><em>NUBES</em></strong> (2025), and <strong><em>aleas</em></strong> (2026).</p>
+
+        <p>Vidal has performed at festivals and venues across Chile and Europe, including BIMHUIS (Amsterdam), JazzBer and Getxo Jazz (Basque Country), La Fête de la Musique (Geneva), and Jazzahead (Bremen). He leads and co-leads several projects, including César Vidal &amp; Artikulation Band, a contemporary jazz ensemble with electronics that won second prize at the Getxo Jazz Ensemble Competition 2025 and opened for Grammy Award-winning vocalist Cécile McLorin Salvant.</p>
+
+        <p>He is also the co-founder of Des Visages, a saxophone and electronics duo focused on improvisation and sound exploration. The project has released two recordings and has toured across Europe, performing in cities such as London, Amsterdam, Copenhagen, Paris, Bern, Marseille, and Geneva.</p>
+
       </div>
+    </article>
 
-      <div class="cv-bio-grid">
+  </section>
 
-        <div class="cv-bio-text" id="bioWrap">
-          <div class="cv-bio-track" id="bioTrack">
-            <!-- Units injected by JS so loop is always clean -->
-          </div>
-        </div>
-
-        <div style="position:relative; overflow:hidden;">
-          <img
-            class="cv-bio-photo"
-            src="img/bio-photo.JPG"
-            alt="César Vidal — photo by Orlando Pedroso"
-          />
-          <span style="
-            position:absolute;
-            bottom: clamp(0.5rem, 1.5vw, 1rem);
-            right: clamp(0.75rem, 2vw, 1.25rem);
-            font-family:'Ronzino',sans-serif;
-            font-size: clamp(9px, 0.9vw, 11px);
-            letter-spacing: 0.16em;
-            color: rgba(255,255,255,0.45);
-          ">photo by Orlando Pedroso</span>
-        </div>
-
-      </div>
-
-    </main>
-
+</main>
     <footer class="cv-bio-footer">
       <span>© 2026 César Vidal</span>
       <span>cesarvidalmusic.art</span>
     </footer>
 
   </div>
-
-  <script>
-    const BIO_TEXT = `
-      <p>César Vidal is a Chilean saxophonist, composer, and improviser based in Amsterdam. His artistic practice explores the relationship between acoustic and electronic sound, with a particular interest in the hybrid space created between the saxophone and digital processes. Through improvisation, he investigates how sound sources of different natures can develop a shared language, bringing together acoustic and electronic elements into a common sonic environment.</p>
-      <p>He studied classical composition at the University of Chile, working with renowned Chilean and international composers, before completing a Master's degree in Jazz Saxophone at the Conservatorium van Amsterdam, where he studied with leading Dutch musicians such as Ben van Gelder and Simon Rigter.</p>
-      <p>Throughout his career, Vidal has collaborated with musicians from the Chilean and international scenes, participating in acclaimed recordings such as <em>Chincol</em> (2021) by Juan Pablo Salvo and <em>CODEX Big Band</em> (2022) by Alfredo Tauber, both recipients of the Pulsar Award for Best Jazz Artist, the most important music recognition in the Chilean music industry. He has also contributed as a sideman to numerous jazz recordings and developed a diverse discography of his own, including <em>SPAM</em> (2026), <em>NUBES</em> (2025), and <em>aleas</em> (2026).</p>
-      <p>Vidal has performed at festivals and venues across Chile and Europe, including BIMHUIS (Amsterdam), JazzBer and Getxo Jazz (Basque Country), La Fête de la Musique (Geneva), and Jazzahead (Bremen). He leads and co-leads several projects, including César Vidal &amp; Artikulation Band, a contemporary jazz ensemble with electronics that won second prize at the Getxo Jazz Ensemble Competition 2025 and opened for Grammy Award-winning vocalist Cécile McLorin Salvant.</p>
-      <p>He is also the co-founder of Des Visages, a saxophone and electronics duo focused on improvisation and sound exploration. The project has released two recordings and has toured across Europe, performing in cities such as London, Amsterdam, Copenhagen, Paris, Bern, Marseille, and Geneva.</p>
-    `;
-
-    const SEP_HTML = `<div class="cv-bio-sep">— — — — — — — — — — —</div>`;
-
-    function makeUnit() {
-      const unit = document.createElement('div');
-      unit.className = 'cv-bio-unit';
-      unit.innerHTML = BIO_TEXT;
-      return unit;
-    }
-
-    const track = document.getElementById('bioTrack');
-
-    // Build: unit A + sep + unit B + sep
-    // We scroll through unit A + sep (= loopHeight), then silently reset.
-    // Unit B ensures content is always visible during the reset.
-    const unitA = makeUnit();
-    const sep1  = document.createElement('div');
-    sep1.innerHTML = SEP_HTML;
-
-    const unitB = makeUnit();
-    const sep2  = document.createElement('div');
-    sep2.innerHTML = SEP_HTML;
-
-    track.appendChild(unitA);
-    track.appendChild(sep1);
-    track.appendChild(unitB);
-    track.appendChild(sep2);
-
-    // Speed: px per second. Lower = slower.
-    const SPEED = 10;
-
-    let pos = 0;
-    let loopHeight = 0;
-    let lastTime = null;
-
-    function measure() {
-      // loopHeight = height of exactly one unit + one separator
-      loopHeight = unitA.offsetHeight + sep1.firstElementChild.offsetHeight;
-    }
-
-    function tick(ts) {
-      if (!lastTime) lastTime = ts;
-      const dt = (ts - lastTime) / 1000;
-      lastTime = ts;
-
-      pos += SPEED * dt;
-
-      // Silent reset: when we've scrolled exactly one loop unit,
-      // snap back — visually seamless because unitB looks identical to unitA
-      if (pos >= loopHeight) {
-        pos -= loopHeight;
-      }
-
-      track.style.transform = `translateY(${-pos}px)`;
-      requestAnimationFrame(tick);
-    }
-
-    // 3 second pause before scroll begins, then measure and start
-    setTimeout(() => {
-      measure();
-      requestAnimationFrame(tick);
-    }, 3200);
-  </script>
 
 </body>
 </html>
