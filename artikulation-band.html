@@ -7,29 +7,106 @@
   <link rel="preload" href="fonts/Ronzino-BoldOblique.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="preload" href="fonts/Ronzino-Regular.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="stylesheet" href="css/style.css" />
+
+  <style>
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      background: #000;
+    }
+
+    .cv-page {
+      position: relative;
+      height: 100vh;
+      overflow: hidden;
+      background: #000;
+    }
+
+    .cv-ab-bg-video {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+      object-position: center center;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .cv-nav {
+      background: transparent;
+    }
+
+    .cv-nav.cv-nav--dark a {
+      color: rgba(255,255,255,0.72);
+    }
+
+    .cv-nav.cv-nav--dark a:hover {
+      color: var(--accent);
+    }
+
+    .cv-nav a.active {
+      color: var(--accent);
+    }
+
+    .cv-page-content {
+      position: relative;
+      z-index: 2;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      padding-top: var(--nav-height);
+      background: transparent;
+    }
+
+    .cv-page-hero {
+      display: block;
+      border-bottom: 0;
+      background: transparent;
+    }
+
+    .cv-page-title {
+      color: #ffffff;
+    }
+
+    .cv-ab-video-section {
+      position: relative;
+      z-index: 2;
+      flex: 1;
+      min-height: 0;
+      background: transparent;
+    }
+  </style>
 </head>
+
 <body>
   <div class="cv-page">
-    <nav class="cv-nav cv-nav--light">
+
+    <video class="cv-ab-bg-video" autoplay muted loop playsinline preload="auto">
+      <source src="videos/artikulation-band.mp4" type="video/mp4">
+    </video>
+
+    <nav class="cv-nav cv-nav--dark">
       <ul>
         <li><a href="index.html">home</a></li>
         <li><a href="bio.html">bio</a></li>
-        <li><a href="music-projects.html">music &amp; projects</a></li>
+        <li><a href="music-projects.html" class="active">music &amp; projects</a></li>
         <li><a href="https://syos.co/en/blogs/our-artists/cesar-vidal" target="_blank" rel="noopener">syos artist</a></li>
         <li><a href="gonzalez-reeds.html">gonzalez reeds</a></li>
         <li><a href="merch.html">merch</a></li>
         <li><a href="contact.html">contact</a></li>
       </ul>
     </nav>
+
     <main class="cv-page-content">
       <div class="cv-page-hero">
         <h1 class="cv-page-title">César Vidal & Artikulation Band</h1>
       </div>
+
+      <section class="cv-ab-video-section"></section>
     </main>
-    <footer class="cv-footer">
-      <span>© 2026 César Vidal</span>
-      <span>cesarvidalmusic.art</span>
-    </footer>
+
   </div>
 </body>
 </html>
