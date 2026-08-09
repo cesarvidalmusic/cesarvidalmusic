@@ -6,9 +6,11 @@
     "#efd06f"  // yellow
   ];
 
-  const TRANSITION_DURATION = 1000; // 1 segundo cambiando de color
-  const HOLD_DURATION = 1000;       // 1 segundo quieto en cada color
-  const UPDATE_INTERVAL = 80;       // suavidad del cambio
+  const TRANSITION_DURATION = 2600; // duración de transición entre colores
+  const HOLD_DURATION = 900;        // tiempo quieto en cada color
+
+  const FAVICON_SIZE = 128;         // resolución interna del icono
+  const CIRCLE_RADIUS = 54;         // tamaño visible del círculo
 
   let favicon = document.querySelector("link[rel='icon']");
 
@@ -21,13 +23,14 @@
   favicon.type = "image/png";
 
   const canvas = document.createElement("canvas");
-  canvas.width = 64;
-  canvas.height = 64;
+  canvas.width = FAVICON_SIZE;
+  canvas.height = FAVICON_SIZE;
 
   const ctx = canvas.getContext("2d");
 
   function hexToRgb(hex) {
     const clean = hex.replace("#", "");
+
     return {
       r: parseInt(clean.substring(0, 2), 16),
       g: parseInt(clean.substring(2, 4), 16),
@@ -35,13 +38,19 @@
     };
   }
 
+  function smoothStep(t) {
+    return t * t * (3 - 2 * t);
+  }
+
   function mixColor(colorA, colorB, amount) {
+    const t = smoothStep(amount);
+
     const a = hexToRgb(colorA);
     const b = hexToRgb(colorB);
 
-    const r = Math.round(a.r + (b.r - a.r) * amount);
-    const g = Math.round(a.g + (b.g - a.g) * amount);
-    const bl = Math.round(a.b + (b.b - a.b) * amount);
+    const r = Math.round(a.r + (b.r - a.r) * t);
+    const g = Math.round(a.g + (b.g - a.g) * t);
+    const bl = Math.round(a.b + (b.b - a.b) * t);
 
     return `rgb(${r}, ${g}, ${bl})`;
   }
@@ -50,7 +59,14 @@
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     ctx.beginPath();
-    ctx.arc(32, 32, 25, 0, Math.PI * 2);
+    ctx.arc(
+      FAVICON_SIZE / 2,
+      FAVICON_SIZE / 2,
+      CIRCLE_RADIUS,
+      0,
+      Math.PI * 2
+    );
+
     ctx.fillStyle = color;
     ctx.fill();
 
@@ -59,10 +75,9 @@
 
   let colorIndex = 0;
   let phase = "hold";
-  let phaseStart = Date.now();
+  let phaseStart = performance.now();
 
-  function update() {
-    const now = Date.now();
+  function update(now) {
     const elapsed = now - phaseStart;
 
     const currentColor = COLORS[colorIndex];
@@ -87,8 +102,10 @@
         phaseStart = now;
       }
     }
+
+    requestAnimationFrame(update);
   }
 
   drawFavicon(COLORS[0]);
-  setInterval(update, UPDATE_INTERVAL);
+  requestAnimationFrame(update);
 })();
