@@ -3,16 +3,180 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="González Reeds — César Vidal" />
-  <title>González Reeds — César Vidal</title>
+  <meta name="description" content="Gonzalez Reeds — César Vidal" />
+  <title>Gonzalez Reeds — César Vidal</title>
+
   <link rel="preload" href="fonts/Ronzino-BoldOblique.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="preload" href="fonts/Ronzino-Regular.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="fonts/Ronzino-Oblique.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='25' fill='%23242017'/%3E%3C/svg%3E">
-<script defer src="favicon.js"></script>
+  <script defer src="favicon.js"></script>
   <link rel="stylesheet" href="css/style.css" />
-</head>
-<body>
 
+  <style>
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .cv-page {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .cv-page-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      padding-top: 0;
+    }
+
+    .cv-page-hero {
+      padding-top: calc(var(--nav-height) + 0.75rem);
+      flex-shrink: 0;
+    }
+
+    .cv-gonzalez-stage {
+      flex: 1;
+      min-height: 0;
+      padding: 0 var(--pad-x) 1rem;
+      display: grid;
+      grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+      gap: clamp(2rem, 5vw, 5rem);
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .cv-gonzalez-text {
+      max-width: 620px;
+      padding-left: clamp(0rem, 1vw, 1rem);
+      font-family: 'Ronzino', sans-serif;
+      color: #0A0A0A;
+    }
+
+    .cv-gonzalez-logo {
+      display: block;
+      width: clamp(190px, 22vw, 320px);
+      height: auto;
+      margin: 0 0 clamp(1.6rem, 3vh, 2.4rem);
+    }
+
+    .cv-gonzalez-kicker {
+      margin: 0 0 0.7rem;
+      font-size: 10px;
+      line-height: 1;
+      letter-spacing: 0.16em;
+      text-transform: lowercase;
+      color: #C8400A;
+    }
+
+    .cv-gonzalez-copy {
+      margin: 0 0 1.1rem;
+      font-size: clamp(13px, 1.05vw, 16px);
+      line-height: 1.55;
+      letter-spacing: 0.005em;
+      color: #222;
+    }
+
+    .cv-gonzalez-quote {
+      margin: clamp(1.3rem, 2.5vh, 2rem) 0;
+      padding: 0 0 0 clamp(1rem, 1.5vw, 1.5rem);
+      border-left: 0.5px solid #C8400A;
+      font-family: 'Ronzino', sans-serif;
+      font-style: oblique;
+      font-size: clamp(13px, 1.05vw, 16px);
+      line-height: 1.55;
+      letter-spacing: 0.005em;
+      color: #111;
+    }
+
+    .cv-gonzalez-link {
+      display: inline-block;
+      margin-top: 0.15rem;
+      font-family: 'Ronzino', sans-serif;
+      font-size: 10.5px;
+      line-height: 1;
+      letter-spacing: 0.14em;
+      text-transform: lowercase;
+      color: #C8400A;
+      text-decoration: none;
+      border-bottom: 0.5px solid #C8400A;
+      padding-bottom: 3px;
+      transition: transform 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+      transform-origin: left center;
+    }
+
+    .cv-gonzalez-link:hover {
+      transform: scale(1.04);
+      color: #0A0A0A;
+      border-color: #0A0A0A;
+    }
+
+    .cv-reeds-visuals {
+      --reed-package-height: clamp(255px, 39vh, 385px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: clamp(1.3rem, 3vw, 3rem);
+      min-width: 0;
+    }
+
+    .cv-reed-card {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      line-height: 0;
+      transition: transform 0.35s ease, filter 0.35s ease;
+      transform-origin: center center;
+    }
+
+    .cv-reed-card:hover {
+      transform: scale(1.065);
+      filter: brightness(1.03);
+    }
+
+    .cv-reed-img {
+      display: block;
+      width: auto;
+      max-width: none;
+      object-fit: contain;
+    }
+
+    .cv-reed-card--local .cv-reed-img {
+      height: calc(var(--reed-package-height) * 1.39);
+    }
+
+    .cv-reed-card--malbec .cv-reed-img {
+      height: calc(var(--reed-package-height) * 1.15);
+    }
+
+    .cv-footer {
+      flex-shrink: 0;
+      padding: 0.55rem clamp(0.5rem, 2vw, 1.25rem);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 0.5px solid #E0E0E0;
+      background: #fff;
+    }
+
+    .cv-footer span {
+      font-family: 'Ronzino', sans-serif;
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: lowercase;
+      color: #bbb;
+    }
+  </style>
+</head>
+
+<body>
   <div class="cv-page">
 
     <nav class="cv-nav cv-nav--light">
@@ -29,19 +193,48 @@
 
     <main class="cv-page-content">
       <div class="cv-page-hero">
-        <h1 class="cv-page-title">González Reeds</h1>
+        <h1 class="cv-page-title">Gonzalez Reeds</h1>
       </div>
-      <div style="padding: 2.5rem 3rem;">
-        <p style="font-family:'Ronzino',sans-serif; font-size:14px; color:#555; line-height:1.8; margin-bottom:1.5rem;">
-          César Vidal is a proud González Reeds artist.
-        </p>
-        <a
-          href="https://www.gonzalezreeds.com/"
-          target="_blank"
-          rel="noopener"
-          style="font-family:'Ronzino',sans-serif; font-size:11px; letter-spacing:0.14em; text-transform:lowercase; color:#C8400A; border-bottom:0.5px solid #C8400A; padding-bottom:2px;"
-        >visit gonzalezreeds.com ↗</a>
-      </div>
+
+      <section class="cv-gonzalez-stage">
+
+        <div class="cv-gonzalez-text">
+          <img class="cv-gonzalez-logo" src="img/logo-gonzalez.webp" alt="Gonzalez Reeds logo" />
+
+          <p class="cv-gonzalez-kicker">official reed partner</p>
+
+          <p class="cv-gonzalez-copy">
+            César Vidal proudly plays Gonzalez Reeds, the Argentine reed maker based in Mendoza whose work is rooted in carefully cultivated Arundo Donax cane and a precise process of selection, cutting, measuring and finishing. Their reeds are produced in Argentina, at the foot of the Andes, with a strong connection to the land where the cane is grown.
+          </p>
+
+          <p class="cv-gonzalez-copy">
+            Gonzalez Reeds supports César’s work as a saxophonist, improviser and composer. He has played their reeds for several years, and among their different cuts, Local Jazz 627 and Malbec have become his preferred models for alto saxophone.
+          </p>
+
+          <blockquote class="cv-gonzalez-quote">
+            “I have played Gonzalez Reeds for several years, and I genuinely trust their quality. Both Local Jazz 627 and Malbec give me the flexibility I need for jazz, experimental music and other situations where the saxophone has to move quickly between different sound worlds. Their response feels direct, open and consistent. I am also drawn to the fact that they are made in Mendoza, Argentina: a Latin American product with a level of craft, reliability and refinement that stands confidently beside the most established reed makers I have used in Europe.”
+          </blockquote>
+
+          <p class="cv-gonzalez-copy">
+            Visit their website to discover more about their work, artists and full catalogue.
+          </p>
+
+          <a class="cv-gonzalez-link" href="https://www.gonzalezreeds.com/" target="_blank" rel="noopener">
+            visit gonzalezreeds.com ↗
+          </a>
+        </div>
+
+        <div class="cv-reeds-visuals">
+          <a class="cv-reed-card cv-reed-card--local" href="https://www.gonzalezreeds.com/products/alto-jazz-local-627-2/" target="_blank" rel="noopener" aria-label="Local Jazz 627 reeds">
+            <img class="cv-reed-img" src="img/local-jazz.webp" alt="Gonzalez Reeds Local Jazz 627 for alto saxophone" />
+          </a>
+
+          <a class="cv-reed-card cv-reed-card--malbec" href="https://www.gonzalezreeds.com/products/alto-malbec-2/" target="_blank" rel="noopener" aria-label="Malbec reeds">
+            <img class="cv-reed-img" src="img/malbec.webp" alt="Gonzalez Reeds Malbec for alto saxophone" />
+          </a>
+        </div>
+
+      </section>
     </main>
 
     <footer class="cv-footer">
@@ -50,6 +243,5 @@
     </footer>
 
   </div>
-
 </body>
 </html>
