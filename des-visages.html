@@ -15,8 +15,8 @@
 
   <style>
     :root {
-  --dv-red: #C40F14;
-}
+      --dv-red: #C40F14;
+    }
 
     html, body {
       height: 100%;
@@ -78,7 +78,7 @@
       flex: 1;
       min-height: 0;
       display: grid;
-      grid-template-columns: minmax(48vw, 55vw) minmax(0, 1fr);
+      grid-template-columns: minmax(34vw, 40vw) minmax(0, 1fr);
       align-items: center;
       padding: 0 var(--pad-x) 2.15rem 0;
       box-sizing: border-box;
@@ -92,24 +92,24 @@
       justify-content: flex-start;
       min-width: 0;
       height: 100%;
-      padding-left: clamp(1.5rem, 3vw, 3.5rem);
+      padding-left: clamp(0.15rem, 0.8vw, 1rem);
       box-sizing: border-box;
     }
 
     .cv-dv-copy {
       width: 100%;
-      max-width: 690px;
+      max-width: 760px;
       font-family: 'Ronzino', sans-serif;
       color: #ffffff;
     }
 
     .cv-page-title {
-      margin: 0 0 clamp(1rem, 2vh, 1.5rem);
+      margin: 0 0 clamp(0.9rem, 1.8vh, 1.35rem);
       color: #ffffff;
     }
 
     .cv-dv-copy p {
-      margin: 0 0 0.8rem;
+      margin: 0 0 0.72rem;
       font-size: clamp(12px, 0.92vw, 14.2px);
       line-height: 1.43;
       letter-spacing: 0.002em;
@@ -123,8 +123,7 @@
     }
 
     .cv-dv-listen-area {
-      margin-top: clamp(1.2rem, 2.3vh, 1.8rem);
-      min-height: 82px;
+      margin-top: clamp(1rem, 2vh, 1.45rem);
       display: flex;
       flex-direction: column;
       align-items: flex-start;
@@ -132,46 +131,27 @@
       gap: 0.55rem;
     }
 
-    .cv-dv-listen-links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.85rem 1.2rem;
-    }
-
-    .cv-dv-link {
-      display: inline-block;
-      font-family: 'Ronzino', sans-serif;
+    .cv-dv-release-note {
+      margin: 0;
       font-size: clamp(12px, 0.92vw, 14.2px);
       line-height: 1.43;
       letter-spacing: 0.002em;
-      text-transform: none;
-      font-weight: 400;
-      font-style: normal;
-      color: #ffffff;
-      text-decoration: none;
-      border-bottom: 0.5px solid #ffffff;
-      padding-bottom: 2px;
-      transition: transform 0.25s ease, opacity 0.25s ease;
-      transform-origin: left center;
-    }
-
-    .cv-dv-link:hover {
-      color: #ffffff;
-      transform: scale(1.04);
-      opacity: 0.78;
+      color: rgba(255,255,255,0.94);
+      text-align: left;
     }
 
     .cv-dv-bandcamp {
       width: 100%;
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
+      max-width: 760px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
     }
 
     .cv-dv-bandcamp iframe {
       display: block;
       width: 100%;
-      max-width: 520px;
+      height: 120px;
       border: 0;
     }
 
@@ -248,29 +228,22 @@
             </p>
 
             <div class="cv-dv-listen-area">
-              <div class="cv-dv-listen-links">
-                <a class="cv-dv-link" href="https://cesarvidal.bandcamp.com/" target="_blank" rel="noopener">
-                  listen on bandcamp ↗
-                </a>
-
-                <a class="cv-dv-link" href="music-projects.html" target="_blank" rel="noopener">
-                  back to music &amp; projects ↗
-                </a>
-              </div>
+              <p class="cv-dv-release-note">
+                Listen to our two releases:
+              </p>
 
               <div class="cv-dv-bandcamp">
-                <!--
-                Cuando tengas los minireproductores de Bandcamp, pega aquí los dos iframes.
-                Ejemplo de estructura:
-
-                <iframe style="border: 0; width: 100%; height: 120px;" src="AQUI_VA_EL_EMBED_DE_BANDCAMP" seamless>
-                  <a href="AQUI_VA_EL_LINK_DEL_ALBUM">Album by Des Visages</a>
+                <iframe
+                  src="https://bandcamp.com/EmbeddedPlayer/album=2317617485/size=small/bgcol=333333/linkcol=e99708/tracklist=false/transparent=true/"
+                  seamless>
+                  <a href="https://desvisages.bandcamp.com/album/aleas">aleas by Des Visages</a>
                 </iframe>
 
-                <iframe style="border: 0; width: 100%; height: 120px;" src="AQUI_VA_EL_EMBED_DE_BANDCAMP" seamless>
-                  <a href="AQUI_VA_EL_LINK_DEL_ALBUM">Album by Des Visages</a>
+                <iframe
+                  src="https://bandcamp.com/EmbeddedPlayer/album=3382948755/size=small/bgcol=333333/linkcol=0f91ff/tracklist=false/transparent=true/"
+                  seamless>
+                  <a href="https://desvisages.bandcamp.com/album/des-visages">Des Visages by Des Visages</a>
                 </iframe>
-                -->
               </div>
             </div>
           </div>
