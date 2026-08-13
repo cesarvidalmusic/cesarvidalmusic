@@ -64,20 +64,11 @@
 }
 
     .cv-gonzalez-text {
-      max-width: 625px;
-      padding-left: clamp(0rem, 1vw, 1rem);
-      font-family: 'Ronzino', sans-serif;
-      color: #0A0A0A;
-    }
-
-    .cv-gonzalez-kicker {
-      margin: 0 0 0.6rem;
-      font-size: 9.5px;
-      line-height: 1;
-      letter-spacing: 0.16em;
-      text-transform: lowercase;
-      color: #C8400A;
-    }
+  max-width: 720px;
+  padding-left: clamp(0rem, 1vw, 1rem);
+  font-family: 'Ronzino', sans-serif;
+  color: #0A0A0A;
+}
 
     .cv-gonzalez-copy {
       margin: 0 0 0.8rem;
@@ -112,20 +103,22 @@
     }
 
     .cv-gonzalez-link {
-      display: inline-block;
-      margin-top: 0.05rem;
-      font-family: 'Ronzino', sans-serif;
-      font-size: 9.8px;
-      line-height: 1;
-      letter-spacing: 0.14em;
-      text-transform: lowercase;
-      color: #C8400A;
-      text-decoration: none;
-      border-bottom: 0.5px solid #C8400A;
-      padding-bottom: 3px;
-      transition: transform 0.25s ease, color 0.25s ease, border-color 0.25s ease;
-      transform-origin: left center;
-    }
+  display: inline-block;
+  margin-top: 0.05rem;
+  font-family: 'Ronzino', sans-serif;
+  font-size: clamp(12px, 0.92vw, 14.2px);
+  line-height: 1.43;
+  letter-spacing: 0.002em;
+  text-transform: none;
+  font-weight: 400;
+  font-style: normal;
+  color: #C8400A;
+  text-decoration: none;
+  border-bottom: 0.5px solid #C8400A;
+  padding-bottom: 2px;
+  transition: transform 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+  transform-origin: left center;
+}
 
     .cv-gonzalez-link:hover {
       transform: scale(1.04);
@@ -134,13 +127,13 @@
     }
 
     .cv-reeds-visuals {
-      --reed-package-height: clamp(310px, 49vh, 485px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: clamp(0.35rem, 1.1vw, 1.15rem);
-      min-width: 0;
-    }
+  --reed-package-height: clamp(310px, 49vh, 485px);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: clamp(0.35rem, 0.9vw, 1rem);
+  min-width: 0;
+}
 
     .cv-reed-card {
       display: flex;
@@ -167,12 +160,20 @@
     }
 
     .cv-reed-card--local .cv-reed-img {
-      height: calc(var(--reed-package-height) * 1.02);
-    }
+  height: calc(var(--reed-package-height) * 1.16);
+}
 
-    .cv-reed-card--malbec .cv-reed-img {
-      height: calc(var(--reed-package-height) * 1);
-    }
+.cv-reed-card--malbec .cv-reed-img {
+  height: calc(var(--reed-package-height) * 1);
+}
+
+.cv-reed-card--malbec {
+  transform: translateX(1cm);
+}
+
+.cv-reed-card--malbec:hover {
+  transform: translateX(1cm) scale(1.13);
+}
 
     .cv-footer {
       flex-shrink: 0;
@@ -217,7 +218,6 @@
       <section class="cv-gonzalez-stage">
 
         <div class="cv-gonzalez-text">
-          <p class="cv-gonzalez-kicker">official reed partner</p>
 
           <p class="cv-gonzalez-copy">
             César Vidal proudly plays Gonzalez Reeds, an Argentine reed maker from Mendoza known for its careful cane selection, precise craftsmanship and warm, reliable response.
