@@ -3,35 +3,192 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="NUBES — César Vidal" />
   <title>NUBES — César Vidal</title>
+
   <link rel="preload" href="fonts/Ronzino-BoldOblique.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="preload" href="fonts/Ronzino-Regular.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="fonts/Ronzino-Oblique.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='25' fill='%23242017'/%3E%3C/svg%3E">
-<script defer src="favicon.js"></script>
+  <script defer src="favicon.js"></script>
   <link rel="stylesheet" href="css/style.css" />
+
+  <style>
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      background: #000;
+    }
+
+    .cv-page {
+      position: relative;
+      height: 100vh;
+      overflow: hidden;
+      background: #000;
+    }
+
+    .cv-nubes-bg-video {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+      object-position: center center;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .cv-nav {
+      background: transparent;
+      z-index: 5;
+    }
+
+    .cv-nav.cv-nav--dark a {
+      color: rgba(255,255,255,0.78);
+    }
+
+    .cv-nav.cv-nav--dark a:hover {
+      color: #ffffff;
+    }
+
+    .cv-nav a.active {
+      color: #ffffff;
+      text-shadow: 0.35px 0 currentColor, -0.35px 0 currentColor;
+    }
+
+    .cv-page-content {
+      position: relative;
+      z-index: 2;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      padding-top: var(--nav-height);
+      background: transparent;
+    }
+
+    .cv-nubes-stage {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: calc(var(--nav-height) * 0.25) var(--pad-x) 2.4rem;
+      box-sizing: border-box;
+    }
+
+    .cv-nubes-panel {
+      width: min(74vw, 1180px);
+      height: min(62vh, 620px);
+      min-height: 380px;
+      background: rgba(255,255,255,0.34);
+      border: 0.5px solid rgba(255,255,255,0.46);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      box-sizing: border-box;
+      display: grid;
+      grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+      gap: clamp(1.4rem, 3vw, 3.2rem);
+      align-items: center;
+      padding: clamp(1.5rem, 3vw, 3.2rem);
+    }
+
+    .cv-nubes-image-slot {
+      width: 100%;
+      height: 100%;
+      min-height: 250px;
+      border: 0.5px solid rgba(255,255,255,0.36);
+      background: rgba(255,255,255,0.16);
+      box-sizing: border-box;
+    }
+
+    .cv-nubes-text-slot {
+      font-family: 'Ronzino', sans-serif;
+      color: #ffffff;
+    }
+
+    .cv-page-title {
+      margin: 0 0 clamp(1rem, 2vh, 1.5rem);
+      color: #ffffff;
+    }
+
+    .cv-nubes-placeholder {
+      margin: 0;
+      font-size: clamp(12px, 0.92vw, 14.2px);
+      line-height: 1.43;
+      letter-spacing: 0.002em;
+      color: rgba(255,255,255,0.82);
+      text-align: justify;
+      text-justify: inter-word;
+    }
+
+    .cv-nubes-footer {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 4;
+      padding: 0.55rem clamp(0.5rem, 2vw, 1.25rem);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: transparent;
+      border: 0;
+      pointer-events: none;
+    }
+
+    .cv-nubes-footer span {
+      font-family: 'Ronzino', sans-serif;
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: lowercase;
+      color: rgba(255,255,255,0.82);
+    }
+  </style>
 </head>
+
 <body>
   <div class="cv-page">
-    <nav class="cv-nav cv-nav--light">
+
+    <video class="cv-nubes-bg-video" autoplay muted loop playsinline preload="auto">
+      <source src="videos/nubes.mp4" type="video/mp4">
+    </video>
+
+    <nav class="cv-nav cv-nav--dark">
       <ul>
         <li><a href="index.html">home</a></li>
         <li><a href="bio.html">bio</a></li>
-        <li><a href="music-projects.html">music &amp; projects</a></li>
+        <li><a href="music-projects.html" class="active">music &amp; projects</a></li>
         <li><a href="https://syos.co/en/blogs/our-artists/cesar-vidal" target="_blank" rel="noopener">syos artist</a></li>
         <li><a href="gonzalez-reeds.html">gonzalez reeds</a></li>
         <li><a href="merch.html">merch</a></li>
         <li><a href="contact.html">contact</a></li>
       </ul>
     </nav>
+
     <main class="cv-page-content">
-      <div class="cv-page-hero">
-        <h1 class="cv-page-title">NUBES</h1>
-      </div>
+      <section class="cv-nubes-stage">
+
+        <div class="cv-nubes-panel">
+          <div class="cv-nubes-image-slot"></div>
+
+          <div class="cv-nubes-text-slot">
+            <h1 class="cv-page-title"><em>NUBES</em></h1>
+
+            <p class="cv-nubes-placeholder">
+              This space is prepared for the image and text content of the project.
+            </p>
+          </div>
+        </div>
+
+      </section>
     </main>
-    <footer class="cv-footer">
+
+    <footer class="cv-nubes-footer">
       <span>© 2026 César Vidal</span>
       <span>cesarvidalmusic.art</span>
     </footer>
+
   </div>
 </body>
 </html>
