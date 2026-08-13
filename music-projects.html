@@ -5,21 +5,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Music & Projects — César Vidal." />
   <title>Music & Projects — César Vidal</title>
+
   <link rel="preload" href="fonts/Ronzino-BoldOblique.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="preload" href="fonts/Ronzino-Regular.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='25' fill='%23242017'/%3E%3C/svg%3E">
-<script defer src="favicon.js"></script>
+  <script defer src="favicon.js"></script>
+
   <link rel="preload" as="image" href="img/cover-des-visages.webp" type="image/webp" fetchpriority="high">
-<link rel="preload" as="image" href="img/cover-nubes.webp" type="image/webp" fetchpriority="high">
-<link rel="preload" as="image" href="img/cover-spam.webp" type="image/webp" fetchpriority="high">
-<link rel="preload" as="image" href="img/cover-artikulation-band.webp" type="image/webp" fetchpriority="high">
-<link rel="preload" as="image" href="img/cover-solo-project.webp" type="image/webp" fetchpriority="high">
-<link rel="preload" as="image" href="img/cover-des-visages-ep.webp" type="image/webp" fetchpriority="high">
-<link rel="preload" as="image" href="img/cover-aleas.webp" type="image/webp" fetchpriority="high">
-<link rel="preload" as="image" href="img/cover-flor-de-loto.webp" type="image/webp" fetchpriority="high">
+  <link rel="preload" as="image" href="img/cover-nubes.webp" type="image/webp" fetchpriority="high">
+  <link rel="preload" as="image" href="img/cover-spam.webp" type="image/webp" fetchpriority="high">
+  <link rel="preload" as="image" href="img/cover-artikulation-band.webp" type="image/webp" fetchpriority="high">
+  <link rel="preload" as="image" href="img/cover-solo-project.webp" type="image/webp" fetchpriority="high">
+  <link rel="preload" as="image" href="img/cover-des-visages-ep.webp" type="image/webp" fetchpriority="high">
+  <link rel="preload" as="image" href="img/cover-aleas.webp" type="image/webp" fetchpriority="high">
+  <link rel="preload" as="image" href="img/cover-flor-de-loto.webp" type="image/webp" fetchpriority="high">
+
   <link rel="stylesheet" href="css/style.css" />
+
   <style>
-    html, body { height: 100%; overflow: hidden; }
+    html, body {
+      height: 100%;
+      overflow: hidden;
+    }
 
     .cv-page {
       height: 100vh;
@@ -27,6 +34,7 @@
       flex-direction: column;
       overflow: hidden;
     }
+
     .cv-page-content {
       flex: 1;
       display: flex;
@@ -35,10 +43,10 @@
       padding-top: 0;
     }
 
-    /* COLUMNS AREA */
     .cv-mp-stage {
-      flex: 1;
+      flex: none;
       min-height: 0;
+      height: calc(100vh - (var(--nav-height) * 2) - 52px);
       padding: 0 var(--pad-x);
       display: flex;
       gap: 0;
@@ -51,17 +59,19 @@
       overflow: hidden;
       border-left: 0.5px solid #E0E0E0;
     }
-    .cv-mp-col:last-child { border-right: 0.5px solid #E0E0E0; }
+
+    .cv-mp-col:last-child {
+      border-right: 0.5px solid #E0E0E0;
+    }
 
     .cv-mp-track {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  will-change: transform;
-}
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      will-change: transform;
+    }
 
-    /* CARD */
     .cv-mp-card {
       display: flex;
       flex-direction: column;
@@ -73,26 +83,17 @@
       text-decoration: none;
       color: #0A0A0A;
       gap: 0.75rem;
-      /* transition for both scale and background */
       transition: background 0.35s ease, transform 0.35s ease;
       transform-origin: center center;
       position: relative;
       z-index: 1;
     }
-    /* HOVER: scale up + color change */
-    .cv-mp-card {
-     transition: background 0.35s ease, transform 0.35s ease;
-    }
 
     .cv-mp-card:hover {
-    background: var(--hover-color);
-    transform: scale(1.03);
-    z-index: 2;
+      background: var(--hover-color);
+      transform: scale(1.03);
+      z-index: 2;
     }
-
-.cv-mp-card-title {
-  transition: color 0.35s ease;
-}
 
     .cv-mp-cover {
       width: 100%;
@@ -110,414 +111,407 @@
       line-height: 1.25;
       letter-spacing: 0.01em;
       color: #0A0A0A;
+      transition: color 0.35s ease;
     }
-    .cv-mp-card-title em { font-style: italic; }
 
-    /* FOOTER */
+    .cv-mp-card-title em {
+      font-style: italic;
+    }
+
     .cv-mp-footer {
-    flex-shrink: 0;
-  padding: 0.55rem clamp(0.5rem, 2vw, 1.25rem);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-top: 0.5px solid #E0E0E0;
-  background: #fff;
-}
+      flex-shrink: 0;
+      padding: 0.55rem clamp(0.5rem, 2vw, 1.25rem);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 0.5px solid #E0E0E0;
+      background: #fff;
+    }
 
-.cv-mp-footer span {
-  font-family: 'Ronzino', sans-serif;
-  font-size: 10px;
-  letter-spacing: 0.12em;
-  text-transform: lowercase;
-  color: #bbb;
-} 
-    /* Move title bar down without changing the whole page */
-.cv-page-hero {
-  padding-top: calc(var(--nav-height) + 0.75rem);
-  flex-shrink: 0;
-}
+    .cv-mp-footer span {
+      font-family: 'Ronzino', sans-serif;
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: lowercase;
+      color: #bbb;
+    }
 
-/* Keep page fixed and reduce only the project area */
-.cv-mp-stage {
-  height: calc(100vh - (var(--nav-height) * 2) - 52px);
-  flex: none;
-}
+    .cv-page-hero {
+      padding-top: calc(var(--nav-height) + 0.75rem);
+      flex-shrink: 0;
+    }
   </style>
 </head>
+
 <body>
-<div class="cv-page">
+  <div class="cv-page">
 
-  <nav class="cv-nav cv-nav--light">
-    <ul>
-      <li><a href="index.html">home</a></li>
-      <li><a href="bio.html">bio</a></li>
-      <li><a href="music-projects.html" class="active">music &amp; projects</a></li>
-      <li><a href="https://syos.co/en/blogs/our-artists/cesar-vidal" target="_blank" rel="noopener">syos artist</a></li>
-      <li><a href="gonzalez-reeds.html">gonzalez reeds</a></li>
-      <li><a href="merch.html">merch</a></li>
-      <li><a href="contact.html">contact</a></li>
-    </ul>
-  </nav>
+    <nav class="cv-nav cv-nav--light">
+      <ul>
+        <li><a href="index.html">home</a></li>
+        <li><a href="bio.html">bio</a></li>
+        <li><a href="music-projects.html" class="active">music &amp; projects</a></li>
+        <li><a href="https://syos.co/en/blogs/our-artists/cesar-vidal" target="_blank" rel="noopener">syos artist</a></li>
+        <li><a href="gonzalez-reeds.html">gonzalez reeds</a></li>
+        <li><a href="merch.html">merch</a></li>
+        <li><a href="contact.html">contact</a></li>
+      </ul>
+    </nav>
 
-  <main class="cv-page-content">
+    <main class="cv-page-content">
 
-    <!-- Title uses global cv-page-hero — same as contact/gonzalez-reeds -->
-    <div class="cv-page-hero">
-      <h1 class="cv-page-title">music & projects</h1>
-    </div>
+      <div class="cv-page-hero">
+        <h1 class="cv-page-title">music &amp; projects</h1>
+      </div>
 
-    <div class="cv-mp-stage" id="stage">
+      <div class="cv-mp-stage" id="stage">
 
-       <!-- COL 1: UP — speed 22px/s -->
-       <div class="cv-mp-col">
+        <div class="cv-mp-col">
+          <div class="cv-mp-track" id="track0"></div>
+        </div>
 
-       <div class="cv-mp-track" id="track0"></div>
+        <div class="cv-mp-col">
+          <div class="cv-mp-track" id="track1"></div>
+        </div>
 
-       </div>
+        <div class="cv-mp-col">
+          <div class="cv-mp-track" id="track2"></div>
+        </div>
 
-       <!-- COL 2: DOWN — speed 30px/s -->
-       <div class="cv-mp-col">
+        <div class="cv-mp-col">
+          <div class="cv-mp-track" id="track3"></div>
+        </div>
 
-       <div class="cv-mp-track" id="track1"></div>
+      </div>
+    </main>
 
-       </div>
+    <footer class="cv-mp-footer">
+      <span>© 2026 César Vidal</span>
+      <span>cesarvidalmusic.art</span>
+    </footer>
 
-       <!-- COL 3: UP — speed 18px/s -->
-       <div class="cv-mp-col">
+  </div>
 
-       <div class="cv-mp-track" id="track2"></div>
+  <script>
+    const SPEEDS = [22, 30, 18, 26];
 
-       </div>
-      
-       <!-- COL 4: DOWN — speed 26px/s -->
-       <div class="cv-mp-col">
+    const DIRS = [1, -1, 1, -1];
 
-       <div class="cv-mp-track" id="track3"></div>
+    const stageEl = document.getElementById("stage");
 
-       </div>
-      
-    </div>
-  </main>
-
-  <footer class="cv-mp-footer">
-    <span>© 2026 César Vidal</span>
-    <span>cesarvidalmusic.art</span>
-  </footer>
-
-</div>
-
-<script>
-  const SPEEDS = [22, 30, 18, 26];
-
-  // 1 = up, -1 = down
-  const DIRS = [1, -1, 1, -1];
-
-  const stageEl = document.getElementById("stage");
-
-  const trackEls = [
-    document.getElementById("track0"),
-    document.getElementById("track1"),
-    document.getElementById("track2"),
-    document.getElementById("track3")
-  ];
-
-  const PROJECTS = [
-    {
-      title: "Des Visages",
-      image: "img/cover-des-visages.webp",
-      link: "des-visages.html"
-    },
-    {
-      title: "NUBES",
-      image: "img/cover-nubes.webp",
-      link: "nubes.html",
-      italic: true
-    },
-    {
-      title: "SPAM",
-      image: "img/cover-spam.webp",
-      link: "spam.html",
-      italic: true
-    },
-    {
-      title: "César Vidal & Artikulation Band",
-      image: "img/cover-artikulation-band.webp",
-      link: "artikulation-band.html"
-    },
-    {
-      title: "Solo Project",
-      image: "img/cover-solo-project.webp",
-      link: "solo-project.html"
-    },
-    {
-      title: "Des Visages (EP)",
-      image: "img/cover-des-visages-ep.webp",
-      link: "des-visages-ep.html",
-      italic: true
-    },
-    {
-      title: "aleas",
-      image: "img/cover-aleas.webp",
-      link: "aleas.html",
-      italic: true
-    },
-    {
-      title: "Flor de Loto",
-      image: "img/cover-flor-de-loto.webp",
-      link: "flor-de-loto.html",
-      italic: true
-    }
-  ];
-
-  const HOVER_COLORS = [
-    "#242017",
-    "#2c5544",
-    "#ed6551",
-    "#efd06f"
-  ];
-
-  const DARK_HOVER_COLORS = [
-    "#242017",
-    "#2c5544"
-  ];
-
-  const offsets = [0, 0, 0, 0];
-
-  let cardHeight = 0;
-  let lastTime = null;
-
-
-  function shuffle(array) {
-    const copy = [...array];
-
-    for (let i = copy.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [copy[i], copy[j]] = [copy[j], copy[i]];
-    }
-
-    return copy;
-  }
-
-
-  function setCardProject(card, project) {
-    card.href = project.link;
-    card.dataset.project = project.title;
-
-    card.innerHTML = `
-     <img class="cv-mp-cover" src="${project.image}" alt="${project.title}" loading="eager" decoding="async" fetchpriority="high" />
-      <span class="cv-mp-card-title">
-        ${project.italic ? "<em>" + project.title + "</em>" : project.title}
-      </span>
-    `;
-
-    card.style.removeProperty("--hover-color");
-  }
-
-
-  function createCard(project) {
-    const card = document.createElement("a");
-
-    card.className = "cv-mp-card";
-
-    setCardProject(card, project);
-    addHover(card);
-
-    return card;
-  }
-
-
-  function addHover(card) {
-    card.addEventListener("mouseenter", () => {
-      const color = HOVER_COLORS[
-        Math.floor(Math.random() * HOVER_COLORS.length)
-      ];
-
-      card.style.setProperty("--hover-color", color);
-
-      const title = card.querySelector(".cv-mp-card-title");
-
-      if (DARK_HOVER_COLORS.includes(color)) {
-        title.style.color = "#ffffff";
-      } else {
-        title.style.color = "#0A0A0A";
-      }
-    });
-
-    card.addEventListener("mouseleave", () => {
-      card.style.removeProperty("--hover-color");
-
-      const title = card.querySelector(".cv-mp-card-title");
-      title.style.color = "";
-    });
-  }
-
-
-  function getVisibleCards() {
-    const stageRect = stageEl.getBoundingClientRect();
-
-    return Array
-      .from(document.querySelectorAll(".cv-mp-card"))
-      .filter(card => {
-        const rect = card.getBoundingClientRect();
-
-        return (
-          rect.top < stageRect.bottom &&
-          rect.bottom > stageRect.top
-        );
-      });
-  }
-
-
-  function getVisibleProjectTitles(excludeCard = null) {
-    return getVisibleCards()
-      .filter(card => card !== excludeCard)
-      .map(card => card.dataset.project)
-      .filter(Boolean);
-  }
-
-
-  function pickProject(blockedTitles = []) {
-    let available = PROJECTS.filter(project => {
-      return !blockedTitles.includes(project.title);
-    });
-
-    if (available.length === 0) {
-      available = PROJECTS;
-    }
-
-    return available[
-      Math.floor(Math.random() * available.length)
+    const trackEls = [
+      document.getElementById("track0"),
+      document.getElementById("track1"),
+      document.getElementById("track2"),
+      document.getElementById("track3")
     ];
-  }
 
+    const PROJECTS = [
+      {
+        title: "Des Visages",
+        image: "img/cover-des-visages.webp",
+        link: "des-visages.html"
+      },
+      {
+        title: "NUBES",
+        image: "img/cover-nubes.webp",
+        link: "nubes.html",
+        italic: true
+      },
+      {
+        title: "SPAM",
+        image: "img/cover-spam.webp",
+        link: "spam.html",
+        italic: true
+      },
+      {
+        title: "César Vidal & Artikulation Band",
+        image: "img/cover-artikulation-band.webp",
+        link: "artikulation-band.html"
+      },
+      {
+        title: "Solo Project",
+        image: "img/cover-solo-project.webp",
+        link: "solo-project.html"
+      },
+      {
+        title: "Des Visages (EP)",
+        image: "img/cover-des-visages-ep.webp",
+        link: "des-visages-ep.html",
+        italic: true
+      },
+      {
+        title: "aleas",
+        image: "img/cover-aleas.webp",
+        link: "aleas.html",
+        italic: true
+      },
+      {
+        title: "Flor de Loto",
+        image: "img/cover-flor-de-loto.webp",
+        link: "flor-de-loto.html",
+        italic: true
+      }
+    ];
 
-  function measureCardHeight() {
-    const testCard = createCard(PROJECTS[0]);
+    const HOVER_COLORS = [
+      "#242017",
+      "#2c5544",
+      "#ed6551",
+      "#efd06f"
+    ];
 
-    testCard.style.visibility = "hidden";
+    const DARK_HOVER_COLORS = [
+      "#242017",
+      "#2c5544"
+    ];
 
-    trackEls[0].appendChild(testCard);
+    const offsets = [0, 0, 0, 0];
 
-    cardHeight = testCard.offsetHeight;
+    let cardHeight = 0;
+    let lastTime = null;
 
-    trackEls[0].removeChild(testCard);
+    function preloadProjectImages() {
+      const loaders = PROJECTS.map(project => {
+        return new Promise(resolve => {
+          const img = new Image();
 
-    if (!cardHeight || cardHeight < 100) {
-      cardHeight = Math.round(window.innerHeight * 0.75);
+          img.onload = () => resolve();
+          img.onerror = () => resolve();
+
+          img.decoding = "async";
+          img.loading = "eager";
+          img.src = project.image;
+        });
+      });
+
+      return Promise.all(loaders);
     }
-  }
 
+    function shuffle(array) {
+      const copy = [...array];
 
-  function buildInitialGallery() {
-    const deck = shuffle(PROJECTS);
-    let index = 0;
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
 
-    trackEls.forEach((track, i) => {
-      track.innerHTML = "";
+      return copy;
+    }
 
-      for (let j = 0; j < 2; j++) {
-        const project = deck[index % deck.length];
-        index++;
+    function setCardProject(card, project) {
+      card.href = project.link;
+      card.dataset.project = project.title;
+
+      card.innerHTML = `
+        <img class="cv-mp-cover" src="${project.image}" alt="${project.title}" loading="eager" decoding="async" fetchpriority="high" />
+        <span class="cv-mp-card-title">
+          ${project.italic ? "<em>" + project.title + "</em>" : project.title}
+        </span>
+      `;
+
+      card.style.removeProperty("--hover-color");
+    }
+
+    function createCard(project) {
+      const card = document.createElement("a");
+
+      card.className = "cv-mp-card";
+
+      setCardProject(card, project);
+      addHover(card);
+
+      return card;
+    }
+
+    function addHover(card) {
+      card.addEventListener("mouseenter", () => {
+        const color = HOVER_COLORS[
+          Math.floor(Math.random() * HOVER_COLORS.length)
+        ];
+
+        card.style.setProperty("--hover-color", color);
+
+        const title = card.querySelector(".cv-mp-card-title");
+
+        if (DARK_HOVER_COLORS.includes(color)) {
+          title.style.color = "#ffffff";
+        } else {
+          title.style.color = "#0A0A0A";
+        }
+      });
+
+      card.addEventListener("mouseleave", () => {
+        card.style.removeProperty("--hover-color");
+
+        const title = card.querySelector(".cv-mp-card-title");
+        title.style.color = "";
+      });
+    }
+
+    function getVisibleCards() {
+      const stageRect = stageEl.getBoundingClientRect();
+
+      return Array
+        .from(document.querySelectorAll(".cv-mp-card"))
+        .filter(card => {
+          const rect = card.getBoundingClientRect();
+
+          return (
+            rect.top < stageRect.bottom &&
+            rect.bottom > stageRect.top
+          );
+        });
+    }
+
+    function getVisibleProjectTitles(excludeCard = null) {
+      return getVisibleCards()
+        .filter(card => card !== excludeCard)
+        .map(card => card.dataset.project)
+        .filter(Boolean);
+    }
+
+    function pickProject(blockedTitles = []) {
+      let available = PROJECTS.filter(project => {
+        return !blockedTitles.includes(project.title);
+      });
+
+      if (available.length === 0) {
+        available = PROJECTS;
+      }
+
+      return available[
+        Math.floor(Math.random() * available.length)
+      ];
+    }
+
+    function measureCardHeight() {
+      const testCard = document.createElement("a");
+
+      testCard.className = "cv-mp-card";
+      testCard.style.visibility = "hidden";
+      testCard.style.pointerEvents = "none";
+
+      testCard.innerHTML = `
+        <span class="cv-mp-card-title">measure</span>
+      `;
+
+      trackEls[0].appendChild(testCard);
+
+      cardHeight = testCard.offsetHeight;
+
+      trackEls[0].removeChild(testCard);
+
+      if (!cardHeight || cardHeight < 100) {
+        cardHeight = Math.round(window.innerHeight * 0.75);
+      }
+    }
+
+    function buildInitialGallery() {
+      const deck = shuffle(PROJECTS);
+      let index = 0;
+
+      trackEls.forEach((track, i) => {
+        track.innerHTML = "";
+
+        for (let j = 0; j < 2; j++) {
+          const project = deck[index % deck.length];
+          index++;
+
+          track.appendChild(
+            createCard(project)
+          );
+        }
+
+        offsets[i] = 0;
+
+        applyTransform(i);
+      });
+    }
+
+    function applyTransform(i) {
+      let y;
+
+      if (DIRS[i] === 1) {
+        y = -offsets[i];
+      } else {
+        y = offsets[i] - cardHeight;
+      }
+
+      trackEls[i].style.transform = `translateY(${y}px)`;
+    }
+
+    function recycleColumn(i) {
+      const track = trackEls[i];
+
+      if (DIRS[i] === 1) {
+        const firstCard = track.firstElementChild;
+
+        if (firstCard) {
+          track.removeChild(firstCard);
+        }
+
+        const blocked = getVisibleProjectTitles();
+        const newProject = pickProject(blocked);
 
         track.appendChild(
-          createCard(project)
+          createCard(newProject)
         );
+
+        offsets[i] -= cardHeight;
+      } else {
+        const lastCard = track.lastElementChild;
+
+        if (lastCard) {
+          track.removeChild(lastCard);
+        }
+
+        const blocked = getVisibleProjectTitles();
+        const newProject = pickProject(blocked);
+
+        track.insertBefore(
+          createCard(newProject),
+          track.firstElementChild
+        );
+
+        offsets[i] -= cardHeight;
       }
-
-      offsets[i] = 0;
-
-      applyTransform(i);
-    });
-
-  
-  }
-
-
-  function applyTransform(i) {
-    let y;
-
-    if (DIRS[i] === 1) {
-      y = -offsets[i];
-    } else {
-      y = offsets[i] - cardHeight;
     }
 
-    trackEls[i].style.transform = `translateY(${y}px)`;
-  }
-
-
-  function recycleColumn(i) {
-    const track = trackEls[i];
-
-    if (DIRS[i] === 1) {
-      const firstCard = track.firstElementChild;
-
-      if (firstCard) {
-        track.removeChild(firstCard);
+    function animate(ts) {
+      if (!lastTime) {
+        lastTime = ts;
       }
 
-      const blocked = getVisibleProjectTitles();
-      const newProject = pickProject(blocked);
-
-      track.appendChild(
-        createCard(newProject)
-      );
-
-      offsets[i] -= cardHeight;
-    } else {
-      const lastCard = track.lastElementChild;
-
-      if (lastCard) {
-        track.removeChild(lastCard);
-      }
-
-      const blocked = getVisibleProjectTitles();
-      const newProject = pickProject(blocked);
-
-      track.insertBefore(
-        createCard(newProject),
-        track.firstElementChild
-      );
-
-      offsets[i] -= cardHeight;
-    }
-
-  
-  }
-
-
-  function animate(ts) {
-    if (!lastTime) {
+      const dt = (ts - lastTime) / 1000;
       lastTime = ts;
+
+      trackEls.forEach((track, i) => {
+        offsets[i] += SPEEDS[i] * dt;
+
+        while (offsets[i] >= cardHeight) {
+          recycleColumn(i);
+        }
+
+        applyTransform(i);
+      });
+
+      requestAnimationFrame(animate);
     }
 
-    const dt = (ts - lastTime) / 1000;
-    lastTime = ts;
+    function startGallery() {
+      measureCardHeight();
+      buildInitialGallery();
+      requestAnimationFrame(animate);
+    }
 
-    trackEls.forEach((track, i) => {
-      offsets[i] += SPEEDS[i] * dt;
+    const preloadLimit = new Promise(resolve => setTimeout(resolve, 2200));
 
-      while (offsets[i] >= cardHeight) {
-        recycleColumn(i);
-      }
-
-      applyTransform(i);
-    });
-
-
-    requestAnimationFrame(animate);
-  }
-
-
-  function startGallery() {
-    measureCardHeight();
-    buildInitialGallery();
-    requestAnimationFrame(animate);
-  }
-
-
-  setTimeout(startGallery, 150);
-</script>
+    Promise.race([
+      preloadProjectImages(),
+      preloadLimit
+    ]).then(startGallery);
+  </script>
 
 </body>
 </html>
