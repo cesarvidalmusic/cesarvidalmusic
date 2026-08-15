@@ -9,7 +9,8 @@
   <link rel="preload" href="fonts/Ronzino-BoldOblique.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="preload" href="fonts/Ronzino-Regular.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="preload" href="fonts/Ronzino-Oblique.woff2" as="font" type="font/woff2" crossorigin />
-  <link rel="preload" as="video" href="videos/spam-echo-loop.webm" type="video/webm">
+  <link rel="preload" as="video" href="videos/spam-echo-wide.webm" type="video/webm">
+  <link rel="preload" as="image" href="img/spam-echo-wide-poster.webp" type="image/webp">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='25' fill='%23242017'/%3E%3C/svg%3E">
   <script defer src="favicon.js"></script>
   <link rel="stylesheet" href="css/style.css" />
@@ -67,10 +68,10 @@
       flex: 1;
       min-height: 0;
       display: grid;
-      grid-template-columns: minmax(0, 0.52fr) minmax(0, 0.48fr);
+      grid-template-columns: minmax(0, 0.53fr) minmax(0, 0.47fr);
       align-items: center;
-      gap: clamp(1.6rem, 3vw, 3.4rem);
-      padding: 0 var(--pad-x) 2.3rem;
+      gap: clamp(1.4rem, 2.8vw, 3.2rem);
+      padding: 0 var(--pad-x) 2.3rem 0;
       box-sizing: border-box;
     }
 
@@ -79,27 +80,28 @@
       min-width: 0;
       display: flex;
       align-items: center;
-      justify-content: center;
+      justify-content: flex-start;
+      overflow: visible;
     }
 
     .cv-spam-artwork-video {
       display: block;
-      width: min(44vw, 720px);
-      max-width: 100%;
+      width: min(58vw, 940px);
+      max-width: none;
       height: auto;
-      aspect-ratio: 1 / 1;
+      aspect-ratio: 4 / 3;
       object-fit: contain;
-      background: var(--spam-cream);
+      background: transparent;
+      transform: translateX(-1.1cm);
     }
 
     .cv-spam-text-panel {
       width: 100%;
-      max-width: 660px;
+      max-width: 680px;
       min-width: 0;
       font-family: 'Ronzino', sans-serif;
       color: var(--spam-black);
       justify-self: start;
-      transform: translateX(-0.25cm);
     }
 
     .cv-page-title {
@@ -108,7 +110,7 @@
     }
 
     .cv-spam-copy {
-      margin: 0 0 0.8rem;
+      margin: 0 0 0.78rem;
       font-size: clamp(12px, 0.92vw, 14.2px);
       line-height: 1.43;
       letter-spacing: 0.002em;
@@ -121,31 +123,22 @@
       font-style: italic;
     }
 
+    .cv-spam-copy strong {
+      font-weight: 400;
+      text-shadow: 0.35px 0 currentColor, -0.35px 0 currentColor;
+    }
+
     .cv-spam-bandcamp-area {
       margin-top: clamp(1rem, 2vh, 1.4rem);
       width: 100%;
       max-width: 520px;
     }
 
-    .cv-spam-bandcamp-placeholder {
+    .cv-spam-bandcamp-area iframe {
+      display: block;
       width: 100%;
-      min-height: 118px;
-      border-top: 0.5px solid rgba(5,5,5,0.36);
-      border-bottom: 0.5px solid rgba(5,5,5,0.36);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-      font-family: 'Ronzino', sans-serif;
-      font-size: clamp(12px, 0.92vw, 14.2px);
-      line-height: 1.25;
-      letter-spacing: 0.002em;
-      color: rgba(5,5,5,0.68);
-      box-sizing: border-box;
-    }
-
-    .cv-spam-bandcamp-placeholder span:last-child {
-      color: var(--accent);
+      height: 120px;
+      border: 0;
     }
 
     .cv-spam-footer {
@@ -192,9 +185,17 @@
       <section class="cv-spam-stage">
 
         <div class="cv-spam-artwork-wrap">
-          <video class="cv-spam-artwork-video" autoplay muted loop playsinline preload="auto" poster="img/cover-spam.webp">
-            <source src="videos/spam-echo-loop.webm" type="video/webm">
-            <source src="videos/spam-echo-loop.mp4" type="video/mp4">
+          <video
+            class="cv-spam-artwork-video"
+            autoplay
+            muted
+            loop
+            playsinline
+            preload="auto"
+            poster="img/spam-echo-wide-poster.webp"
+          >
+            <source src="videos/spam-echo-wide.webm" type="video/webm">
+            <source src="videos/spam-echo-wide.mp4" type="video/mp4">
           </video>
         </div>
 
@@ -202,27 +203,27 @@
           <h1 class="cv-page-title"><em>SPAM</em></h1>
 
           <p class="cv-spam-copy">
-            Project text will go here. This layout is prepared for a short description of <em>SPAM</em>, with the animated artwork placed on the left and space for a Bandcamp player below.
+            <strong>SPAM</strong> is the second release by the duo of César Vidal and Chilean guitarist Nicolás Vera, recorded between January and February 2026. The EP features eight compositions and remote improvisations developed through an exploration of sound, texture, melody, and harmony.
           </p>
 
           <p class="cv-spam-copy">
-            The animated image uses a subtle echo movement in the striped areas while keeping the main cover structure stable.
+            Building on the acoustic foundation of their first release, <em>NUBES</em>, <strong>SPAM</strong> expands the duo’s sonic palette through electronic textures, analog effects, synthesizers, and subtle forms of sound processing. The material was recorded remotely, with Vera working from Bruma in Santiago, Chile, and Vidal recording in Amsterdam.
+          </p>
+
+          <p class="cv-spam-copy">
+            The EP was mixed by Nicolás Vera and marks the duo’s second collaboration with Chilean engineer Gonzalo “Chalo” González, a Latin Grammy nominee who has worked on numerous significant recordings within Chilean popular music.
+          </p>
+
+          <p class="cv-spam-copy">
+            <strong>SPAM</strong> was officially presented on April 24, 2026, as part of the clubnight programme of <strong>jazzahead! 2026</strong> in Bremen, Germany.
           </p>
 
           <div class="cv-spam-bandcamp-area">
-            <!--
-            Pega aquí el iframe de Bandcamp cuando lo tengas.
-            Puedes reemplazar el placeholder de abajo por algo como:
-
-            <iframe style="border: 0; width: 100%; height: 120px;" src="AQUI_VA_EL_EMBED_DE_BANDCAMP" seamless>
-              <a href="AQUI_VA_EL_LINK_DEL_ALBUM">SPAM by César Vidal</a>
+            <iframe
+              src="https://bandcamp.com/EmbeddedPlayer/album=2821956132/size=large/bgcol=333333/linkcol=c8400a/tracklist=false/artwork=none/transparent=true/"
+              seamless>
+              <a href="https://cesarvidal.bandcamp.com/album/spam-2">SPAM by César Vidal, Nicolás Vera</a>
             </iframe>
-            -->
-
-            <div class="cv-spam-bandcamp-placeholder">
-              <span>bandcamp player</span>
-              <span>coming soon</span>
-            </div>
           </div>
         </article>
 
