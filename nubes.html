@@ -9,6 +9,7 @@
   <link rel="preload" href="fonts/Ronzino-BoldOblique.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="preload" href="fonts/Ronzino-Regular.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="preload" href="fonts/Ronzino-Oblique.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" as="image" href="img/nubes-cover.webp" type="image/webp" fetchpriority="high">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='25' fill='%23242017'/%3E%3C/svg%3E">
   <script defer src="favicon.js"></script>
   <link rel="stylesheet" href="css/style.css" />
@@ -44,7 +45,7 @@
     }
 
     .cv-nav.cv-nav--dark a {
-      color: rgba(255,255,255,0.78);
+      color: rgba(255,255,255,0.82);
     }
 
     .cv-nav.cv-nav--dark a:hover {
@@ -73,53 +74,99 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: calc(var(--nav-height) * 0.25) var(--pad-x) 2.4rem;
+      padding: 0 0 2.4rem;
       box-sizing: border-box;
     }
 
     .cv-nubes-panel {
-      width: min(74vw, 1180px);
+      width: 100vw;
       height: min(62vh, 620px);
       min-height: 380px;
-      background: rgba(255,255,255,0.34);
-      border: 0.5px solid rgba(255,255,255,0.46);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
+      background: rgba(0,0,0,0.58);
       box-sizing: border-box;
       display: grid;
-      grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
-      gap: clamp(1.4rem, 3vw, 3.2rem);
+      grid-template-columns: minmax(0, 0.43fr) minmax(0, 0.57fr);
+      gap: clamp(1.6rem, 3.4vw, 4rem);
       align-items: center;
-      padding: clamp(1.5rem, 3vw, 3.2rem);
+      padding: clamp(1.35rem, 2.6vw, 2.7rem) var(--pad-x);
     }
 
-    .cv-nubes-image-slot {
+    .cv-nubes-artwork-wrap {
       width: 100%;
       height: 100%;
-      min-height: 250px;
-      border: 0.5px solid rgba(255,255,255,0.36);
-      background: rgba(255,255,255,0.16);
-      box-sizing: border-box;
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transform: translateX(-1cm);
+    }
+
+    .cv-nubes-cover {
+      display: block;
+      width: min(30vw, 420px);
+      max-width: 100%;
+      max-height: min(47vh, 470px);
+      height: auto;
+      object-fit: contain;
+      box-shadow: 0 18px 42px rgba(0,0,0,0.28);
     }
 
     .cv-nubes-text-slot {
+      width: 100%;
+      max-width: 720px;
+      min-width: 0;
       font-family: 'Ronzino', sans-serif;
       color: #ffffff;
     }
 
     .cv-page-title {
-      margin: 0 0 clamp(1rem, 2vh, 1.5rem);
+      margin: 0 0 clamp(0.75rem, 1.45vh, 1.1rem);
       color: #ffffff;
     }
 
-    .cv-nubes-placeholder {
-      margin: 0;
-      font-size: clamp(12px, 0.92vw, 14.2px);
-      line-height: 1.43;
+    .cv-nubes-copy {
+      margin: 0 0 0.58rem;
+      font-size: clamp(11.4px, 0.86vw, 13.4px);
+      line-height: 1.35;
       letter-spacing: 0.002em;
-      color: rgba(255,255,255,0.82);
+      color: rgba(255,255,255,0.92);
       text-align: justify;
       text-justify: inter-word;
+    }
+
+    .cv-nubes-copy em {
+      font-style: italic;
+    }
+
+    .cv-nubes-copy:last-of-type {
+      margin-bottom: 0;
+    }
+
+    .cv-nubes-listen-area {
+      margin-top: clamp(0.8rem, 1.6vh, 1.15rem);
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+    }
+
+    .cv-nubes-release-note {
+      margin: 0;
+      font-size: clamp(11.4px, 0.86vw, 13.4px);
+      line-height: 1.35;
+      letter-spacing: 0.002em;
+      color: rgba(255,255,255,0.92);
+    }
+
+    .cv-nubes-bandcamp {
+      width: 100%;
+      max-width: 720px;
+    }
+
+    .cv-nubes-bandcamp iframe {
+      display: block;
+      width: 100%;
+      height: 120px;
+      border: 0;
     }
 
     .cv-nubes-footer {
@@ -170,15 +217,48 @@
       <section class="cv-nubes-stage">
 
         <div class="cv-nubes-panel">
-          <div class="cv-nubes-image-slot"></div>
 
-          <div class="cv-nubes-text-slot">
+          <div class="cv-nubes-artwork-wrap">
+            <img
+              class="cv-nubes-cover"
+              src="img/nubes-cover.webp"
+              alt="NUBES album cover"
+              decoding="async"
+              fetchpriority="high"
+            />
+          </div>
+
+          <article class="cv-nubes-text-slot">
             <h1 class="cv-page-title"><em>NUBES</em></h1>
 
-            <p class="cv-nubes-placeholder">
-              This space is prepared for the image and text content of the project.
+            <p class="cv-nubes-copy">
+              <em>NUBES</em> is the first duo album by César Vidal and the renowned Chilean guitarist Nicolás Vera, a prolific musician with over 20 years of experience working in Chile and abroad alongside international artists. Released in Chile as the first album of 2025, <em>NUBES</em> features original compositions by both César and Nicolás.
             </p>
-          </div>
+
+            <p class="cv-nubes-copy">
+              The project was born from a period of remote collaboration that began in 2022, when César moved to Amsterdam. Between ideas and experiments, the two musicians exchanged recordings and explored various approaches, resulting in the ten tracks that make up the album. <em>NUBES</em> represents the first collaboration between two musicians of different generations, yet with similar artistic ambitions.
+            </p>
+
+            <p class="cv-nubes-copy">
+              The music of <em>NUBES</em> is characterized by an airy, fluid quality, with a temporal structure inspired by the behavior of clouds, “<em>nubes</em>” in Spanish, which inspired its title. In addition to acoustic elements, the album incorporates electronic textures, effects produced by analog machines, synthesizers, and subtle sound manipulations. The album was recorded, mixed, and mastered by the acclaimed Chilean engineer Gonzalo “Chalo” González, a Latin Grammy nominee whose work includes some of the most iconic recordings in Chilean popular music.
+            </p>
+
+            <div class="cv-nubes-listen-area">
+              <p class="cv-nubes-release-note">
+                Listen to the album:
+              </p>
+
+              <div class="cv-nubes-bandcamp">
+                <iframe
+                  style="border: 0; width: 100%; height: 120px;"
+                  src="https://bandcamp.com/EmbeddedPlayer/album=1691127146/size=large/bgcol=333333/linkcol=e99708/tracklist=false/artwork=small/transparent=true/"
+                  seamless>
+                  <a href="https://cesarvidal.bandcamp.com/album/nubes">NUBES by César Vidal, Nicolás Vera</a>
+                </iframe>
+              </div>
+            </div>
+          </article>
+
         </div>
 
       </section>
