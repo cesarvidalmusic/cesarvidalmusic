@@ -3,35 +3,237 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="SPAM — César Vidal" />
   <title>SPAM — César Vidal</title>
+
   <link rel="preload" href="fonts/Ronzino-BoldOblique.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="preload" href="fonts/Ronzino-Regular.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="fonts/Ronzino-Oblique.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" as="video" href="videos/spam-echo-loop.webm" type="video/webm">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='25' fill='%23242017'/%3E%3C/svg%3E">
-<script defer src="favicon.js"></script>
+  <script defer src="favicon.js"></script>
   <link rel="stylesheet" href="css/style.css" />
+
+  <style>
+    :root {
+      --spam-cream: #E6DFC5;
+      --spam-black: #050505;
+    }
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      background: var(--spam-cream);
+    }
+
+    .cv-page {
+      position: relative;
+      height: 100vh;
+      overflow: hidden;
+      background: var(--spam-cream);
+    }
+
+    .cv-nav {
+      background: transparent;
+      z-index: 5;
+    }
+
+    .cv-nav.cv-nav--light a {
+      color: rgba(5,5,5,0.72);
+    }
+
+    .cv-nav.cv-nav--light a:hover {
+      color: var(--accent);
+    }
+
+    .cv-nav a.active {
+      color: var(--accent);
+      text-shadow: 0.35px 0 currentColor, -0.35px 0 currentColor;
+    }
+
+    .cv-page-content {
+      position: relative;
+      z-index: 2;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      padding-top: var(--nav-height);
+      box-sizing: border-box;
+      background: transparent;
+    }
+
+    .cv-spam-stage {
+      flex: 1;
+      min-height: 0;
+      display: grid;
+      grid-template-columns: minmax(0, 0.52fr) minmax(0, 0.48fr);
+      align-items: center;
+      gap: clamp(1.6rem, 3vw, 3.4rem);
+      padding: 0 var(--pad-x) 2.3rem;
+      box-sizing: border-box;
+    }
+
+    .cv-spam-artwork-wrap {
+      width: 100%;
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .cv-spam-artwork-video {
+      display: block;
+      width: min(44vw, 720px);
+      max-width: 100%;
+      height: auto;
+      aspect-ratio: 1 / 1;
+      object-fit: contain;
+      background: var(--spam-cream);
+    }
+
+    .cv-spam-text-panel {
+      width: 100%;
+      max-width: 660px;
+      min-width: 0;
+      font-family: 'Ronzino', sans-serif;
+      color: var(--spam-black);
+      justify-self: start;
+      transform: translateX(-0.25cm);
+    }
+
+    .cv-page-title {
+      margin: 0 0 clamp(1rem, 2vh, 1.45rem);
+      color: var(--spam-black);
+    }
+
+    .cv-spam-copy {
+      margin: 0 0 0.8rem;
+      font-size: clamp(12px, 0.92vw, 14.2px);
+      line-height: 1.43;
+      letter-spacing: 0.002em;
+      color: rgba(5,5,5,0.84);
+      text-align: justify;
+      text-justify: inter-word;
+    }
+
+    .cv-spam-copy em {
+      font-style: italic;
+    }
+
+    .cv-spam-bandcamp-area {
+      margin-top: clamp(1rem, 2vh, 1.4rem);
+      width: 100%;
+      max-width: 520px;
+    }
+
+    .cv-spam-bandcamp-placeholder {
+      width: 100%;
+      min-height: 118px;
+      border-top: 0.5px solid rgba(5,5,5,0.36);
+      border-bottom: 0.5px solid rgba(5,5,5,0.36);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      font-family: 'Ronzino', sans-serif;
+      font-size: clamp(12px, 0.92vw, 14.2px);
+      line-height: 1.25;
+      letter-spacing: 0.002em;
+      color: rgba(5,5,5,0.68);
+      box-sizing: border-box;
+    }
+
+    .cv-spam-bandcamp-placeholder span:last-child {
+      color: var(--accent);
+    }
+
+    .cv-spam-footer {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 4;
+      padding: 0.55rem clamp(0.5rem, 2vw, 1.25rem);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: transparent;
+      border: 0;
+      pointer-events: none;
+    }
+
+    .cv-spam-footer span {
+      font-family: 'Ronzino', sans-serif;
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: lowercase;
+      color: rgba(5,5,5,0.58);
+    }
+  </style>
 </head>
+
 <body>
   <div class="cv-page">
+
     <nav class="cv-nav cv-nav--light">
       <ul>
         <li><a href="index.html">home</a></li>
         <li><a href="bio.html">bio</a></li>
-        <li><a href="music-projects.html">music &amp; projects</a></li>
+        <li><a href="music-projects.html" class="active">music &amp; projects</a></li>
         <li><a href="https://syos.co/en/blogs/our-artists/cesar-vidal" target="_blank" rel="noopener">syos artist</a></li>
         <li><a href="gonzalez-reeds.html">gonzalez reeds</a></li>
         <li><a href="merch.html">merch</a></li>
         <li><a href="contact.html">contact</a></li>
       </ul>
     </nav>
+
     <main class="cv-page-content">
-      <div class="cv-page-hero">
-        <h1 class="cv-page-title">SPAM</h1>
-      </div>
+      <section class="cv-spam-stage">
+
+        <div class="cv-spam-artwork-wrap">
+          <video class="cv-spam-artwork-video" autoplay muted loop playsinline preload="auto" poster="img/cover-spam.webp">
+            <source src="videos/spam-echo-loop.webm" type="video/webm">
+            <source src="videos/spam-echo-loop.mp4" type="video/mp4">
+          </video>
+        </div>
+
+        <article class="cv-spam-text-panel">
+          <h1 class="cv-page-title"><em>SPAM</em></h1>
+
+          <p class="cv-spam-copy">
+            Project text will go here. This layout is prepared for a short description of <em>SPAM</em>, with the animated artwork placed on the left and space for a Bandcamp player below.
+          </p>
+
+          <p class="cv-spam-copy">
+            The animated image uses a subtle echo movement in the striped areas while keeping the main cover structure stable.
+          </p>
+
+          <div class="cv-spam-bandcamp-area">
+            <!--
+            Pega aquí el iframe de Bandcamp cuando lo tengas.
+            Puedes reemplazar el placeholder de abajo por algo como:
+
+            <iframe style="border: 0; width: 100%; height: 120px;" src="AQUI_VA_EL_EMBED_DE_BANDCAMP" seamless>
+              <a href="AQUI_VA_EL_LINK_DEL_ALBUM">SPAM by César Vidal</a>
+            </iframe>
+            -->
+
+            <div class="cv-spam-bandcamp-placeholder">
+              <span>bandcamp player</span>
+              <span>coming soon</span>
+            </div>
+          </div>
+        </article>
+
+      </section>
     </main>
-    <footer class="cv-footer">
+
+    <footer class="cv-spam-footer">
       <span>© 2026 César Vidal</span>
       <span>cesarvidalmusic.art</span>
     </footer>
+
   </div>
 </body>
 </html>
