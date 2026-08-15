@@ -95,6 +95,10 @@
       z-index: 2;
     }
 
+    .cv-mp-card--coming-soon {
+      cursor: default;
+    }
+
     .cv-mp-cover {
       width: 100%;
       aspect-ratio: 1 / 1;
@@ -102,6 +106,12 @@
       object-position: center;
       display: block;
       flex-shrink: 0;
+    }
+
+    .cv-mp-card-text {
+      display: flex;
+      flex-direction: column;
+      gap: 0.22rem;
     }
 
     .cv-mp-card-title {
@@ -116,6 +126,17 @@
 
     .cv-mp-card-title em {
       font-style: italic;
+    }
+
+    .cv-mp-coming-soon {
+      font-family: 'Ronzino', sans-serif;
+      font-weight: 400;
+      font-size: clamp(10px, 0.86vw, 12px);
+      line-height: 1.2;
+      letter-spacing: 0.08em;
+      text-transform: lowercase;
+      color: rgba(10,10,10,0.48);
+      transition: color 0.35s ease;
     }
 
     .cv-mp-footer {
@@ -232,7 +253,8 @@
       {
         title: "Solo Project",
         image: "img/cover-solo-project.webp",
-        link: "solo-project.html"
+        link: null,
+        comingSoon: true
       },
       {
         title: "Des Visages (EP)",
@@ -300,13 +322,26 @@
     }
 
     function setCardProject(card, project) {
-      card.href = project.link;
       card.dataset.project = project.title;
+
+      card.classList.remove("cv-mp-card--coming-soon");
+      card.removeAttribute("aria-disabled");
+
+      if (project.link) {
+        card.href = project.link;
+      } else {
+        card.removeAttribute("href");
+        card.setAttribute("aria-disabled", "true");
+        card.classList.add("cv-mp-card--coming-soon");
+      }
 
       card.innerHTML = `
         <img class="cv-mp-cover" src="${project.image}" alt="${project.title}" loading="eager" decoding="async" fetchpriority="high" />
-        <span class="cv-mp-card-title">
-          ${project.italic ? "<em>" + project.title + "</em>" : project.title}
+        <span class="cv-mp-card-text">
+          <span class="cv-mp-card-title">
+            ${project.italic ? "<em>" + project.title + "</em>" : project.title}
+          </span>
+          ${project.comingSoon ? '<span class="cv-mp-coming-soon">coming soon</span>' : ""}
         </span>
       `;
 
@@ -321,6 +356,12 @@
       setCardProject(card, project);
       addHover(card);
 
+      if (project.comingSoon) {
+        card.addEventListener("click", event => {
+          event.preventDefault();
+        });
+      }
+
       return card;
     }
 
@@ -332,20 +373,25 @@
 
         card.style.setProperty("--hover-color", color);
 
-        const title = card.querySelector(".cv-mp-card-title");
+        const textElements = card.querySelectorAll(".cv-mp-card-title, .cv-mp-coming-soon");
 
-        if (DARK_HOVER_COLORS.includes(color)) {
-          title.style.color = "#ffffff";
-        } else {
-          title.style.color = "#0A0A0A";
-        }
+        textElements.forEach(element => {
+          if (DARK_HOVER_COLORS.includes(color)) {
+            element.style.color = "#ffffff";
+          } else {
+            element.style.color = "#0A0A0A";
+          }
+        });
       });
 
       card.addEventListener("mouseleave", () => {
         card.style.removeProperty("--hover-color");
 
-        const title = card.querySelector(".cv-mp-card-title");
-        title.style.color = "";
+        const textElements = card.querySelectorAll(".cv-mp-card-title, .cv-mp-coming-soon");
+
+        textElements.forEach(element => {
+          element.style.color = "";
+        });
       });
     }
 
