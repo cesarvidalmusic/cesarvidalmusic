@@ -1,26 +1,28 @@
 (function () {
   const COLORS = [
+    "#C8400A", // orange
     "#242017", // dark brown / black
     "#2c5544", // green
     "#ed6551", // coral
     "#efd06f"  // yellow
   ];
 
-  const TRANSITION_DURATION = 2600; // duración de transición entre colores
-  const HOLD_DURATION = 900;        // tiempo quieto en cada color
+  const TRANSITION_DURATION = 12000;
+  const HOLD_DURATION = 8000;
+  const UPDATE_EVERY = 260;
 
-  const FAVICON_SIZE = 128;         // resolución interna del icono
-  const CIRCLE_RADIUS = 54;         // tamaño visible del círculo
+  const FAVICON_SIZE = 128;
+  const CIRCLE_RADIUS = 54;
 
-  let favicon = document.querySelector("link[rel='icon']");
+  let favicon = document.querySelector("link[data-dynamic-favicon='true']");
 
   if (!favicon) {
     favicon = document.createElement("link");
     favicon.rel = "icon";
+    favicon.type = "image/png";
+    favicon.setAttribute("data-dynamic-favicon", "true");
     document.head.appendChild(favicon);
   }
-
-  favicon.type = "image/png";
 
   const canvas = document.createElement("canvas");
   canvas.width = FAVICON_SIZE;
@@ -38,13 +40,12 @@
     };
   }
 
-  function smoothStep(t) {
-    return t * t * (3 - 2 * t);
+  function smootherStep(t) {
+    return t * t * t * (t * (t * 6 - 15) + 10);
   }
 
   function mixColor(colorA, colorB, amount) {
-    const t = smoothStep(amount);
-
+    const t = smootherStep(amount);
     const a = hexToRgb(colorA);
     const b = hexToRgb(colorB);
 
@@ -76,10 +77,22 @@
   let colorIndex = 0;
   let phase = "hold";
   let phaseStart = performance.now();
+  let lastDraw = 0;
 
   function update(now) {
-    const elapsed = now - phaseStart;
+    requestAnimationFrame(update);
 
+    if (document.visibilityState !== "visible") {
+      return;
+    }
+
+    if (now - lastDraw < UPDATE_EVERY) {
+      return;
+    }
+
+    lastDraw = now;
+
+    const elapsed = now - phaseStart;
     const currentColor = COLORS[colorIndex];
     const nextColor = COLORS[(colorIndex + 1) % COLORS.length];
 
@@ -90,20 +103,20 @@
         phase = "transition";
         phaseStart = now;
       }
-    } else {
-      const amount = Math.min(elapsed / TRANSITION_DURATION, 1);
-      const mixed = mixColor(currentColor, nextColor, amount);
 
-      drawFavicon(mixed);
-
-      if (amount >= 1) {
-        colorIndex = (colorIndex + 1) % COLORS.length;
-        phase = "hold";
-        phaseStart = now;
-      }
+      return;
     }
 
-    requestAnimationFrame(update);
+    const amount = Math.min(elapsed / TRANSITION_DURATION, 1);
+    const mixed = mixColor(currentColor, nextColor, amount);
+
+    drawFavicon(mixed);
+
+    if (amount >= 1) {
+      colorIndex = (colorIndex + 1) % COLORS.length;
+      phase = "hold";
+      phaseStart = now;
+    }
   }
 
   drawFavicon(COLORS[0]);
