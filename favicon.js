@@ -1,28 +1,28 @@
 (function () {
   const COLORS = [
     "#C8400A", // orange
-    "#242017", // dark brown / black
-    "#2c5544", // green
-    "#ed6551", // coral
-    "#efd06f"  // yellow
+    "#ED6551", // coral
+    "#EFD06F", // yellow
+    "#2C5544"  // green
   ];
 
-  const TRANSITION_DURATION = 12000;
-  const HOLD_DURATION = 8000;
-  const UPDATE_EVERY = 260;
+  const START_DELAY = 3500;
+  const TRANSITION_DURATION = 16000;
+  const HOLD_DURATION = 7000;
+  const UPDATE_EVERY = 320;
 
   const FAVICON_SIZE = 128;
   const CIRCLE_RADIUS = 54;
 
-  let favicon = document.querySelector("link[data-dynamic-favicon='true']");
+  document
+    .querySelectorAll("link[data-dynamic-favicon='true']")
+    .forEach(link => link.remove());
 
-  if (!favicon) {
-    favicon = document.createElement("link");
-    favicon.rel = "icon";
-    favicon.type = "image/png";
-    favicon.setAttribute("data-dynamic-favicon", "true");
-    document.head.appendChild(favicon);
-  }
+  const favicon = document.createElement("link");
+  favicon.rel = "icon";
+  favicon.type = "image/png";
+  favicon.setAttribute("data-dynamic-favicon", "true");
+  document.head.appendChild(favicon);
 
   const canvas = document.createElement("canvas");
   canvas.width = FAVICON_SIZE;
@@ -75,7 +75,7 @@
   }
 
   let colorIndex = 0;
-  let phase = "hold";
+  let phase = "start-delay";
   let phaseStart = performance.now();
   let lastDraw = 0;
 
@@ -96,6 +96,17 @@
     const currentColor = COLORS[colorIndex];
     const nextColor = COLORS[(colorIndex + 1) % COLORS.length];
 
+    if (phase === "start-delay") {
+      drawFavicon(COLORS[0]);
+
+      if (elapsed >= START_DELAY) {
+        phase = "hold";
+        phaseStart = now;
+      }
+
+      return;
+    }
+
     if (phase === "hold") {
       drawFavicon(currentColor);
 
@@ -108,9 +119,7 @@
     }
 
     const amount = Math.min(elapsed / TRANSITION_DURATION, 1);
-    const mixed = mixColor(currentColor, nextColor, amount);
-
-    drawFavicon(mixed);
+    drawFavicon(mixColor(currentColor, nextColor, amount));
 
     if (amount >= 1) {
       colorIndex = (colorIndex + 1) % COLORS.length;
