@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Des Visages EP — César Vidal</title>
+  <title>Des Visages — César Vidal</title>
 
   <style>
     * {
@@ -23,408 +24,563 @@
     }
 
     body {
+      min-height: 100vh;
       overflow-x: hidden;
+      background: #000;
     }
 
-    /* =========================
-       NAV
-    ========================== */
+
+    /* =========================================================
+       HEADER / NAV
+    ========================================================= */
 
     header {
       position: relative;
       z-index: 20;
       width: 100%;
-      padding: 28px 5vw;
-      background: transparent;
+      height: 72px;
+      background: #000;
     }
 
     nav {
+      height: 100%;
       display: flex;
+      justify-content: flex-end;
       align-items: center;
-      justify-content: space-between;
-      width: 100%;
+
+      padding-right: 62px;
+
+      gap: 46px;
     }
 
-    .site-name {
-      color: #fff;
+    nav a {
+      color: #bdbdbd;
       text-decoration: none;
-      font-size: 14px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
 
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 28px;
-    }
+      font-size: 16px;
+      font-weight: 400;
+      letter-spacing: 0.01em;
 
-    .nav-links a {
-      color: #fff;
-      text-decoration: none;
-      font-size: 13px;
-      letter-spacing: 0.06em;
       transition: color 0.2s ease;
     }
 
-    .nav-links a:hover {
-      color: #ff6a00;
+    nav a:hover {
+      color: #fff;
     }
 
-    .nav-links .disabled {
-      opacity: 0.45;
-      cursor: default;
-      pointer-events: none;
+    nav a.active {
+      color: #fff;
+      font-weight: 600;
     }
 
-    /* =========================
+
+    /* =========================================================
        MAIN
-    ========================== */
+    ========================================================= */
 
     main {
       position: relative;
-      width: 100%;
-      min-height: calc(100vh - 80px);
 
-      display: flex;
-      align-items: center;
+      width: 100%;
+      min-height: calc(100vh - 72px);
 
       background: #000;
 
-      padding-top: 30px;
-      padding-bottom: 70px;
+      /*
+        Necesario para que la portada pueda
+        quedar pegada abajo y a la derecha.
+      */
+      overflow: hidden;
     }
 
-    /* =========================
-       TEXT
-    ========================== */
+
+    /* =========================================================
+       TEXT BLOCK
+    ========================================================= */
 
     .content {
       position: relative;
       z-index: 5;
 
       /*
-        El texto sigue a la izquierda,
-        pero comienza un poco más hacia adentro.
+        Ahora comienza bastante más a la derecha.
       */
-      margin-left: 8vw;
+      margin-left: clamp(110px, 8.5vw, 175px);
 
       /*
-        Más angosto que antes para que
-        ocupe menos espacio horizontal.
+        También lo bajamos ligeramente.
       */
-      width: 31vw;
-      max-width: 520px;
-      min-width: 360px;
+      padding-top: clamp(100px, 14vh, 155px);
 
-      padding: 30px 0;
+      /*
+        Más estrecho que antes.
+      */
+      width: min(43vw, 760px);
+
+      padding-bottom: 170px;
     }
+
+
+    /* =========================================================
+       TITLE
+    ========================================================= */
 
     .content h1 {
-      margin: 0 0 26px 0;
+      margin: 0 0 17px 0;
 
-      font-size: clamp(36px, 4vw, 66px);
+      font-size: clamp(42px, 3.3vw, 59px);
+
       line-height: 0.95;
-      font-weight: 400;
-      letter-spacing: -0.035em;
+
+      font-weight: 700;
+      font-style: italic;
+
+      letter-spacing: -0.045em;
     }
+
+
+    /* =========================================================
+       TEXT
+    ========================================================= */
 
     .content p {
-      margin: 0 0 18px 0;
+      margin: 0 0 13px 0;
 
       font-size: 15px;
-      line-height: 1.55;
+      line-height: 1.42;
+
       font-weight: 400;
+
+      color: #efefef;
     }
 
-    /* =========================
+    .content strong,
+    .content em {
+      font-weight: 600;
+      font-style: italic;
+    }
+
+
+    /* =========================================================
+       LISTEN TEXT
+    ========================================================= */
+
+    .listen {
+      margin-top: 18px !important;
+      margin-bottom: 10px !important;
+    }
+
+
+    /* =========================================================
        BANDCAMP
-    ========================== */
+    ========================================================= */
 
     .bandcamp {
-      width: 100%;
-      margin-top: 36px;
+      position: relative;
+      z-index: 6;
+
+      width: 490px;
+      max-width: 100%;
+
+      margin-top: 8px;
     }
 
     .bandcamp iframe {
       display: block;
+
       width: 100%;
-      max-width: 470px;
+      height: 137px;
+
       border: 0;
     }
 
-    /* =========================
-       COVER IMAGE
-    ========================== */
 
-    .cover-wrapper {
+    /* =========================================================
+       COVER IMAGE
+    ========================================================= */
+
+    .cover {
       position: absolute;
 
       /*
-        Pegada completamente al borde derecho.
+        Esta es la parte importante:
+        queda pegada completamente a las
+        esquinas inferior y derecha.
       */
       right: 0;
-
-      /*
-        Centrada verticalmente.
-      */
-      top: 50%;
-      transform: translateY(-50%);
+      bottom: 0;
 
       z-index: 2;
 
+      pointer-events: none;
+
       display: flex;
       justify-content: flex-end;
-      align-items: center;
-
-      height: 100%;
-      pointer-events: none;
+      align-items: flex-end;
     }
 
-    .cover-wrapper img {
+    .cover img {
       display: block;
 
       /*
-        Aproximadamente 1000 px de alto
-        cuando la pantalla lo permite.
+        MUCHO más grande.
+
+        En una pantalla como la de tu captura
+        debería quedar aproximadamente entre
+        600 y 700 px de alto.
       */
-      height: min(1000px, 88vh);
+      height: clamp(560px, 73vh, 1000px);
 
       width: auto;
-      max-width: 62vw;
+
+      /*
+        No deja separación con los bordes.
+      */
+      margin: 0;
+      padding: 0;
 
       object-fit: contain;
-      object-position: right center;
+      object-position: right bottom;
     }
 
-    /* =========================
+
+    /* =========================================================
        FOOTER
-    ========================== */
+    ========================================================= */
 
     footer {
-      position: relative;
-      z-index: 10;
+      position: fixed;
+
+      left: 0;
+      bottom: 0;
+
+      z-index: 30;
 
       width: 100%;
-      padding: 20px 5vw 28px;
 
-      background: #000;
-      color: rgba(255, 255, 255, 0.6);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      padding: 0 12px 13px;
+
+      pointer-events: none;
 
       font-size: 11px;
-      letter-spacing: 0.04em;
+      letter-spacing: 0.11em;
+
+      color: #aaa;
     }
 
-    /* =========================
+
+    /* =========================================================
+       LARGE / MEDIUM SCREENS
+    ========================================================= */
+
+    @media (max-width: 1450px) {
+
+      nav {
+        gap: 32px;
+        padding-right: 42px;
+      }
+
+      .content {
+        margin-left: 7vw;
+        width: 45vw;
+      }
+
+      .cover img {
+        height: 67vh;
+      }
+    }
+
+
+    /* =========================================================
        TABLET
-    ========================== */
+    ========================================================= */
 
     @media (max-width: 1100px) {
 
-      .content {
-        margin-left: 6vw;
-        width: 38vw;
-        min-width: 320px;
+      nav {
+        gap: 22px;
+        padding-right: 28px;
       }
 
-      .cover-wrapper img {
-        height: min(850px, 80vh);
-        max-width: 58vw;
+      nav a {
+        font-size: 14px;
+      }
+
+      .content {
+        margin-left: 6vw;
+
+        width: 50vw;
+
+        padding-top: 100px;
+      }
+
+      .content p {
+        font-size: 14px;
+      }
+
+      .cover img {
+        height: 60vh;
       }
     }
 
-    /* =========================
+
+    /* =========================================================
        MOBILE
-    ========================== */
+    ========================================================= */
 
     @media (max-width: 800px) {
 
       header {
-        padding: 22px 24px;
+        height: auto;
       }
 
       nav {
-        align-items: flex-start;
-      }
+        justify-content: flex-start;
 
-      .nav-links {
-        gap: 14px;
         flex-wrap: wrap;
-        justify-content: flex-end;
+
+        gap: 14px 22px;
+
+        padding: 25px 7vw;
       }
 
       main {
         display: flex;
         flex-direction: column;
+
         min-height: auto;
-        padding: 35px 0 60px;
-      }
 
-      .cover-wrapper {
-        position: relative;
-        top: auto;
-        right: auto;
-        transform: none;
-
-        order: 1;
-
-        width: 100%;
-        height: auto;
-
-        justify-content: flex-end;
-
-        margin-bottom: 45px;
-      }
-
-      .cover-wrapper img {
-        width: 88vw;
-        height: auto;
-        max-width: none;
-        max-height: none;
+        overflow: visible;
       }
 
       .content {
-        order: 2;
+        order: 1;
 
-        margin-left: 8vw;
-        margin-right: 8vw;
+        margin-left: 7vw;
+        margin-right: 7vw;
 
-        width: 84vw;
-        min-width: 0;
-        max-width: 560px;
+        width: 86vw;
 
-        padding: 0;
+        padding-top: 60px;
+        padding-bottom: 50px;
       }
 
       .content h1 {
-        font-size: 42px;
+        font-size: 44px;
       }
 
-      .bandcamp iframe {
-        max-width: 100%;
+      .content p {
+        font-size: 15px;
+        line-height: 1.5;
+      }
+
+      .bandcamp {
+        width: 100%;
+      }
+
+      .cover {
+        position: relative;
+
+        order: 2;
+
+        right: auto;
+        bottom: auto;
+
+        width: 100%;
+
+        justify-content: flex-end;
+      }
+
+      .cover img {
+        width: 93vw;
+        height: auto;
+      }
+
+      footer {
+        position: relative;
+
+        margin-top: 20px;
+
+        padding: 20px 15px;
       }
     }
 
   </style>
 </head>
 
+
 <body>
 
-  <!-- =========================
+
+  <!-- =======================================================
        NAVIGATION
-  ========================== -->
+  ======================================================== -->
 
   <header>
+
     <nav>
 
-      <a class="site-name" href="index.html">
-        César Vidal
+      <a href="index.html">
+        home
       </a>
 
-      <div class="nav-links">
+      <a href="bio.html">
+        bio
+      </a>
 
-        <!--
-          Mantén aquí exactamente los enlaces
-          que tienes en el resto de tu sitio.
-        -->
+      <a href="music.html" class="active">
+        music &amp; projects
+      </a>
 
-        <a href="index.html">home</a>
+      <a href="syos.html">
+        syos artist
+      </a>
 
-        <a href="music.html">music</a>
+      <a href="gonzalez-reeds.html">
+        gonzalez reeds
+      </a>
 
-        <a href="about.html">about</a>
+      <a href="merch.html">
+        merch
+      </a>
 
-        <a href="contact.html">contact</a>
-
-        <a class="disabled" href="#">
-          merch — coming soon
-        </a>
-
-      </div>
+      <a href="contact.html">
+        contact
+      </a>
 
     </nav>
+
   </header>
 
 
-  <!-- =========================
-       MAIN CONTENT
-  ========================== -->
+
+  <!-- =======================================================
+       MAIN
+  ======================================================== -->
 
   <main>
 
-    <!-- TEXTO -->
+
+    <!-- =====================================================
+         TEXT
+    ====================================================== -->
 
     <section class="content">
 
-      <h1>Des Visages</h1>
+      <h1>
+        des visages
+      </h1>
 
-      <!--
-        DEJA AQUÍ EXACTAMENTE EL TEXTO
-        QUE YA TENÍAS EN LA VERSIÓN ANTERIOR.
-      -->
 
       <p>
-        Des Visages is an electroacoustic duo formed by saxophonist César Vidal
-        and electronic musician Jorge Care. The project explores the interaction
-        between acoustic improvisation and live electronic processing.
-      </p>
-
-      <p>
-        Their first EP, <em>Des Visages</em>, was recorded at the Haute école
-        de musique de Genève and develops a dialogue between saxophone,
-        electronics, improvisation and real-time sound transformation.
+        <strong>Des Visages</strong> marks the duo’s recorded debut,
+        captured in 2025 at Studio d’enregistrement HEM in Geneva,
+        Switzerland, and recorded, mixed, and mastered by Samuel Albert.
+        Comprising three original pieces, the EP consolidates the group’s
+        aesthetic vision, where acoustic and electronic elements intertwine
+        through improvisation to form coherent and evolving musical narratives.
       </p>
 
 
-      <!-- BANDCAMP -->
+      <p>
+        Partly inspired by literary narrative structures, the works are
+        presented as a triptych titled <em>Introduction</em>,
+        <em>Corpo</em>, and
+        <em>Conclusions (for Peter Evans and Sam Pluta)</em>.
+        With this debut recording, the duo sought to allow sound to become
+        a vehicle for the unpredictable, and for the unpredictable in turn
+        to take shape as form, shaping a work that aims to remain precise
+        in its conception while fluid and open in its execution.
+      </p>
+
+
+      <p>
+        The EP <strong>Des Visages</strong> was premiered during the concert
+        <em>Électrons libérés</em>, held at the Black Box of HEM in Geneva
+        on February 21, 2025. Later that same year, the project was presented
+        again in Geneva as part of the renowned Fête de la Musique.
+      </p>
+
+
+      <p class="listen">
+        Listen to the EP:
+      </p>
+
+
+
+      <!-- ===================================================
+           BANDCAMP
+      ==================================================== -->
 
       <div class="bandcamp">
 
         <!--
-          PEGA AQUÍ EL MISMO IFRAME DE BANDCAMP
-          QUE TENÍAS ANTES.
 
-          No actives el artwork de Bandcamp,
-          porque ya estamos mostrando la portada
-          grande a la derecha.
-        -->
+        IMPORTANTE:
 
-        <!-- EJEMPLO:
+        Aquí usa EXACTAMENTE el mismo src=""
+        del iframe de Bandcamp que ya tienes funcionando.
+
+        Por ejemplo:
 
         <iframe
-          style="border: 0; width: 100%; height: 120px;"
-          src="TU-EMBED-DE-BANDCAMP"
+          src="TU URL ACTUAL DE BANDCAMP"
           seamless>
         </iframe>
 
         -->
 
+        <iframe
+          src="PEGA-AQUI-TU-SRC-ACTUAL-DE-BANDCAMP"
+          seamless>
+        </iframe>
+
       </div>
+
 
     </section>
 
 
-    <!-- PORTADA -->
 
-    <div class="cover-wrapper">
+    <!-- =====================================================
+         LARGE COVER
+    ====================================================== -->
+
+    <div class="cover">
 
       <img
         src="img/des-visages-caratula.webp"
-        alt="Des Visages EP cover"
+        alt="Des Visages"
       >
 
     </div>
 
+
   </main>
 
 
-  <!-- =========================
+
+  <!-- =======================================================
        FOOTER
-  ========================== -->
+  ======================================================== -->
 
   <footer>
-    © César Vidal
+
+    <span>
+      © 2026 césar vidal
+    </span>
+
+    <span>
+      cesarvidalmusic.art
+    </span>
+
   </footer>
 
+
 </body>
+
 </html>
