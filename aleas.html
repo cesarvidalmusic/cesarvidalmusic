@@ -233,5 +233,12 @@
     </footer>
 
   </div>
+  <script>
+  document.querySelectorAll(".cv-nav-soon > a").forEach(link => {
+    link.addEventListener("click", event => {
+      event.preventDefault();
+    });
+  });
+</script>
 </body>
 </html>
