@@ -107,7 +107,7 @@
       z-index: 4;
       width: min(42vw, 720px);
       margin-left: clamp(110px, 8.4vw, 165px);
-      padding-top: clamp(82px, 12.2vh, 132px);
+      padding-top: calc(clamp(82px, 12.2vh, 132px) + 1cm);
       padding-bottom: 2.4rem;
       font-family: 'Ronzino', sans-serif;
       color: #ffffff;
@@ -128,7 +128,9 @@
       line-height: 1.39;
       letter-spacing: 0.002em;
       color: rgba(255,255,255,0.94);
-      text-align: left;
+      text-align: justify;
+      text-justify: inter-word;
+      hyphens: auto;
     }
 
     .cv-dv-ep-copy em,
@@ -174,7 +176,7 @@
 
     .cv-dv-ep-cover {
       display: block;
-      height: clamp(500px, 66vh, 820px);
+      height: clamp(640px, 92vh, 1120px);
       width: auto;
       max-width: none;
       margin: 0;
@@ -211,11 +213,11 @@
       .cv-dv-ep-copy-panel {
         width: min(45vw, 690px);
         margin-left: 7vw;
-        padding-top: clamp(76px, 11.2vh, 118px);
+        padding-top: calc(clamp(76px, 11.2vh, 118px) + 1cm);
       }
 
       .cv-dv-ep-cover {
-        height: clamp(460px, 61vh, 720px);
+        height: clamp(610px, 88vh, 980px);
       }
     }
 
@@ -223,7 +225,7 @@
       .cv-dv-ep-copy-panel {
         width: 52vw;
         margin-left: 6vw;
-        padding-top: 92px;
+        padding-top: calc(92px + 1cm);
       }
 
       .cv-dv-ep-copy {
@@ -232,7 +234,7 @@
       }
 
       .cv-dv-ep-cover {
-        height: 55vh;
+        height: 78vh;
       }
     }
 
