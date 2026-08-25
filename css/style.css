@@ -502,3 +502,41 @@ img { display: block; max-width: 100%; }
   text-transform: lowercase;
   color: #bbb;
 }
+.cv-nav-soon {
+  position: relative;
+}
+
+.cv-nav-soon > a {
+  cursor: default;
+}
+
+.cv-nav-soon-bubble {
+  position: absolute;
+  top: calc(100% + 0.55rem);
+  left: 50%;
+  transform: translateX(-50%) translateY(-0.15rem);
+  opacity: 0;
+  pointer-events: none;
+
+  padding: 0.34rem 0.52rem 0.38rem;
+  border-radius: 999px;
+
+  font-family: 'Ronzino', sans-serif;
+  font-size: 10px;
+  line-height: 1;
+  letter-spacing: 0.08em;
+  text-transform: lowercase;
+  white-space: nowrap;
+
+  color: #ffffff;
+  background: var(--accent);
+
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s ease;
+}
+
+.cv-nav-soon:hover .cv-nav-soon-bubble {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
