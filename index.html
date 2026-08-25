@@ -168,8 +168,10 @@
     <li><a href="music-projects.html">music &amp; projects</a></li>
     <li><a href="https://syos.co/en/blogs/our-artists/cesar-vidal" target="_blank" rel="noopener">syos artist</a></li>
     <li><a href="gonzalez-reeds.html">gonzalez reeds</a></li>
-    <li><a href="merch.html">merch</a></li>
-    <li><a href="contact.html">contact</a></li>
+<li class="cv-nav-soon">
+  <a href="#" aria-disabled="true">merch</a>
+  <span class="cv-nav-soon-bubble">coming soon</span>
+</li>    <li><a href="contact.html">contact</a></li>
   </ul>
 </nav>
       <div class="cv-hero-content">
@@ -195,6 +197,12 @@
     </footer>
 
   </div>
-
+<script>
+  document.querySelectorAll(".cv-nav-soon > a").forEach(link => {
+    link.addEventListener("click", event => {
+      event.preventDefault();
+    });
+  });
+</script>
 </body>
 </html>
