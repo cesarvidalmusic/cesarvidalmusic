@@ -8,10 +8,12 @@
 
   <link rel="preload" href="fonts/Ronzino-BoldOblique.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="preload" href="fonts/Ronzino-Regular.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="fonts/Ronzino-Oblique.woff2" as="font" type="font/woff2" crossorigin />
+
   <link rel="icon" href="favicon.ico" sizes="any">
-<link rel="icon" href="favicon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="apple-touch-icon.png">
-<script defer src="favicon.js?v=6"></script>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <script defer src="favicon.js?v=6"></script>
 
   <link rel="preload" as="image" href="img/cover-des-visages.webp" type="image/webp" fetchpriority="high">
   <link rel="preload" as="image" href="img/cover-nubes.webp" type="image/webp" fetchpriority="high">
@@ -78,13 +80,13 @@
       display: flex;
       flex-direction: column;
       align-items: flex-start;
-      padding: 1rem 1rem;
+      padding: 1rem 1rem 1.05rem;
       border-bottom: 0.5px solid #E0E0E0;
       height: 75vh;
       box-sizing: border-box;
       text-decoration: none;
       color: #0A0A0A;
-      gap: 0.75rem;
+      gap: 0.72rem;
       transition: background 0.35s ease, transform 0.35s ease;
       transform-origin: center center;
       position: relative;
@@ -113,14 +115,21 @@
     .cv-mp-card-text {
       display: flex;
       flex-direction: column;
-      gap: 0.22rem;
+      gap: 0.34rem;
+      min-height: 0;
+      max-width: 100%;
+      transition: transform 0.35s ease;
+    }
+
+    .cv-mp-card:hover .cv-mp-card-text {
+      transform: translateY(-0.02rem);
     }
 
     .cv-mp-card-title {
       font-family: 'Ronzino', sans-serif;
       font-weight: 400;
-      font-size: clamp(12px, 1.2vw, 17px);
-      line-height: 1.25;
+      font-size: clamp(12px, 1.15vw, 16.5px);
+      line-height: 1.2;
       letter-spacing: 0.01em;
       color: #0A0A0A;
       transition: color 0.35s ease;
@@ -130,10 +139,42 @@
       font-style: italic;
     }
 
-    .cv-mp-coming-soon {
+    .cv-mp-card-preview {
+      display: -webkit-box;
+      -webkit-line-clamp: 4;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+
       font-family: 'Ronzino', sans-serif;
       font-weight: 400;
-      font-size: clamp(10px, 0.86vw, 12px);
+      font-size: clamp(10.4px, 0.78vw, 12.2px);
+      line-height: 1.32;
+      letter-spacing: 0.002em;
+      color: rgba(10,10,10,0.68);
+      transition: color 0.35s ease;
+    }
+
+    .cv-mp-card-preview em {
+      font-style: italic;
+    }
+
+    .cv-mp-card-more {
+      margin-top: 0.05rem;
+      font-family: 'Ronzino', sans-serif;
+      font-weight: 400;
+      font-size: clamp(9.5px, 0.72vw, 11px);
+      line-height: 1.2;
+      letter-spacing: 0.08em;
+      text-transform: lowercase;
+      color: rgba(10,10,10,0.46);
+      transition: color 0.35s ease;
+    }
+
+    .cv-mp-coming-soon {
+      margin-top: 0.05rem;
+      font-family: 'Ronzino', sans-serif;
+      font-weight: 400;
+      font-size: clamp(10px, 0.78vw, 11.5px);
       line-height: 1.2;
       letter-spacing: 0.08em;
       text-transform: lowercase;
@@ -163,6 +204,45 @@
       padding-top: calc(var(--nav-height) + 0.75rem);
       flex-shrink: 0;
     }
+
+    .cv-nav-soon {
+      position: relative;
+    }
+
+    .cv-nav-soon > a {
+      cursor: default;
+    }
+
+    .cv-nav-soon-bubble {
+      position: absolute;
+      top: calc(100% + 0.55rem);
+      left: 50%;
+      transform: translateX(-50%) translateY(-0.15rem);
+      opacity: 0;
+      pointer-events: none;
+
+      padding: 0.34rem 0.52rem 0.38rem;
+      border-radius: 999px;
+
+      font-family: 'Ronzino', sans-serif;
+      font-size: 10px;
+      line-height: 1;
+      letter-spacing: 0.08em;
+      text-transform: lowercase;
+      white-space: nowrap;
+
+      color: #ffffff;
+      background: var(--accent);
+
+      transition:
+        opacity 0.25s ease,
+        transform 0.25s ease;
+    }
+
+    .cv-nav-soon:hover .cv-nav-soon-bubble {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
   </style>
 </head>
 
@@ -176,10 +256,11 @@
         <li><a href="music-projects.html" class="active">music &amp; projects</a></li>
         <li><a href="https://syos.co/en/blogs/our-artists/cesar-vidal" target="_blank" rel="noopener">syos artist</a></li>
         <li><a href="gonzalez-reeds.html">gonzalez reeds</a></li>
-<li class="cv-nav-soon">
-  <a href="#" aria-disabled="true">merch</a>
-  <span class="cv-nav-soon-bubble">coming soon</span>
-</li>        <li><a href="contact.html">contact</a></li>
+        <li class="cv-nav-soon">
+          <a href="#" aria-disabled="true">merch</a>
+          <span class="cv-nav-soon-bubble">coming soon</span>
+        </li>
+        <li><a href="contact.html">contact</a></li>
       </ul>
     </nav>
 
@@ -235,48 +316,56 @@
       {
         title: "Des Visages",
         image: "img/cover-des-visages.webp",
-        link: "des-visages.html"
+        link: "des-visages.html",
+        preview: "A Europe-based duo of saxophone and live electronics created by Chilean musicians Jorge Care and César Vidal. Their music unfolds through spontaneous interaction, weaving sonic narratives born from improvisation."
       },
       {
         title: "NUBES",
         image: "img/cover-nubes.webp",
         link: "nubes.html",
-        italic: true
+        italic: true,
+        preview: "The first duo album by César Vidal and Chilean guitarist Nicolás Vera, born from a period of remote collaboration between Amsterdam and Santiago, Chile."
       },
       {
         title: "SPAM",
         image: "img/cover-spam.webp",
         link: "spam.html",
-        italic: true
+        italic: true,
+        preview: "The second release by César Vidal and Nicolás Vera, expanding the duo’s acoustic foundation through electronic textures, analog effects, synthesizers, and subtle sound processing."
       },
       {
         title: "César Vidal & Artikulation Band",
         image: "img/cover-artikulation-band.webp",
-        link: "artikulation-band.html"
+        link: "artikulation-band.html",
+        preview: "A multicultural contemporary jazz quintet based in the Netherlands, bringing together acoustic writing, improvisation, and live electronics."
       },
       {
         title: "Solo Project",
         image: "img/cover-solo-project.webp",
         link: null,
-        comingSoon: true
+        comingSoon: true,
+        preview: "A solo project for saxophone, electronics, real-time processing, and expanded performance practice. Currently in development."
       },
       {
         title: "Des Visages (EP)",
         image: "img/cover-des-visages-ep.webp",
         link: "des-visages-ep.html",
-        italic: true
+        italic: true,
+        preview: "The recorded debut of Des Visages, captured at Studio d’enregistrement HEM in Geneva and shaped as a triptych of original pieces."
       },
       {
         title: "aleas",
         image: "img/cover-aleas.webp",
         link: "aleas.html",
-        italic: true
+        italic: true,
+        preview: "The second recording project by Des Visages, focused on improvisation, chance, lighting, and real-time video projection."
       },
       {
         title: "Flor de Loto",
         image: "img/cover-flor-de-loto.webp",
         link: "flor-de-loto.html",
-        italic: true
+        italic: true,
+        preview: "A duo album by César Vidal and Chilean pianist Joaquín Fuentes, recorded during an early and meaningful stage in Vidal’s musical path."
       }
     ];
 
@@ -345,7 +434,14 @@
           <span class="cv-mp-card-title">
             ${project.italic ? "<em>" + project.title + "</em>" : project.title}
           </span>
-          ${project.comingSoon ? '<span class="cv-mp-coming-soon">coming soon</span>' : ""}
+          <span class="cv-mp-card-preview">
+            ${project.preview}
+          </span>
+          ${
+            project.comingSoon
+              ? '<span class="cv-mp-coming-soon">coming soon</span>'
+              : '<span class="cv-mp-card-more">read more…</span>'
+          }
         </span>
       `;
 
@@ -369,6 +465,30 @@
       return card;
     }
 
+    function applyHoverTextColor(card, color) {
+      const textElements = card.querySelectorAll(
+        ".cv-mp-card-title, .cv-mp-card-preview, .cv-mp-card-more, .cv-mp-coming-soon"
+      );
+
+      textElements.forEach(element => {
+        if (DARK_HOVER_COLORS.includes(color)) {
+          element.style.color = "#ffffff";
+        } else {
+          element.style.color = "#0A0A0A";
+        }
+      });
+    }
+
+    function clearHoverTextColor(card) {
+      const textElements = card.querySelectorAll(
+        ".cv-mp-card-title, .cv-mp-card-preview, .cv-mp-card-more, .cv-mp-coming-soon"
+      );
+
+      textElements.forEach(element => {
+        element.style.color = "";
+      });
+    }
+
     function addHover(card) {
       card.addEventListener("mouseenter", () => {
         const color = HOVER_COLORS[
@@ -376,26 +496,12 @@
         ];
 
         card.style.setProperty("--hover-color", color);
-
-        const textElements = card.querySelectorAll(".cv-mp-card-title, .cv-mp-coming-soon");
-
-        textElements.forEach(element => {
-          if (DARK_HOVER_COLORS.includes(color)) {
-            element.style.color = "#ffffff";
-          } else {
-            element.style.color = "#0A0A0A";
-          }
-        });
+        applyHoverTextColor(card, color);
       });
 
       card.addEventListener("mouseleave", () => {
         card.style.removeProperty("--hover-color");
-
-        const textElements = card.querySelectorAll(".cv-mp-card-title, .cv-mp-coming-soon");
-
-        textElements.forEach(element => {
-          element.style.color = "";
-        });
+        clearHoverTextColor(card);
       });
     }
 
@@ -562,12 +668,13 @@
       preloadLimit
     ]).then(startGallery);
   </script>
-<script>
-  document.querySelectorAll(".cv-nav-soon > a").forEach(link => {
-    link.addEventListener("click", event => {
-      event.preventDefault();
+
+  <script>
+    document.querySelectorAll(".cv-nav-soon > a").forEach(link => {
+      link.addEventListener("click", event => {
+        event.preventDefault();
+      });
     });
-  });
-</script>
+  </script>
 </body>
 </html>
