@@ -3,42 +3,50 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Des Visages EP — César Vidal" />
-  <title>Des Visages (EP) — César Vidal</title>
+  <meta name="description" content="Des Visages — saxophone and live electronics duo by Jorge Care and César Vidal." />
+  <title>Des Visages — César Vidal</title>
 
   <link rel="preload" href="fonts/Ronzino-BoldOblique.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="preload" href="fonts/Ronzino-Regular.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="preload" href="fonts/Ronzino-Oblique.woff2" as="font" type="font/woff2" crossorigin />
-  <link rel="preload" as="image" href="img/des-visages-caratula.webp" type="image/webp" fetchpriority="high">
+
   <link rel="icon" href="favicon.ico" sizes="any">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <script defer src="favicon.js?v=6"></script>
+
   <link rel="stylesheet" href="css/style.css" />
 
   <style>
+    :root {
+      --dv-red: #C40F14;
+    }
+
     html, body {
       height: 100%;
       overflow: hidden;
-      background: #000;
+      background: var(--dv-red);
     }
 
     .cv-page {
       position: relative;
       height: 100vh;
       overflow: hidden;
-      background: #000;
+      background: var(--dv-red);
     }
 
-    .cv-dv-ep-bg-video {
+    .cv-dv-bg-img {
       position: fixed;
-      inset: 0;
-      width: 100vw;
+      left: 0;
+      bottom: 0;
       height: 100vh;
-      object-fit: cover;
-      object-position: center center;
+      width: auto;
+      max-width: none;
+      object-fit: contain;
+      object-position: left bottom;
       z-index: 0;
       pointer-events: none;
+      user-select: none;
     }
 
     .cv-nav {
@@ -51,12 +59,45 @@
     }
 
     .cv-nav.cv-nav--dark a:hover {
-      color: var(--accent);
+      color: #ffffff;
     }
 
     .cv-nav a.active {
       color: #ffffff;
       text-shadow: 0.35px 0 currentColor, -0.35px 0 currentColor;
+    }
+
+    .cv-nav-soon {
+      position: relative;
+    }
+
+    .cv-nav-soon > a {
+      cursor: default;
+    }
+
+    .cv-nav-soon-bubble {
+      position: absolute;
+      top: calc(100% + 0.55rem);
+      left: 50%;
+      transform: translateX(-50%) translateY(-0.15rem);
+      opacity: 0;
+      pointer-events: none;
+      padding: 0.34rem 0.52rem 0.38rem;
+      border-radius: 999px;
+      font-family: 'Ronzino', sans-serif;
+      font-size: 10px;
+      line-height: 1;
+      letter-spacing: 0.08em;
+      text-transform: lowercase;
+      white-space: nowrap;
+      color: var(--dv-red);
+      background: #ffffff;
+      transition: opacity 0.25s ease, transform 0.25s ease;
+    }
+
+    .cv-nav-soon:hover .cv-nav-soon-bubble {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
     }
 
     .cv-page-content {
@@ -67,112 +108,104 @@
       flex-direction: column;
       min-height: 0;
       padding-top: var(--nav-height);
+      background: transparent;
+    }
+
+    .cv-dv-layout {
+      flex: 1;
+      min-height: 0;
+      display: grid;
+      grid-template-columns: minmax(34vw, 40vw) minmax(0, 1fr);
+      align-items: center;
+      padding: 0 var(--pad-x) 2.15rem 0;
       box-sizing: border-box;
       background: transparent;
     }
 
-    .cv-dv-ep-stage {
-      flex: 1;
-      min-height: 0;
+    .cv-dv-copy-panel {
+      grid-column: 2;
       display: flex;
       align-items: center;
-      justify-content: center;
-      padding: 0 0 2.1rem;
-      box-sizing: border-box;
-    }
-
-    .cv-dv-ep-panel {
-      width: 100vw;
-      height: min(72vh, 720px);
-      min-height: 520px;
-      background: rgba(0,0,0,0.48);
-      box-sizing: border-box;
-      display: grid;
-      grid-template-columns: minmax(0, 0.58fr) minmax(0, 0.42fr);
-      gap: clamp(1.6rem, 3.4vw, 4.2rem);
-      align-items: center;
-      padding: clamp(1.35rem, 2.4vw, 2.6rem) var(--pad-x);
-    }
-
-    .cv-dv-ep-text-slot {
-      width: 100%;
-      max-width: 780px;
+      justify-content: flex-start;
       min-width: 0;
+      height: 100%;
+      padding-left: calc(clamp(0.15rem, 0.8vw, 1rem) + 1cm);
+      box-sizing: border-box;
+    }
+
+    .cv-dv-copy {
+      width: 100%;
+      max-width: 760px;
       font-family: 'Ronzino', sans-serif;
       color: #ffffff;
-      justify-self: end;
     }
 
     .cv-page-title {
-      margin: 0 0 clamp(0.75rem, 1.45vh, 1.1rem);
+      margin: 0 0 clamp(0.85rem, 1.65vh, 1.25rem);
       color: #ffffff;
     }
 
-    .cv-dv-ep-copy {
-      margin: 0 0 0.62rem;
-      font-size: clamp(11.4px, 0.86vw, 13.4px);
-      line-height: 1.36;
+    .cv-dv-copy p {
+      margin: 0 0 0.66rem;
+      font-size: clamp(12px, 0.92vw, 14.2px);
+      line-height: 1.39;
       letter-spacing: 0.002em;
       color: rgba(255,255,255,0.94);
       text-align: justify;
       text-justify: inter-word;
     }
 
-    .cv-dv-ep-copy em {
-      font-style: italic;
-    }
-
-    .cv-dv-ep-copy:last-of-type {
+    .cv-dv-copy p:last-of-type {
       margin-bottom: 0;
     }
 
-    .cv-dv-ep-listen-area {
-      margin-top: clamp(0.8rem, 1.55vh, 1.1rem);
+    .cv-dv-listen-area {
+      margin-top: clamp(0.9rem, 1.75vh, 1.25rem);
       display: flex;
       flex-direction: column;
-      gap: 0.42rem;
+      align-items: flex-start;
+      justify-content: flex-start;
+      gap: 0.5rem;
     }
 
-    .cv-dv-ep-release-note {
+    .cv-dv-release-note {
       margin: 0;
-      font-size: clamp(11.4px, 0.86vw, 13.4px);
-      line-height: 1.36;
+      font-size: clamp(12px, 0.92vw, 14.2px);
+      line-height: 1.39;
       letter-spacing: 0.002em;
       color: rgba(255,255,255,0.94);
+      text-align: left;
     }
 
-    .cv-dv-ep-bandcamp {
-      width: min(58%, 430px);
-      min-width: 340px;
+    .cv-dv-bandcamp {
+      width: 100%;
+      max-width: 760px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
     }
 
-    .cv-dv-ep-bandcamp iframe {
+    .cv-dv-bandcamp iframe {
       display: block;
       width: 100%;
       height: 120px;
       border: 0;
     }
 
-    .cv-dv-ep-artwork-wrap {
-      width: 100%;
-      height: 100%;
-      min-width: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    .cv-dv-photo-credit {
+      position: fixed;
+      left: clamp(0.75rem, 2vw, 1.25rem);
+      bottom: 1.85rem;
+      z-index: 4;
+      font-family: 'Ronzino', sans-serif;
+      font-size: clamp(9px, 0.9vw, 11px);
+      letter-spacing: 0.16em;
+      color: rgba(255,255,255,0.58);
+      text-transform: lowercase;
+      pointer-events: none;
     }
 
-    .cv-dv-ep-cover {
-      display: block;
-      width: min(32vw, 460px);
-      max-width: 100%;
-      max-height: min(54vh, 520px);
-      height: auto;
-      object-fit: contain;
-      box-shadow: 0 18px 42px rgba(0,0,0,0.32);
-    }
-
-    .cv-dv-ep-footer {
+    .cv-dv-footer {
       position: fixed;
       left: 0;
       right: 0;
@@ -187,7 +220,7 @@
       pointer-events: none;
     }
 
-    .cv-dv-ep-footer span {
+    .cv-dv-footer span {
       font-family: 'Ronzino', sans-serif;
       font-size: 10px;
       letter-spacing: 0.12em;
@@ -200,9 +233,14 @@
 <body>
   <div class="cv-page">
 
-    <video class="cv-dv-ep-bg-video" autoplay muted loop playsinline preload="auto">
-      <source src="videos/des-visages-ep.mp4" type="video/mp4">
-    </video>
+    <img
+      class="cv-dv-bg-img"
+      src="img/des-visages-red.webp"
+      alt=""
+      aria-hidden="true"
+      decoding="async"
+      fetchpriority="high"
+    />
 
     <nav class="cv-nav cv-nav--dark">
       <ul>
@@ -220,56 +258,60 @@
     </nav>
 
     <main class="cv-page-content">
-      <section class="cv-dv-ep-stage">
+      <section class="cv-dv-layout">
 
-        <div class="cv-dv-ep-panel">
+        <article class="cv-dv-copy-panel">
+          <div class="cv-dv-copy">
+            <h1 class="cv-page-title">Des Visages</h1>
 
-          <article class="cv-dv-ep-text-slot">
-            <h1 class="cv-page-title"><em>Des Visages</em></h1>
-
-            <p class="cv-dv-ep-copy">
-              <em>Des Visages</em> marks the duo’s recorded debut, captured in 2025 at Studio d’enregistrement HEM in Geneva, Switzerland, and recorded, mixed, and mastered by Samuel Albert. Comprising three original pieces, the EP consolidates the group’s aesthetic vision, where acoustic and electronic elements intertwine through improvisation to form coherent and evolving musical narratives.
+            <p>
+              Des Visages is a Europe-based duo of saxophone and live electronics created by Chilean musicians Jorge Care and César Vidal. Their music unfolds through spontaneous interaction, weaving sonic narratives born from improvisation and blurring the boundaries between acoustic and electronic sound.
             </p>
 
-            <p class="cv-dv-ep-copy">
-              Partly inspired by literary narrative structures, the works are presented as a triptych titled <em>Introduction</em>, <em>Corpo</em>, and <em>Conclusions (for Peter Evans and Sam Pluta)</em>. With this debut recording, the duo sought to allow sound to become a vehicle for the unpredictable, and for the unpredictable in turn to take shape as form, shaping a work that aims to remain precise in its conception while fluid and open in its execution.
+            <p>
+              Rooted in dialogue, listening and real-time transformation, the duo builds evolving soundscapes where texture, rhythm and space shape the story as it happens. Their setup includes prepared saxophone, synthesizers, controllers, Push 3 and digital environments such as Ableton Live, MAX, TouchOSC, Beam and TouchDesigner.
             </p>
 
-            <p class="cv-dv-ep-copy">
-              The EP <em>Des Visages</em> was premiered during the concert <em>Électrons libérés</em>, held at the Black Box of HEM in Geneva on February 21, 2025. Later that same year, the project was presented again in Geneva as part of the renowned Fête de la Musique.
+            <p>
+              Alongside sound, Des Visages incorporates a strong theatrical dimension through concert lighting, sometimes reactive to sound, as well as video projection, generated visuals, poetic texts and video mapping. Their work is also informed by electroacoustic music and by the dynamic interplay of Peter Evans and Sam Pluta, whose duo practice resonates with their own approach.
             </p>
 
-            <div class="cv-dv-ep-listen-area">
-              <p class="cv-dv-ep-release-note">
-                Listen to the EP:
+            <p>
+              The duo released its self-titled EP in 2025, recorded and launched in Geneva, Switzerland, followed by <em>aleas</em>, recorded in Amsterdam and presented through their 2026 European tour, with concerts in Switzerland, France, the Netherlands, England and Denmark.
+            </p>
+
+            <p>
+              Each performance becomes a unique encounter between performer, audience and place: a sonic journey where improvisation turns sound into story.
+            </p>
+
+            <div class="cv-dv-listen-area">
+              <p class="cv-dv-release-note">
+                Listen to our two recorded works:
               </p>
 
-              <div class="cv-dv-ep-bandcamp">
+              <div class="cv-dv-bandcamp">
                 <iframe
-                  src="https://bandcamp.com/EmbeddedPlayer/album=3382948755/size=large/bgcol=333333/linkcol=c8400a/tracklist=false/artwork=none/transparent=true/"
+                  src="https://bandcamp.com/EmbeddedPlayer/album=2317617485/size=large/bgcol=333333/linkcol=e99708/tracklist=false/artwork=small/transparent=true/"
+                  seamless>
+                  <a href="https://desvisages.bandcamp.com/album/aleas">aleas by Des Visages</a>
+                </iframe>
+
+                <iframe
+                  src="https://bandcamp.com/EmbeddedPlayer/album=3382948755/size=large/bgcol=333333/linkcol=e32c14/tracklist=false/artwork=small/transparent=true/"
                   seamless>
                   <a href="https://desvisages.bandcamp.com/album/des-visages">Des Visages by Des Visages</a>
                 </iframe>
               </div>
             </div>
-          </article>
-
-          <div class="cv-dv-ep-artwork-wrap">
-            <img
-              class="cv-dv-ep-cover"
-              src="img/des-visages-caratula.webp"
-              alt="Des Visages EP album cover"
-              decoding="async"
-              fetchpriority="high"
-            />
           </div>
-
-        </div>
+        </article>
 
       </section>
     </main>
 
-    <footer class="cv-dv-ep-footer">
+    <span class="cv-dv-photo-credit">photo by beatriz álvarez</span>
+
+    <footer class="cv-dv-footer">
       <span>© 2026 César Vidal</span>
       <span>cesarvidalmusic.art</span>
     </footer>
