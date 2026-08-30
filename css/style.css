@@ -540,3 +540,69 @@ img { display: block; max-width: 100%; }
   opacity: 1;
   transform: translateX(-50%) translateY(0);
 }
+/* =============================================
+   PAGE TRANSITION — jagged curtain test
+   ============================================= */
+
+.cv-page-transition {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.cv-page-transition__curtain {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 118vh;
+  background: #000000;
+
+  transform: translateY(-112%);
+  transition: transform 0.72s cubic-bezier(0.76, 0, 0.24, 1);
+
+  clip-path: polygon(
+    0 0,
+    100% 0,
+    100% 86%,
+    96% 100%,
+    92% 86%,
+    88% 100%,
+    84% 86%,
+    80% 100%,
+    76% 86%,
+    72% 100%,
+    68% 86%,
+    64% 100%,
+    60% 86%,
+    56% 100%,
+    52% 86%,
+    48% 100%,
+    44% 86%,
+    40% 100%,
+    36% 86%,
+    32% 100%,
+    28% 86%,
+    24% 100%,
+    20% 86%,
+    16% 100%,
+    12% 86%,
+    8% 100%,
+    4% 86%,
+    0 100%
+  );
+}
+
+.cv-page-transition.is-closing .cv-page-transition__curtain {
+  transform: translateY(0);
+}
+
+.cv-page-transition.is-entering .cv-page-transition__curtain {
+  transform: translateY(-112%);
+}
+
+.cv-page-transition.is-ready .cv-page-transition__curtain {
+  transform: translateY(0);
+}
