@@ -1,8 +1,8 @@
 (function () {
-  const BAR_COUNT = 7;
-  const MIN_DURATION = 1050;
-  const MAX_DURATION = 1550;
-  const MAX_DELAY = 180;
+  const BAR_COUNT = 5;
+  const MIN_DURATION = 2100;
+  const MAX_DURATION = 3000;
+  const MAX_DELAY = 260;
 
   let isNavigating = false;
 
@@ -78,8 +78,43 @@
 
       iframe.addEventListener("load", done, { once: true });
 
-      setTimeout(done, 1200);
+      setTimeout(done, 1400);
     });
+  }
+
+  function normalizeCanvasToViewport(sourceCanvas) {
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+
+    const normalizedCanvas = document.createElement("canvas");
+    normalizedCanvas.width = viewportWidth;
+    normalizedCanvas.height = viewportHeight;
+
+    const ctx = normalizedCanvas.getContext("2d");
+
+    const sourceWidth = sourceCanvas.width;
+    const sourceHeight = sourceCanvas.height;
+
+    const scale = Math.max(
+      viewportWidth / sourceWidth,
+      viewportHeight / sourceHeight
+    );
+
+    const drawWidth = sourceWidth * scale;
+    const drawHeight = sourceHeight * scale;
+
+    const drawX = (viewportWidth - drawWidth) / 2;
+    const drawY = (viewportHeight - drawHeight) / 2;
+
+    ctx.drawImage(
+      sourceCanvas,
+      drawX,
+      drawY,
+      drawWidth,
+      drawHeight
+    );
+
+    return normalizedCanvas;
   }
 
   async function captureCurrentPage() {
@@ -95,20 +130,24 @@
       useCORS: true,
       allowTaint: true,
       logging: false,
-      scale: Math.min(window.devicePixelRatio || 1, 1.35),
+      scale: 1,
       width: window.innerWidth,
       height: window.innerHeight,
       windowWidth: window.innerWidth,
       windowHeight: window.innerHeight,
       scrollX: 0,
-      scrollY: 0
+      scrollY: 0,
+      x: 0,
+      y: 0
     });
 
-    return canvas.toDataURL("image/jpeg", 0.84);
+    const normalizedCanvas = normalizeCanvasToViewport(canvas);
+
+    return normalizedCanvas.toDataURL("image/jpeg", 0.88);
   }
 
   function directionForIndex(index) {
-    const pattern = [-1, 1, -1, 1, -1, 1, -1];
+    const pattern = [-1, 1, -1, 1, -1];
     return pattern[index % pattern.length];
   }
 
@@ -125,6 +164,7 @@
     for (let i = 0; i < BAR_COUNT; i++) {
       const bar = document.createElement("div");
       const left = i * barWidth;
+
       const actualWidth = i === BAR_COUNT - 1
         ? viewportWidth - left
         : barWidth + 1;
@@ -179,7 +219,7 @@
       });
     });
 
-    return MAX_DURATION + MAX_DELAY + 140;
+    return MAX_DURATION + MAX_DELAY + 180;
   }
 
   async function goToWithTeethTransition(destinationUrl) {
