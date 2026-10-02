@@ -1,8 +1,8 @@
 (function () {
-  const BAR_COUNT = 13;
-  const MIN_DURATION = 620;
-  const MAX_DURATION = 960;
-  const MAX_DELAY = 110;
+  const BAR_COUNT = 7;
+  const MIN_DURATION = 1050;
+  const MAX_DURATION = 1550;
+  const MAX_DELAY = 180;
 
   let isNavigating = false;
 
@@ -78,7 +78,7 @@
 
       iframe.addEventListener("load", done, { once: true });
 
-      setTimeout(done, 900);
+      setTimeout(done, 1200);
     });
   }
 
@@ -104,15 +104,11 @@
       scrollY: 0
     });
 
-    return canvas.toDataURL("image/jpeg", 0.82);
+    return canvas.toDataURL("image/jpeg", 0.84);
   }
 
   function directionForIndex(index) {
-    const pattern = [
-      -1, 1, -1, 1, -1, 1, -1,
-      1, -1, 1, -1, 1, -1
-    ];
-
+    const pattern = [-1, 1, -1, 1, -1, 1, -1];
     return pattern[index % pattern.length];
   }
 
@@ -153,6 +149,17 @@
     return overlay;
   }
 
+  function createDestinationFrame(destinationUrl) {
+    const iframe = document.createElement("iframe");
+
+    iframe.className = "cv-teeth-destination";
+    iframe.src = destinationUrl;
+
+    document.body.appendChild(iframe);
+
+    return iframe;
+  }
+
   function animateBarsOpen(overlay) {
     const bars = Array.from(overlay.querySelectorAll(".cv-teeth-bar"));
 
@@ -172,7 +179,7 @@
       });
     });
 
-    return MAX_DURATION + MAX_DELAY + 120;
+    return MAX_DURATION + MAX_DELAY + 140;
   }
 
   async function goToWithTeethTransition(destinationUrl) {
@@ -183,12 +190,6 @@
 
     injectStyles();
 
-    const iframe = document.createElement("iframe");
-    iframe.className = "cv-teeth-destination";
-    iframe.src = destinationUrl;
-
-    document.body.appendChild(iframe);
-
     let snapshotDataUrl = null;
 
     try {
@@ -197,9 +198,11 @@
       console.warn("No se pudo capturar la página actual:", error);
     }
 
+    const overlay = createBars(snapshotDataUrl);
+    const iframe = createDestinationFrame(destinationUrl);
+
     await waitForIframeLoad(iframe);
 
-    const overlay = createBars(snapshotDataUrl);
     const totalTime = animateBarsOpen(overlay);
 
     setTimeout(() => {
