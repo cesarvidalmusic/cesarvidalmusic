@@ -1,55 +1,46 @@
 (function () {
-  const STORAGE_KEY = "cv-teeth-transition-snapshot";
-  const META_KEY = "cv-teeth-transition-meta";
-
   const BAR_COUNT = 13;
-  const MIN_DURATION = 680;
-  const MAX_DURATION = 980;
-  const MAX_DELAY = 95;
+  const MIN_DURATION = 620;
+  const MAX_DURATION = 960;
+  const MAX_DELAY = 110;
 
   let isNavigating = false;
 
-  function isInternalLink(link) {
-    if (!link || !link.href) return false;
-    if (link.target && link.target !== "_self") return false;
-    if (link.hasAttribute("download")) return false;
-    if (link.closest(".cv-nav-soon")) return false;
-
-    const url = new URL(link.href, window.location.href);
-
-    if (url.origin !== window.location.origin) return false;
-    if (url.hash && url.pathname === window.location.pathname) return false;
-    if (url.href === window.location.href) return false;
-
-    return true;
-  }
-
-  function injectTransitionStyles() {
-    if (document.getElementById("cv-teeth-transition-styles")) {
-      return;
-    }
+  function injectStyles() {
+    if (document.getElementById("cv-teeth-transition-styles")) return;
 
     const style = document.createElement("style");
     style.id = "cv-teeth-transition-styles";
 
     style.textContent = `
-      .cv-teeth-transition {
+      .cv-teeth-destination {
         position: fixed;
         inset: 0;
-        z-index: 2147483647;
+        width: 100vw;
+        height: 100vh;
+        border: 0;
+        z-index: 2147483000;
+        pointer-events: none;
+        background: #ffffff;
+      }
+
+      .cv-teeth-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 2147483600;
         pointer-events: none;
         overflow: hidden;
         background: transparent;
       }
 
-      .cv-teeth-transition__bar {
+      .cv-teeth-bar {
         position: absolute;
         top: 0;
         height: 100vh;
         background-repeat: no-repeat;
         background-position-y: 0;
-        will-change: transform;
         transform: translateY(0);
+        will-change: transform;
       }
 
       .cv-transition-freeze {
@@ -60,23 +51,51 @@
     document.head.appendChild(style);
   }
 
-  function getSnapshotTarget() {
-    return document.querySelector(".cv-page") || document.body;
+  function isInternalLink(link) {
+    if (!link || !link.href) return false;
+    if (link.target && link.target !== "_self") return false;
+    if (link.hasAttribute("download")) return false;
+    if (link.closest(".cv-nav-soon")) return false;
+
+    const url = new URL(link.href, window.location.href);
+
+    if (url.origin !== window.location.origin) return false;
+    if (url.href === window.location.href) return false;
+    if (url.hash && url.pathname === window.location.pathname) return false;
+
+    return true;
+  }
+
+  function waitForIframeLoad(iframe) {
+    return new Promise(resolve => {
+      let resolved = false;
+
+      const done = () => {
+        if (resolved) return;
+        resolved = true;
+        resolve();
+      };
+
+      iframe.addEventListener("load", done, { once: true });
+
+      setTimeout(done, 900);
+    });
   }
 
   async function captureCurrentPage() {
     if (!window.html2canvas) {
-      throw new Error("html2canvas is not loaded.");
+      console.warn("html2canvas no está cargado. Usando fallback simple.");
+      return null;
     }
 
-    const target = getSnapshotTarget();
+    const target = document.querySelector(".cv-page") || document.body;
 
     const canvas = await window.html2canvas(target, {
       backgroundColor: null,
       useCORS: true,
       allowTaint: true,
       logging: false,
-      scale: Math.min(window.devicePixelRatio || 1, 1.5),
+      scale: Math.min(window.devicePixelRatio || 1, 1.35),
       width: window.innerWidth,
       height: window.innerHeight,
       windowWidth: window.innerWidth,
@@ -85,64 +104,27 @@
       scrollY: 0
     });
 
-    return canvas.toDataURL("image/jpeg", 0.86);
-  }
-
-  function saveSnapshot(dataUrl) {
-    const meta = {
-      width: window.innerWidth,
-      height: window.innerHeight,
-      time: Date.now()
-    };
-
-    try {
-      sessionStorage.setItem(STORAGE_KEY, dataUrl);
-      sessionStorage.setItem(META_KEY, JSON.stringify(meta));
-    } catch (error) {
-      sessionStorage.removeItem(STORAGE_KEY);
-      sessionStorage.removeItem(META_KEY);
-    }
-  }
-
-  function readSnapshot() {
-    const dataUrl = sessionStorage.getItem(STORAGE_KEY);
-    const metaRaw = sessionStorage.getItem(META_KEY);
-
-    sessionStorage.removeItem(STORAGE_KEY);
-    sessionStorage.removeItem(META_KEY);
-
-    if (!dataUrl || !metaRaw) {
-      return null;
-    }
-
-    try {
-      return {
-        dataUrl,
-        meta: JSON.parse(metaRaw)
-      };
-    } catch (error) {
-      return null;
-    }
+    return canvas.toDataURL("image/jpeg", 0.82);
   }
 
   function directionForIndex(index) {
     const pattern = [
-      -1, 1, -1, 1, -1, 1, 1,
-      -1, 1, -1, 1, -1, 1
+      -1, 1, -1, 1, -1, 1, -1,
+      1, -1, 1, -1, 1, -1
     ];
 
     return pattern[index % pattern.length];
   }
 
-  function createBars(snapshot) {
-    injectTransitionStyles();
-
+  function createBars(snapshotDataUrl) {
     const overlay = document.createElement("div");
-    overlay.className = "cv-teeth-transition";
+    overlay.className = "cv-teeth-overlay";
 
     const viewportWidth = window.innerWidth;
     const viewportHeight = window.innerHeight;
     const barWidth = Math.ceil(viewportWidth / BAR_COUNT);
+
+    const fallbackColor = getComputedStyle(document.body).backgroundColor || "#ffffff";
 
     for (let i = 0; i < BAR_COUNT; i++) {
       const bar = document.createElement("div");
@@ -151,13 +133,17 @@
         ? viewportWidth - left
         : barWidth + 1;
 
-      bar.className = "cv-teeth-transition__bar";
-
+      bar.className = "cv-teeth-bar";
       bar.style.left = left + "px";
       bar.style.width = actualWidth + "px";
-      bar.style.backgroundImage = `url("${snapshot.dataUrl}")`;
-      bar.style.backgroundSize = `${viewportWidth}px ${viewportHeight}px`;
-      bar.style.backgroundPositionX = `-${left}px`;
+
+      if (snapshotDataUrl) {
+        bar.style.backgroundImage = `url("${snapshotDataUrl}")`;
+        bar.style.backgroundSize = `${viewportWidth}px ${viewportHeight}px`;
+        bar.style.backgroundPositionX = `-${left}px`;
+      } else {
+        bar.style.background = fallbackColor;
+      }
 
       overlay.appendChild(bar);
     }
@@ -167,57 +153,67 @@
     return overlay;
   }
 
-  function revealNewPageWithBars(snapshot) {
-    const overlay = createBars(snapshot);
-    const bars = Array.from(
-      overlay.querySelectorAll(".cv-teeth-transition__bar")
-    );
+  function animateBarsOpen(overlay) {
+    const bars = Array.from(overlay.querySelectorAll(".cv-teeth-bar"));
 
     requestAnimationFrame(() => {
       bars.forEach((bar, index) => {
         const direction = directionForIndex(index);
         const travel = direction < 0 ? "-112vh" : "112vh";
 
-        const randomDuration = MIN_DURATION + Math.random() * (MAX_DURATION - MIN_DURATION);
-        const randomDelay = Math.random() * MAX_DELAY;
+        const duration = MIN_DURATION + Math.random() * (MAX_DURATION - MIN_DURATION);
+        const delay = Math.random() * MAX_DELAY;
 
         bar.style.transition = `
-          transform ${randomDuration}ms cubic-bezier(0.16, 1, 0.3, 1) ${randomDelay}ms
+          transform ${duration}ms cubic-bezier(0.16, 1, 0.3, 1) ${delay}ms
         `;
 
         bar.style.transform = `translateY(${travel})`;
       });
     });
 
-    window.setTimeout(() => {
-      overlay.remove();
-    }, MAX_DURATION + MAX_DELAY + 180);
+    return MAX_DURATION + MAX_DELAY + 120;
   }
 
-  async function goToWithTransition(url) {
+  async function goToWithTeethTransition(destinationUrl) {
     if (isNavigating) return;
 
     isNavigating = true;
     document.documentElement.classList.add("cv-transition-freeze");
 
+    injectStyles();
+
+    const iframe = document.createElement("iframe");
+    iframe.className = "cv-teeth-destination";
+    iframe.src = destinationUrl;
+
+    document.body.appendChild(iframe);
+
+    let snapshotDataUrl = null;
+
     try {
-      const snapshot = await captureCurrentPage();
-      saveSnapshot(snapshot);
+      snapshotDataUrl = await captureCurrentPage();
     } catch (error) {
-      sessionStorage.removeItem(STORAGE_KEY);
-      sessionStorage.removeItem(META_KEY);
+      console.warn("No se pudo capturar la página actual:", error);
     }
 
-    window.location.href = url;
+    await waitForIframeLoad(iframe);
+
+    const overlay = createBars(snapshotDataUrl);
+    const totalTime = animateBarsOpen(overlay);
+
+    setTimeout(() => {
+      window.location.href = destinationUrl;
+    }, totalTime);
   }
 
-  function setupOutgoingLinks() {
+  document.addEventListener("DOMContentLoaded", () => {
+    injectStyles();
+
     document.addEventListener("click", event => {
       const link = event.target.closest("a");
 
-      if (!isInternalLink(link)) {
-        return;
-      }
+      if (!isInternalLink(link)) return;
 
       if (
         event.metaKey ||
@@ -230,28 +226,7 @@
       }
 
       event.preventDefault();
-
-      goToWithTransition(link.href);
+      goToWithTeethTransition(link.href);
     });
-  }
-
-  function setupIncomingTransition() {
-    const snapshot = readSnapshot();
-
-    if (!snapshot) {
-      return;
-    }
-
-    window.addEventListener("load", () => {
-      window.setTimeout(() => {
-        revealNewPageWithBars(snapshot);
-      }, 80);
-    });
-  }
-
-  document.addEventListener("DOMContentLoaded", () => {
-    injectTransitionStyles();
-    setupOutgoingLinks();
-    setupIncomingTransition();
   });
 })();
