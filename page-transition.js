@@ -37,10 +37,24 @@
         position: absolute;
         top: 0;
         height: 100vh;
-        background-repeat: no-repeat;
-        background-position-y: 0;
+        overflow: hidden;
         transform: translateY(0);
         will-change: transform;
+        background: #ffffff;
+      }
+
+      .cv-teeth-shot {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        max-width: none;
+        object-fit: cover;
+        object-position: center center;
+        transform-origin: top left;
+        pointer-events: none;
+        user-select: none;
       }
 
       .cv-transition-freeze {
@@ -82,39 +96,24 @@
     });
   }
 
-  function normalizeCanvasToViewport(sourceCanvas) {
-    const viewportWidth = window.innerWidth;
-    const viewportHeight = window.innerHeight;
-
-    const normalizedCanvas = document.createElement("canvas");
-    normalizedCanvas.width = viewportWidth;
-    normalizedCanvas.height = viewportHeight;
-
-    const ctx = normalizedCanvas.getContext("2d");
-
-    const sourceWidth = sourceCanvas.width;
-    const sourceHeight = sourceCanvas.height;
-
-    const scale = Math.max(
-      viewportWidth / sourceWidth,
-      viewportHeight / sourceHeight
-    );
-
-    const drawWidth = sourceWidth * scale;
-    const drawHeight = sourceHeight * scale;
-
-    const drawX = (viewportWidth - drawWidth) / 2;
-    const drawY = (viewportHeight - drawHeight) / 2;
-
-    ctx.drawImage(
-      sourceCanvas,
-      drawX,
-      drawY,
-      drawWidth,
-      drawHeight
-    );
-
-    return normalizedCanvas;
+  async function runHtml2Canvas(target, useForeignObject) {
+    return window.html2canvas(target, {
+      backgroundColor: null,
+      useCORS: true,
+      allowTaint: true,
+      logging: false,
+      foreignObjectRendering: useForeignObject,
+      scale: Math.min(window.devicePixelRatio || 1, 2),
+      width: window.innerWidth,
+      height: window.innerHeight,
+      windowWidth: window.innerWidth,
+      windowHeight: window.innerHeight,
+      scrollX: 0,
+      scrollY: 0,
+      x: 0,
+      y: 0,
+      imageTimeout: 1600
+    });
   }
 
   async function captureCurrentPage() {
@@ -125,25 +124,20 @@
 
     const target = document.querySelector(".cv-page") || document.body;
 
-    const canvas = await window.html2canvas(target, {
-      backgroundColor: null,
-      useCORS: true,
-      allowTaint: true,
-      logging: false,
-      scale: 1,
-      width: window.innerWidth,
-      height: window.innerHeight,
-      windowWidth: window.innerWidth,
-      windowHeight: window.innerHeight,
-      scrollX: 0,
-      scrollY: 0,
-      x: 0,
-      y: 0
-    });
+    try {
+      const canvas = await runHtml2Canvas(target, true);
+      return canvas.toDataURL("image/jpeg", 0.88);
+    } catch (firstError) {
+      console.warn("Captura avanzada falló. Intentando fallback:", firstError);
 
-    const normalizedCanvas = normalizeCanvasToViewport(canvas);
-
-    return normalizedCanvas.toDataURL("image/jpeg", 0.88);
+      try {
+        const canvas = await runHtml2Canvas(target, false);
+        return canvas.toDataURL("image/jpeg", 0.88);
+      } catch (secondError) {
+        console.warn("No se pudo capturar la página actual:", secondError);
+        return null;
+      }
+    }
   }
 
   function directionForIndex(index) {
@@ -156,9 +150,7 @@
     overlay.className = "cv-teeth-overlay";
 
     const viewportWidth = window.innerWidth;
-    const viewportHeight = window.innerHeight;
     const barWidth = Math.ceil(viewportWidth / BAR_COUNT);
-
     const fallbackColor = getComputedStyle(document.body).backgroundColor || "#ffffff";
 
     for (let i = 0; i < BAR_COUNT; i++) {
@@ -172,13 +164,18 @@
       bar.className = "cv-teeth-bar";
       bar.style.left = left + "px";
       bar.style.width = actualWidth + "px";
+      bar.style.background = fallbackColor;
 
       if (snapshotDataUrl) {
-        bar.style.backgroundImage = `url("${snapshotDataUrl}")`;
-        bar.style.backgroundSize = `${viewportWidth}px ${viewportHeight}px`;
-        bar.style.backgroundPositionX = `-${left}px`;
-      } else {
-        bar.style.background = fallbackColor;
+        const shot = document.createElement("img");
+
+        shot.className = "cv-teeth-shot";
+        shot.src = snapshotDataUrl;
+        shot.alt = "";
+        shot.setAttribute("aria-hidden", "true");
+        shot.style.transform = `translateX(${-left}px)`;
+
+        bar.appendChild(shot);
       }
 
       overlay.appendChild(bar);
@@ -198,6 +195,21 @@
     document.body.appendChild(iframe);
 
     return iframe;
+  }
+
+  function updateAddressEarly(destinationUrl) {
+    try {
+      window.history.pushState(
+        { cvTransition: true },
+        "",
+        destinationUrl
+      );
+
+      return true;
+    } catch (error) {
+      console.warn("No se pudo actualizar la URL antes:", error);
+      return false;
+    }
   }
 
   function animateBarsOpen(overlay) {
@@ -243,10 +255,15 @@
 
     await waitForIframeLoad(iframe);
 
+    const addressWasUpdated = updateAddressEarly(destinationUrl);
     const totalTime = animateBarsOpen(overlay);
 
     setTimeout(() => {
-      window.location.href = destinationUrl;
+      if (addressWasUpdated) {
+        window.location.reload();
+      } else {
+        window.location.href = destinationUrl;
+      }
     }, totalTime);
   }
 
