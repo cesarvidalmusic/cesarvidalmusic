@@ -1,8 +1,12 @@
 (function () {
   const BAR_COUNT = 5;
-  const MIN_DURATION = 2100;
-  const MAX_DURATION = 3000;
-  const MAX_DELAY = 260;
+  const MIN_DURATION = 2500;
+  const MAX_DURATION = 3600;
+  const MAX_DELAY = 320;
+
+  const SNAPSHOT_KEY = "cv-teeth-transition-snapshot-v6";
+  const SNAPSHOT_TIME_KEY = "cv-teeth-transition-time-v6";
+  const SNAPSHOT_MAX_AGE = 7000;
 
   let isNavigating = false;
 
@@ -13,22 +17,11 @@
     style.id = "cv-teeth-transition-styles";
 
     style.textContent = `
-      .cv-teeth-destination {
-        position: fixed;
-        inset: 0;
-        width: 100vw;
-        height: 100vh;
-        border: 0;
-        z-index: 2147483000;
-        pointer-events: none;
-        background: #ffffff;
-      }
-
       .cv-teeth-overlay {
         position: fixed;
         inset: 0;
         z-index: 2147483600;
-        pointer-events: none;
+        pointer-events: auto;
         overflow: hidden;
         background: transparent;
       }
@@ -40,21 +33,9 @@
         overflow: hidden;
         transform: translateY(0);
         will-change: transform;
-        background: #ffffff;
-      }
-
-      .cv-teeth-shot {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        max-width: none;
-        object-fit: cover;
-        object-position: center center;
-        transform-origin: top left;
-        pointer-events: none;
-        user-select: none;
+        background-repeat: no-repeat;
+        background-position-y: 0;
+        background-color: #ffffff;
       }
 
       .cv-transition-freeze {
@@ -80,42 +61,6 @@
     return true;
   }
 
-  function waitForIframeLoad(iframe) {
-    return new Promise(resolve => {
-      let resolved = false;
-
-      const done = () => {
-        if (resolved) return;
-        resolved = true;
-        resolve();
-      };
-
-      iframe.addEventListener("load", done, { once: true });
-
-      setTimeout(done, 1400);
-    });
-  }
-
-  async function runHtml2Canvas(target, useForeignObject) {
-    return window.html2canvas(target, {
-      backgroundColor: null,
-      useCORS: true,
-      allowTaint: true,
-      logging: false,
-      foreignObjectRendering: useForeignObject,
-      scale: Math.min(window.devicePixelRatio || 1, 2),
-      width: window.innerWidth,
-      height: window.innerHeight,
-      windowWidth: window.innerWidth,
-      windowHeight: window.innerHeight,
-      scrollX: 0,
-      scrollY: 0,
-      x: 0,
-      y: 0,
-      imageTimeout: 1600
-    });
-  }
-
   async function captureCurrentPage() {
     if (!window.html2canvas) {
       console.warn("html2canvas no está cargado. Usando fallback simple.");
@@ -124,20 +69,56 @@
 
     const target = document.querySelector(".cv-page") || document.body;
 
-    try {
-      const canvas = await runHtml2Canvas(target, true);
-      return canvas.toDataURL("image/jpeg", 0.88);
-    } catch (firstError) {
-      console.warn("Captura avanzada falló. Intentando fallback:", firstError);
+    const canvas = await window.html2canvas(target, {
+      backgroundColor: null,
+      useCORS: true,
+      allowTaint: true,
+      logging: false,
+      foreignObjectRendering: false,
+      scale: 1,
+      width: window.innerWidth,
+      height: window.innerHeight,
+      windowWidth: window.innerWidth,
+      windowHeight: window.innerHeight,
+      scrollX: 0,
+      scrollY: 0,
+      x: 0,
+      y: 0,
+      imageTimeout: 2200
+    });
 
-      try {
-        const canvas = await runHtml2Canvas(target, false);
-        return canvas.toDataURL("image/jpeg", 0.88);
-      } catch (secondError) {
-        console.warn("No se pudo capturar la página actual:", secondError);
-        return null;
-      }
+    return canvas.toDataURL("image/jpeg", 0.82);
+  }
+
+  function saveSnapshot(snapshotDataUrl) {
+    if (!snapshotDataUrl) return;
+
+    try {
+      sessionStorage.setItem(SNAPSHOT_KEY, snapshotDataUrl);
+      sessionStorage.setItem(SNAPSHOT_TIME_KEY, String(Date.now()));
+    } catch (error) {
+      console.warn("No se pudo guardar la captura para la transición:", error);
+      sessionStorage.removeItem(SNAPSHOT_KEY);
+      sessionStorage.removeItem(SNAPSHOT_TIME_KEY);
     }
+  }
+
+  function readSnapshot() {
+    const snapshotDataUrl = sessionStorage.getItem(SNAPSHOT_KEY);
+    const timeRaw = sessionStorage.getItem(SNAPSHOT_TIME_KEY);
+
+    sessionStorage.removeItem(SNAPSHOT_KEY);
+    sessionStorage.removeItem(SNAPSHOT_TIME_KEY);
+
+    if (!snapshotDataUrl || !timeRaw) return null;
+
+    const age = Date.now() - Number(timeRaw);
+
+    if (!Number.isFinite(age) || age > SNAPSHOT_MAX_AGE) {
+      return null;
+    }
+
+    return snapshotDataUrl;
   }
 
   function directionForIndex(index) {
@@ -150,6 +131,7 @@
     overlay.className = "cv-teeth-overlay";
 
     const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
     const barWidth = Math.ceil(viewportWidth / BAR_COUNT);
     const fallbackColor = getComputedStyle(document.body).backgroundColor || "#ffffff";
 
@@ -164,18 +146,12 @@
       bar.className = "cv-teeth-bar";
       bar.style.left = left + "px";
       bar.style.width = actualWidth + "px";
-      bar.style.background = fallbackColor;
+      bar.style.backgroundColor = fallbackColor;
 
       if (snapshotDataUrl) {
-        const shot = document.createElement("img");
-
-        shot.className = "cv-teeth-shot";
-        shot.src = snapshotDataUrl;
-        shot.alt = "";
-        shot.setAttribute("aria-hidden", "true");
-        shot.style.transform = `translateX(${-left}px)`;
-
-        bar.appendChild(shot);
+        bar.style.backgroundImage = `url("${snapshotDataUrl}")`;
+        bar.style.backgroundSize = `${viewportWidth}px ${viewportHeight}px`;
+        bar.style.backgroundPositionX = `-${left}px`;
       }
 
       overlay.appendChild(bar);
@@ -184,32 +160,6 @@
     document.body.appendChild(overlay);
 
     return overlay;
-  }
-
-  function createDestinationFrame(destinationUrl) {
-    const iframe = document.createElement("iframe");
-
-    iframe.className = "cv-teeth-destination";
-    iframe.src = destinationUrl;
-
-    document.body.appendChild(iframe);
-
-    return iframe;
-  }
-
-  function updateAddressEarly(destinationUrl) {
-    try {
-      window.history.pushState(
-        { cvTransition: true },
-        "",
-        destinationUrl
-      );
-
-      return true;
-    } catch (error) {
-      console.warn("No se pudo actualizar la URL antes:", error);
-      return false;
-    }
   }
 
   function animateBarsOpen(overlay) {
@@ -231,7 +181,9 @@
       });
     });
 
-    return MAX_DURATION + MAX_DELAY + 180;
+    window.setTimeout(() => {
+      overlay.remove();
+    }, MAX_DURATION + MAX_DELAY + 220);
   }
 
   async function goToWithTeethTransition(destinationUrl) {
@@ -239,8 +191,6 @@
 
     isNavigating = true;
     document.documentElement.classList.add("cv-transition-freeze");
-
-    injectStyles();
 
     let snapshotDataUrl = null;
 
@@ -250,26 +200,12 @@
       console.warn("No se pudo capturar la página actual:", error);
     }
 
-    const overlay = createBars(snapshotDataUrl);
-    const iframe = createDestinationFrame(destinationUrl);
+    saveSnapshot(snapshotDataUrl);
 
-    await waitForIframeLoad(iframe);
-
-    const addressWasUpdated = updateAddressEarly(destinationUrl);
-    const totalTime = animateBarsOpen(overlay);
-
-    setTimeout(() => {
-      if (addressWasUpdated) {
-        window.location.reload();
-      } else {
-        window.location.href = destinationUrl;
-      }
-    }, totalTime);
+    window.location.href = destinationUrl;
   }
 
-  document.addEventListener("DOMContentLoaded", () => {
-    injectStyles();
-
+  function setupOutgoingLinks() {
     document.addEventListener("click", event => {
       const link = event.target.closest("a");
 
@@ -288,5 +224,25 @@
       event.preventDefault();
       goToWithTeethTransition(link.href);
     });
+  }
+
+  function setupIncomingTransition() {
+    const snapshotDataUrl = readSnapshot();
+
+    if (!snapshotDataUrl) return;
+
+    const overlay = createBars(snapshotDataUrl);
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        animateBarsOpen(overlay);
+      });
+    });
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    injectStyles();
+    setupOutgoingLinks();
+    setupIncomingTransition();
   });
 })();
