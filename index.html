@@ -48,21 +48,19 @@
 
     .cv-hero-img {
       position: absolute;
-
-      top: -8px;
-      right: 0;
-      bottom: -8px;
-      left: -0.7cm;
-
-      width: calc(100% + 0.7cm);
-      height: calc(100% + 16px);
+      inset: 0;
+      width: 100%;
+      height: 100%;
 
       object-fit: cover;
       object-position: 50% 56%;
 
+      transform: scale(1.035);
+      transform-origin: right bottom;
+
       display: block;
       animation: heroBlur 50s ease-in-out infinite;
-      will-change: filter;
+      will-change: filter, transform;
     }
 
     @keyframes heroBlur {
