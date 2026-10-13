@@ -49,18 +49,18 @@
     .cv-hero-img {
       position: absolute;
 
+      top: -8px;
       right: 0;
-      bottom: 0;
+      bottom: -8px;
+      left: -0.7cm;
 
-      width: calc(100% + 2cm);
-      height: calc(100% + 1cm);
-
-      max-width: none;
-      display: block;
+      width: calc(100% + 0.7cm);
+      height: calc(100% + 16px);
 
       object-fit: cover;
-      object-position: right bottom;
+      object-position: 50% 56%;
 
+      display: block;
       animation: heroBlur 50s ease-in-out infinite;
       will-change: filter;
     }
