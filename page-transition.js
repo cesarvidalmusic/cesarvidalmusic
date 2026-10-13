@@ -1,44 +1,90 @@
 (function () {
-  const BAR_COUNT = 5;
-  const MIN_DURATION = 2500;
-  const MAX_DURATION = 3600;
-  const MAX_DELAY = 320;
+  const TRANSITION_VERSION = "v7-soft-color-wash";
 
-  const SNAPSHOT_KEY = "cv-teeth-transition-snapshot-v6";
-  const SNAPSHOT_TIME_KEY = "cv-teeth-transition-time-v6";
-  const SNAPSHOT_MAX_AGE = 7000;
+  const PAGE_COLORS = {
+    "bio.html": {
+      base: "rgba(255,255,255,0.94)",
+      wash: "rgba(36,32,23,0.68)",
+      accent: "rgba(36,32,23,0.28)"
+    },
+    "gonzalez-reeds.html": {
+      base: "rgba(255,255,255,0.94)",
+      wash: "rgba(200,64,10,0.72)",
+      accent: "rgba(200,64,10,0.32)"
+    }
+  };
+
+  const STORAGE_KEY = "cv-soft-page-transition";
+  const OUT_DURATION = 620;
+  const IN_DURATION = 950;
 
   let isNavigating = false;
 
+  function getPageName(urlString) {
+    const url = new URL(urlString, window.location.href);
+    const parts = url.pathname.split("/");
+    return parts[parts.length - 1] || "index.html";
+  }
+
+  function getConfigForUrl(urlString) {
+    const pageName = getPageName(urlString);
+    return PAGE_COLORS[pageName] || null;
+  }
+
   function injectStyles() {
-    if (document.getElementById("cv-teeth-transition-styles")) return;
+    if (document.getElementById("cv-soft-transition-styles")) return;
 
     const style = document.createElement("style");
-    style.id = "cv-teeth-transition-styles";
+    style.id = "cv-soft-transition-styles";
 
     style.textContent = `
-      .cv-teeth-overlay {
+      .cv-soft-transition-layer {
         position: fixed;
         inset: 0;
         z-index: 2147483600;
-        pointer-events: auto;
-        overflow: hidden;
-        background: transparent;
+        pointer-events: none;
+        opacity: 0;
+        transition:
+          opacity var(--cv-soft-duration, 720ms) cubic-bezier(0.16, 1, 0.3, 1);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
       }
 
-      .cv-teeth-bar {
+      .cv-soft-transition-layer::after {
+        content: "";
         position: absolute;
-        top: 0;
-        height: 100vh;
-        overflow: hidden;
-        transform: translateY(0);
-        will-change: transform;
-        background-repeat: no-repeat;
-        background-position-y: 0;
-        background-color: #ffffff;
+        inset: 0;
+        background:
+          radial-gradient(circle at 74% 18%, var(--cv-soft-accent), transparent 36%),
+          linear-gradient(135deg, var(--cv-soft-base) 0%, var(--cv-soft-wash) 100%);
       }
 
-      .cv-transition-freeze {
+      .cv-soft-transition-layer.is-visible {
+        opacity: 1;
+      }
+
+      .cv-soft-blur-out .cv-page {
+        filter: blur(8px) brightness(0.92);
+        transform: scale(1.012);
+        transition:
+          filter 620ms cubic-bezier(0.16, 1, 0.3, 1),
+          transform 620ms cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      .cv-soft-blur-in .cv-page {
+        filter: blur(8px) brightness(0.94);
+        transform: scale(1.012);
+      }
+
+      .cv-soft-blur-in.cv-soft-ready .cv-page {
+        filter: blur(0) brightness(1);
+        transform: scale(1);
+        transition:
+          filter 950ms cubic-bezier(0.16, 1, 0.3, 1),
+          transform 950ms cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      .cv-soft-transition-freeze {
         cursor: progress;
       }
     `;
@@ -46,170 +92,118 @@
     document.head.appendChild(style);
   }
 
-  function isInternalLink(link) {
+  function createLayer(config, duration) {
+    const layer = document.createElement("div");
+
+    layer.className = "cv-soft-transition-layer";
+    layer.style.setProperty("--cv-soft-duration", duration + "ms");
+    layer.style.setProperty("--cv-soft-base", config.base);
+    layer.style.setProperty("--cv-soft-wash", config.wash);
+    layer.style.setProperty("--cv-soft-accent", config.accent);
+
+    document.body.appendChild(layer);
+
+    return layer;
+  }
+
+  function isInternalTransitionLink(link) {
     if (!link || !link.href) return false;
     if (link.target && link.target !== "_self") return false;
     if (link.hasAttribute("download")) return false;
     if (link.closest(".cv-nav-soon")) return false;
 
-    const url = new URL(link.href, window.location.href);
+    const destination = new URL(link.href, window.location.href);
 
-    if (url.origin !== window.location.origin) return false;
-    if (url.href === window.location.href) return false;
-    if (url.hash && url.pathname === window.location.pathname) return false;
+    if (destination.origin !== window.location.origin) return false;
+    if (destination.href === window.location.href) return false;
+    if (destination.hash && destination.pathname === window.location.pathname) return false;
+
+    const currentConfig = getConfigForUrl(window.location.href);
+    const destinationConfig = getConfigForUrl(destination.href);
+
+    if (!currentConfig || !destinationConfig) return false;
 
     return true;
   }
 
-  async function captureCurrentPage() {
-    if (!window.html2canvas) {
-      console.warn("html2canvas no está cargado. Usando fallback simple.");
-      return null;
-    }
+  function saveIncomingConfig(destinationUrl) {
+    const config = getConfigForUrl(destinationUrl);
 
-    const target = document.querySelector(".cv-page") || document.body;
-
-    const canvas = await window.html2canvas(target, {
-      backgroundColor: null,
-      useCORS: true,
-      allowTaint: true,
-      logging: false,
-      foreignObjectRendering: false,
-      scale: 1,
-      width: window.innerWidth,
-      height: window.innerHeight,
-      windowWidth: window.innerWidth,
-      windowHeight: window.innerHeight,
-      scrollX: 0,
-      scrollY: 0,
-      x: 0,
-      y: 0,
-      imageTimeout: 2200
-    });
-
-    return canvas.toDataURL("image/jpeg", 0.82);
-  }
-
-  function saveSnapshot(snapshotDataUrl) {
-    if (!snapshotDataUrl) return;
+    if (!config) return;
 
     try {
-      sessionStorage.setItem(SNAPSHOT_KEY, snapshotDataUrl);
-      sessionStorage.setItem(SNAPSHOT_TIME_KEY, String(Date.now()));
+      sessionStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify({
+          version: TRANSITION_VERSION,
+          time: Date.now(),
+          config
+        })
+      );
     } catch (error) {
-      console.warn("No se pudo guardar la captura para la transición:", error);
-      sessionStorage.removeItem(SNAPSHOT_KEY);
-      sessionStorage.removeItem(SNAPSHOT_TIME_KEY);
+      console.warn("No se pudo guardar la transición:", error);
     }
   }
 
-  function readSnapshot() {
-    const snapshotDataUrl = sessionStorage.getItem(SNAPSHOT_KEY);
-    const timeRaw = sessionStorage.getItem(SNAPSHOT_TIME_KEY);
+  function readIncomingConfig() {
+    let raw = null;
 
-    sessionStorage.removeItem(SNAPSHOT_KEY);
-    sessionStorage.removeItem(SNAPSHOT_TIME_KEY);
-
-    if (!snapshotDataUrl || !timeRaw) return null;
-
-    const age = Date.now() - Number(timeRaw);
-
-    if (!Number.isFinite(age) || age > SNAPSHOT_MAX_AGE) {
+    try {
+      raw = sessionStorage.getItem(STORAGE_KEY);
+      sessionStorage.removeItem(STORAGE_KEY);
+    } catch (error) {
       return null;
     }
 
-    return snapshotDataUrl;
+    if (!raw) return null;
+
+    try {
+      const data = JSON.parse(raw);
+
+      if (data.version !== TRANSITION_VERSION) return null;
+      if (!data.time || Date.now() - data.time > 7000) return null;
+      if (!data.config) return null;
+
+      return data.config;
+    } catch (error) {
+      return null;
+    }
   }
 
-  function directionForIndex(index) {
-    const pattern = [-1, 1, -1, 1, -1];
-    return pattern[index % pattern.length];
-  }
+  function runOutgoingTransition(destinationUrl) {
+    if (isNavigating) return;
 
-  function createBars(snapshotDataUrl) {
-    const overlay = document.createElement("div");
-    overlay.className = "cv-teeth-overlay";
+    const destinationConfig = getConfigForUrl(destinationUrl);
 
-    const viewportWidth = window.innerWidth;
-    const viewportHeight = window.innerHeight;
-    const barWidth = Math.ceil(viewportWidth / BAR_COUNT);
-    const fallbackColor = getComputedStyle(document.body).backgroundColor || "#ffffff";
-
-    for (let i = 0; i < BAR_COUNT; i++) {
-      const bar = document.createElement("div");
-      const left = i * barWidth;
-
-      const actualWidth = i === BAR_COUNT - 1
-        ? viewportWidth - left
-        : barWidth + 1;
-
-      bar.className = "cv-teeth-bar";
-      bar.style.left = left + "px";
-      bar.style.width = actualWidth + "px";
-      bar.style.backgroundColor = fallbackColor;
-
-      if (snapshotDataUrl) {
-        bar.style.backgroundImage = `url("${snapshotDataUrl}")`;
-        bar.style.backgroundSize = `${viewportWidth}px ${viewportHeight}px`;
-        bar.style.backgroundPositionX = `-${left}px`;
-      }
-
-      overlay.appendChild(bar);
+    if (!destinationConfig) {
+      window.location.href = destinationUrl;
+      return;
     }
 
-    document.body.appendChild(overlay);
+    isNavigating = true;
 
-    return overlay;
-  }
+    injectStyles();
+    saveIncomingConfig(destinationUrl);
 
-  function animateBarsOpen(overlay) {
-    const bars = Array.from(overlay.querySelectorAll(".cv-teeth-bar"));
+    document.documentElement.classList.add("cv-soft-transition-freeze");
+    document.documentElement.classList.add("cv-soft-blur-out");
+
+    const layer = createLayer(destinationConfig, OUT_DURATION);
 
     requestAnimationFrame(() => {
-      bars.forEach((bar, index) => {
-        const direction = directionForIndex(index);
-        const travel = direction < 0 ? "-112vh" : "112vh";
-
-        const duration = MIN_DURATION + Math.random() * (MAX_DURATION - MIN_DURATION);
-        const delay = Math.random() * MAX_DELAY;
-
-        bar.style.transition = `
-          transform ${duration}ms cubic-bezier(0.16, 1, 0.3, 1) ${delay}ms
-        `;
-
-        bar.style.transform = `translateY(${travel})`;
-      });
+      layer.classList.add("is-visible");
     });
 
     window.setTimeout(() => {
-      overlay.remove();
-    }, MAX_DURATION + MAX_DELAY + 220);
-  }
-
-  async function goToWithTeethTransition(destinationUrl) {
-    if (isNavigating) return;
-
-    isNavigating = true;
-    document.documentElement.classList.add("cv-transition-freeze");
-
-    let snapshotDataUrl = null;
-
-    try {
-      snapshotDataUrl = await captureCurrentPage();
-    } catch (error) {
-      console.warn("No se pudo capturar la página actual:", error);
-    }
-
-    saveSnapshot(snapshotDataUrl);
-
-    window.location.href = destinationUrl;
+      window.location.href = destinationUrl;
+    }, OUT_DURATION);
   }
 
   function setupOutgoingLinks() {
     document.addEventListener("click", event => {
       const link = event.target.closest("a");
 
-      if (!isInternalLink(link)) return;
+      if (!isInternalTransitionLink(link)) return;
 
       if (
         event.metaKey ||
@@ -222,27 +216,45 @@
       }
 
       event.preventDefault();
-      goToWithTeethTransition(link.href);
+      runOutgoingTransition(link.href);
     });
   }
 
   function setupIncomingTransition() {
-    const snapshotDataUrl = readSnapshot();
+    const config = readIncomingConfig();
 
-    if (!snapshotDataUrl) return;
+    if (!config) return;
 
-    const overlay = createBars(snapshotDataUrl);
+    injectStyles();
+
+    document.documentElement.classList.add("cv-soft-blur-in");
+
+    const layer = createLayer(config, IN_DURATION);
+    layer.classList.add("is-visible");
 
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
-        animateBarsOpen(overlay);
+        document.documentElement.classList.add("cv-soft-ready");
+        layer.classList.remove("is-visible");
       });
     });
+
+    window.setTimeout(() => {
+      layer.remove();
+      document.documentElement.classList.remove("cv-soft-blur-in");
+      document.documentElement.classList.remove("cv-soft-ready");
+    }, IN_DURATION + 120);
   }
 
-  document.addEventListener("DOMContentLoaded", () => {
+  function init() {
     injectStyles();
     setupOutgoingLinks();
     setupIncomingTransition();
-  });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
 })();
