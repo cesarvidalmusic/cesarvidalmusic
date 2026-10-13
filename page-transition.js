@@ -3,20 +3,20 @@
 
   const PAGE_COLORS = {
     "bio.html": {
-      base: "rgba(255,255,255,0.94)",
-      wash: "rgba(36,32,23,0.68)",
+      base: "rgba(255,255,255,0.96)",
+      wash: "rgba(36,32,23,0.72)",
       accent: "rgba(36,32,23,0.28)"
     },
     "gonzalez-reeds.html": {
-      base: "rgba(255,255,255,0.94)",
-      wash: "rgba(200,64,10,0.72)",
-      accent: "rgba(200,64,10,0.32)"
+      base: "rgba(255,255,255,0.96)",
+      wash: "rgba(200,64,10,0.74)",
+      accent: "rgba(200,64,10,0.34)"
     }
   };
 
-  const STORAGE_KEY = "cv-soft-page-transition";
+  const STORAGE_KEY = "cv-soft-page-transition-v7";
   const OUT_DURATION = 620;
-  const IN_DURATION = 950;
+  const IN_DURATION = 980;
 
   let isNavigating = false;
 
@@ -80,8 +80,8 @@
         filter: blur(0) brightness(1);
         transform: scale(1);
         transition:
-          filter 950ms cubic-bezier(0.16, 1, 0.3, 1),
-          transform 950ms cubic-bezier(0.16, 1, 0.3, 1);
+          filter 980ms cubic-bezier(0.16, 1, 0.3, 1),
+          transform 980ms cubic-bezier(0.16, 1, 0.3, 1);
       }
 
       .cv-soft-transition-freeze {
@@ -243,7 +243,8 @@
       layer.remove();
       document.documentElement.classList.remove("cv-soft-blur-in");
       document.documentElement.classList.remove("cv-soft-ready");
-    }, IN_DURATION + 120);
+      document.documentElement.classList.remove("cv-soft-transition-freeze");
+    }, IN_DURATION + 140);
   }
 
   function init() {
