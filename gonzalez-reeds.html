@@ -120,7 +120,12 @@
       text-decoration: none;
       border-bottom: 0.5px solid #C8400A;
       padding-bottom: 2px;
-      transition: transform 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+
+      transition:
+        transform 0.25s ease,
+        color 0.25s ease,
+        border-color 0.25s ease;
+
       transform-origin: left center;
     }
 
@@ -132,6 +137,7 @@
 
     .cv-reeds-visuals {
       --reed-package-height: clamp(310px, 49vh, 485px);
+
       display: flex;
       align-items: center;
       justify-content: center;
@@ -145,7 +151,11 @@
       justify-content: center;
       text-decoration: none;
       line-height: 0;
-      transition: transform 0.38s ease, filter 0.38s ease;
+
+      transition:
+        transform 0.38s ease,
+        filter 0.38s ease;
+
       transform-origin: center center;
       will-change: transform;
     }
@@ -197,6 +207,86 @@
       color: #bbb;
     }
   </style>
+
+  <!-- TRANSICIÓN V8: ESTADO INICIAL DEL FADE-IN -->
+
+  <style>
+    html.cv-transition-v8-incoming .cv-page {
+      filter: blur(7px) brightness(0.90);
+      transform: scale(1.008);
+    }
+
+    html.cv-transition-v8-incoming::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 2147483600;
+      opacity: 1;
+      pointer-events: auto;
+
+      background:
+        radial-gradient(
+          ellipse at 57% 63%,
+          rgba(44,85,68,0.18),
+          transparent 75%
+        ),
+        #242017;
+    }
+
+    html.cv-transition-v8-incoming.cv-transition-v8-reveal::after {
+      opacity: 0;
+      pointer-events: none;
+
+      transition:
+        opacity 1080ms cubic-bezier(0.40, 0, 0.22, 1);
+    }
+
+    html.cv-transition-v8-incoming.cv-transition-v8-reveal .cv-page {
+      filter: blur(0) brightness(1);
+      transform: scale(1);
+
+      transition:
+        filter 1080ms cubic-bezier(0.40, 0, 0.22, 1),
+        transform 1080ms cubic-bezier(0.40, 0, 0.22, 1);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html.cv-transition-v8-incoming.cv-transition-v8-reveal::after,
+      html.cv-transition-v8-incoming.cv-transition-v8-reveal .cv-page {
+        transition-duration: 100ms;
+      }
+    }
+  </style>
+
+  <!-- DETECTAR TRANSICIÓN ANTES DEL PRIMER RENDER -->
+
+  <script>
+    (function () {
+      try {
+        const key = "cv-soft-page-transition-v8";
+        const raw = sessionStorage.getItem(key);
+        const state = raw ? JSON.parse(raw) : null;
+        const age = state ? Date.now() - Number(state.time) : Infinity;
+
+        if (
+          state &&
+          state.target === location.pathname &&
+          age >= 0 &&
+          age < 12000
+        ) {
+          document.documentElement.classList.add(
+            "cv-transition-v8-incoming"
+          );
+
+        } else if (raw) {
+          sessionStorage.removeItem(key);
+        }
+
+      } catch (error) {
+        // La página continúa normalmente si falla el almacenamiento.
+      }
+    })();
+  </script>
 </head>
 
 <body>
@@ -209,17 +299,24 @@
         <li><a href="music-projects.html">music &amp; projects</a></li>
         <li><a href="https://syos.co/en/blogs/our-artists/cesar-vidal" target="_blank" rel="noopener">syos artist</a></li>
         <li><a href="gonzalez-reeds.html" class="active">gonzalez reeds</a></li>
+
         <li class="cv-nav-soon">
           <a href="#" aria-disabled="true">merch</a>
           <span class="cv-nav-soon-bubble">coming soon</span>
         </li>
+
         <li><a href="contact.html">contact</a></li>
       </ul>
     </nav>
 
     <main class="cv-page-content">
+
       <div class="cv-page-hero">
-        <img class="cv-gonzalez-hero-logo" src="img/logo-gonzalez.webp" alt="Gonzalez Reeds logo" />
+        <img
+          class="cv-gonzalez-hero-logo"
+          src="img/logo-gonzalez.webp"
+          alt="Gonzalez Reeds logo"
+        />
       </div>
 
       <section class="cv-gonzalez-stage">
@@ -243,22 +340,51 @@
             Visit their website to discover more about their work, artists and full catalogue.
           </p>
 
-          <a class="cv-gonzalez-link" href="https://www.gonzalezreeds.com/" target="_blank" rel="noopener">
+          <a
+            class="cv-gonzalez-link"
+            href="https://www.gonzalezreeds.com/"
+            target="_blank"
+            rel="noopener"
+          >
             visit gonzalezreeds.com ↗
           </a>
+
         </div>
 
         <div class="cv-reeds-visuals">
-          <a class="cv-reed-card cv-reed-card--local" href="https://www.gonzalezreeds.com/products/alto-jazz-local-627-2/" target="_blank" rel="noopener" aria-label="Local Jazz 627 reeds">
-            <img class="cv-reed-img" src="img/local-jazz.avif" alt="Gonzalez Reeds Local Jazz 627 for alto saxophone" />
+
+          <a
+            class="cv-reed-card cv-reed-card--local"
+            href="https://www.gonzalezreeds.com/products/alto-jazz-local-627-2/"
+            target="_blank"
+            rel="noopener"
+            aria-label="Local Jazz 627 reeds"
+          >
+            <img
+              class="cv-reed-img"
+              src="img/local-jazz.avif"
+              alt="Gonzalez Reeds Local Jazz 627 for alto saxophone"
+            />
           </a>
 
-          <a class="cv-reed-card cv-reed-card--malbec" href="https://www.gonzalezreeds.com/products/alto-malbec-2/" target="_blank" rel="noopener" aria-label="Malbec reeds">
-            <img class="cv-reed-img" src="img/malbec.avif" alt="Gonzalez Reeds Malbec for alto saxophone" />
+          <a
+            class="cv-reed-card cv-reed-card--malbec"
+            href="https://www.gonzalezreeds.com/products/alto-malbec-2/"
+            target="_blank"
+            rel="noopener"
+            aria-label="Malbec reeds"
+          >
+            <img
+              class="cv-reed-img"
+              src="img/malbec.avif"
+              alt="Gonzalez Reeds Malbec for alto saxophone"
+            />
           </a>
+
         </div>
 
       </section>
+
     </main>
 
     <footer class="cv-footer">
@@ -268,6 +394,8 @@
 
   </div>
 
+  <!-- MERCH COMING SOON -->
+
   <script>
     document.querySelectorAll(".cv-nav-soon > a").forEach(link => {
       link.addEventListener("click", event => {
@@ -276,6 +404,9 @@
     });
   </script>
 
-  <script defer src="page-transition.js?v=7"></script>
+  <!-- TRANSICIÓN V8 -->
+
+  <script defer src="page-transition.js?v=8"></script>
+
 </body>
 </html>
