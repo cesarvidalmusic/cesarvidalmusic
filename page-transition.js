@@ -1,30 +1,93 @@
 /*
- * César Vidal — page transition v8
- * Prueba limitada a Bio <-> Gonzalez Reeds.
+ * César Vidal — page transition v10
+ * Transición compartida para todas las páginas del sitio.
  * Wash oscuro idéntico en ambos sentidos, sin capturas ni iframes.
  */
 
 (function () {
   "use strict";
 
-  const STORAGE_KEY = "cv-soft-page-transition-v8";
+  const STORAGE_KEY = "cv-page-transition";
 
+  const SITE_ROOT = new URL(".", document.currentScript.src).pathname;
   const ALLOWED_PAGES = new Set([
+    "aleas.html",
+    "artikulation-band.html",
     "bio.html",
-    "gonzalez-reeds.html"
+    "contact.html",
+    "des-visages-ep.html",
+    "des-visages.html",
+    "flor-de-loto.html",
+    "gonzalez-reeds.html",
+    "index.html",
+    "merch.html",
+    "music-projects.html",
+    "nubes.html",
+    "spam.html",
   ]);
 
-  const OUT_DURATION = 800;
-  const IN_DURATION = 1080;
+  const root = document.documentElement;
+  const settings = getComputedStyle(root);
+  if (settings.getPropertyValue("--cv-transition-ready").trim() !== "1") {
+    root.classList.remove("cv-transition-incoming");
+    return;
+  }
+
+  function readDuration(name, fallback) {
+    const value = settings.getPropertyValue(name).trim();
+    const number = parseFloat(value);
+    if (!Number.isFinite(number) || number < 0) return fallback;
+    return value.endsWith("ms") ? number : number * 1000;
+  }
+
+  const OUT_DURATION = readDuration("--cv-transition-out-duration", 500);
+  const IN_DURATION = readDuration("--cv-transition-in-duration", 650);
+  const REDUCED_OUT_DURATION = readDuration("--cv-transition-reduced-out-duration", 80);
+  const REDUCED_IN_DURATION = readDuration("--cv-transition-reduced-in-duration", 100);
   const MAX_ASSET_WAIT = 420;
-  const MAX_INTENT_AGE = 12000;
 
   let isNavigating = false;
   let outgoingOverlay = null;
+  let outgoingNavigation = null;
+  let incomingCleanup = null;
+  let incomingTransitionEnd = null;
+  let incomingAnimation = null;
+  let outgoingAnimation = null;
+
+  function animatePage(overlay, content, closing, duration) {
+    if (typeof overlay.animate !== "function" || !content) return null;
+    const previousStyles = [overlay, content].map((element) => {
+      const previous = {
+        element,
+        value: element.style.getPropertyValue("transition"),
+        priority: element.style.getPropertyPriority("transition")
+      };
+      element.style.setProperty("transition", "none");
+      return previous;
+    });
+    const clear = { filter: "blur(0px) brightness(1)", transform: "scale(1)" };
+    const blurred = { filter: "blur(7px) brightness(0.90)", transform: "scale(1.008)" };
+    const timing = { duration, easing: "cubic-bezier(0.40, 0, 0.22, 1)", fill: "both" };
+    const animations = [
+      overlay.animate(closing ? [{ opacity: 0 }, { opacity: 1 }] : [{ opacity: 1 }, { opacity: 0 }], timing),
+      content.animate(closing ? [clear, blurred] : [blurred, clear], timing)
+    ];
+    return {
+      finished: Promise.all(animations.map((animation) => animation.finished)),
+      cancel() {
+        animations.forEach((animation) => animation.cancel());
+        previousStyles.forEach(({ element, value, priority }) => {
+          if (value) element.style.setProperty("transition", value, priority);
+          else element.style.removeProperty("transition");
+        });
+      }
+    };
+  }
 
   function pageName(url) {
     const pathname = new URL(url, location.href).pathname;
-    return pathname.split("/").pop() || "index.html";
+    if (!pathname.startsWith(SITE_ROOT)) return null;
+    return pathname.slice(SITE_ROOT.length) || "index.html";
   }
 
   function transitionAllowed(link) {
@@ -36,7 +99,7 @@
       return false;
     }
 
-    if (link.closest(".cv-nav-soon")) {
+    if (link.closest('.cv-nav-soon, [aria-disabled="true"]')) {
       return false;
     }
 
@@ -60,60 +123,6 @@
     );
   }
 
-  function addOutgoingStyles() {
-    if (document.getElementById("cv-transition-v8-style")) {
-      return;
-    }
-
-    const style = document.createElement("style");
-
-    style.id = "cv-transition-v8-style";
-
-    style.textContent = `
-      .cv-transition-v8-curtain {
-        position: fixed;
-        inset: 0;
-        z-index: 2147483600;
-        opacity: 0;
-        pointer-events: none;
-
-        background:
-          radial-gradient(
-            ellipse at 57% 63%,
-            rgba(44,85,68,0.18),
-            transparent 75%
-          ),
-          #242017;
-
-        transition:
-          opacity ${OUT_DURATION}ms cubic-bezier(0.40, 0, 0.22, 1);
-      }
-
-      .cv-transition-v8-curtain.is-covered {
-        opacity: 1;
-        pointer-events: auto;
-      }
-
-      html.cv-transition-v8-leaving .cv-page {
-        filter: blur(7px) brightness(0.90);
-        transform: scale(1.008);
-
-        transition:
-          filter ${OUT_DURATION}ms cubic-bezier(0.40, 0, 0.22, 1),
-          transform ${OUT_DURATION}ms cubic-bezier(0.40, 0, 0.22, 1);
-      }
-
-      @media (prefers-reduced-motion: reduce) {
-        .cv-transition-v8-curtain,
-        html.cv-transition-v8-leaving .cv-page {
-          transition-duration: 80ms;
-        }
-      }
-    `;
-
-    document.head.appendChild(style);
-  }
-
   function saveIntent(destination) {
     try {
       sessionStorage.setItem(
@@ -131,12 +140,19 @@
     }
   }
 
-  function clearIntent() {
-    try {
-      sessionStorage.removeItem(STORAGE_KEY);
-    } catch (error) {
-      // Ignorar errores de almacenamiento.
-    }
+  function finishIncomingPage() {
+    window.clearTimeout(incomingCleanup);
+    incomingCleanup = null;
+    document.removeEventListener("transitionend", incomingTransitionEnd);
+    incomingTransitionEnd = null;
+
+    document.documentElement.classList.remove(
+      "cv-transition-incoming",
+      "cv-transition-reveal"
+    );
+
+    if (incomingAnimation) incomingAnimation.cancel();
+    incomingAnimation = null;
   }
 
   function navigate(destination) {
@@ -144,12 +160,18 @@
       return;
     }
 
-    isNavigating = true;
+    // Si el navegador bloquea sessionStorage, conservar la navegación normal
+    // en lugar de mostrar solamente la mitad de la transición.
+    if (!saveIntent(destination)) {
+      location.assign(destination);
+      return;
+    }
 
-    addOutgoingStyles();
+    isNavigating = true;
+    finishIncomingPage();
 
     outgoingOverlay = document.createElement("div");
-    outgoingOverlay.className = "cv-transition-v8-curtain";
+    outgoingOverlay.className = "cv-transition-curtain";
     outgoingOverlay.setAttribute("aria-hidden", "true");
 
     document.body.appendChild(outgoingOverlay);
@@ -160,48 +182,62 @@
     void outgoingOverlay.offsetWidth;
 
     document.documentElement.classList.add(
-      "cv-transition-v8-leaving"
+      "cv-transition-leaving"
     );
-
-    requestAnimationFrame(() => {
-      outgoingOverlay.classList.add("is-covered");
-    });
 
     const duration = window.matchMedia(
       "(prefers-reduced-motion: reduce)"
     ).matches
-      ? 90
-      : OUT_DURATION + 40;
+      ? REDUCED_OUT_DURATION
+      : OUT_DURATION;
 
-    window.setTimeout(() => {
-      saveIntent(destination);
+    let completed = false;
+    const completeNavigation = () => {
+      if (completed || !isNavigating) return;
+      completed = true;
+      window.clearTimeout(outgoingNavigation);
       location.assign(destination);
-    }, duration);
+    };
+    outgoingAnimation = animatePage(
+      outgoingOverlay, document.querySelector("[data-page-transition-content]"), true, duration
+    );
+    if (outgoingAnimation) {
+      outgoingOverlay.classList.add("is-covered");
+      outgoingAnimation.finished.then(completeNavigation, () => {});
+    } else {
+      requestAnimationFrame(() => {
+        if (outgoingOverlay && isNavigating) outgoingOverlay.classList.add("is-covered");
+      });
+      outgoingOverlay.addEventListener("transitionend", (event) => {
+        if (event.target === outgoingOverlay && event.propertyName === "opacity") completeNavigation();
+      });
+    }
+    outgoingNavigation = window.setTimeout(completeNavigation, duration + 1000);
   }
 
-  function waitForImagesBriefly() {
-    const incomplete = Array.from(document.images).filter(
-      (img) => !img.complete
-    );
-
-    if (incomplete.length === 0) {
-      return Promise.resolve();
-    }
-
-    const imagesReady = Promise.all(
-      incomplete.map(
-        (img) => new Promise((resolve) => {
-          img.addEventListener("load", resolve, { once: true });
-          img.addEventListener("error", resolve, { once: true });
-        })
-      )
-    );
-
-    const timeout = new Promise((resolve) => {
-      setTimeout(resolve, MAX_ASSET_WAIT);
+  function waitForPageAssets() {
+    const pending = [];
+    const waitFor = (element, event) => new Promise((resolve) => {
+      element.addEventListener(event, resolve, { once: true });
+      element.addEventListener("error", resolve, { once: true });
     });
 
-    return Promise.race([imagesReady, timeout]);
+    Array.from(document.images)
+      .filter((image) => image.loading !== "lazy" && !image.complete)
+      .forEach((image) => pending.push(waitFor(image, "load")));
+    document.querySelectorAll("video[autoplay]").forEach((video) => {
+      if (video.readyState < 2) pending.push(waitFor(video, "loadeddata"));
+    });
+    if (document.fonts && document.fonts.status === "loading") {
+      pending.push(document.fonts.ready);
+    }
+
+    if (pending.length === 0) return Promise.resolve();
+    let timeout;
+    return Promise.race([
+      Promise.all(pending),
+      new Promise((resolve) => { timeout = setTimeout(resolve, MAX_ASSET_WAIT); })
+    ]).finally(() => clearTimeout(timeout));
   }
 
   async function revealIncomingPage() {
@@ -211,43 +247,38 @@
 
     if (
       !document.documentElement.classList.contains(
-        "cv-transition-v8-incoming"
+        "cv-transition-incoming"
       )
     ) {
       return;
     }
 
-    let validIntent = false;
+    // El <head> ya validó y consumió la intención de navegación. No volver a
+    // caducarla aquí: una carga lenta del script no debe cancelar el fade-in.
 
-    try {
-      const raw = sessionStorage.getItem(STORAGE_KEY);
-      const data = raw ? JSON.parse(raw) : null;
+    // Esperar brevemente las imágenes, las fuentes y los fondos de vídeo.
+    // No se bloquea la página indefinidamente.
 
-      validIntent = Boolean(
-        data &&
-        data.target === location.pathname &&
-        Date.now() - Number(data.time) >= 0 &&
-        Date.now() - Number(data.time) < MAX_INTENT_AGE
-      );
-
-    } catch (error) {
-      // Continuar sin transición si falla el almacenamiento.
+    if (window.cvPageReady) {
+      await Promise.race([
+        Promise.resolve(window.cvPageReady).catch(() => {}),
+        new Promise((resolve) => setTimeout(resolve, 2400))
+      ]);
     }
+    await waitForPageAssets();
 
-    clearIntent();
+    if (isNavigating || !root.classList.contains("cv-transition-incoming")) return;
 
-    if (!validIntent) {
-      document.documentElement.classList.remove(
-        "cv-transition-v8-incoming"
-      );
-
+    // Registrar el estado cubierto antes de empezar a retirar la cortina,
+    // incluso si todos los recursos proceden de la caché.
+    const incomingOverlay = document.querySelector(".cv-transition-entering");
+    if (!incomingOverlay) {
+      finishIncomingPage();
       return;
     }
 
-    // Esperar brevemente las imágenes.
-    // No se bloquea la página indefinidamente.
-
-    await waitForImagesBriefly();
+    void incomingOverlay.offsetWidth;
+    void getComputedStyle(incomingOverlay).opacity;
 
     await new Promise((resolve) => {
       requestAnimationFrame(() => {
@@ -255,27 +286,46 @@
       });
     });
 
-    document.documentElement.classList.add(
-      "cv-transition-v8-reveal"
-    );
+    if (isNavigating || !root.classList.contains("cv-transition-incoming")) {
+      return;
+    }
 
     const duration = window.matchMedia(
       "(prefers-reduced-motion: reduce)"
     ).matches
-      ? 100
-      : IN_DURATION + 100;
+      ? REDUCED_IN_DURATION
+      : IN_DURATION;
 
-    window.setTimeout(() => {
-      document.documentElement.classList.remove(
-        "cv-transition-v8-incoming",
-        "cv-transition-v8-reveal"
+    // Limpiar al terminar realmente la animación. El temporizador es solo
+    // una salida de seguridad para pestañas ocultas o transiciones canceladas.
+    incomingCleanup = window.setTimeout(finishIncomingPage, duration + 1000);
+
+    // Los fotogramas explícitos evitan que el primer layout omita el fundido.
+    incomingAnimation = animatePage(
+      incomingOverlay, document.querySelector("[data-page-transition-content]"), false, duration
+    );
+    if (incomingAnimation) {
+      incomingAnimation.finished.then(
+        finishIncomingPage,
+        () => { /* La navegación puede cancelar una entrada en curso. */ }
       );
-    }, duration);
+    } else {
+      incomingTransitionEnd = (event) => {
+        if (event.target === incomingOverlay && event.propertyName === "opacity") {
+          finishIncomingPage();
+        }
+      };
+      document.addEventListener("transitionend", incomingTransitionEnd);
+    }
+
+    document.documentElement.classList.add(
+      "cv-transition-reveal"
+    );
   }
 
   document.addEventListener("click", (event) => {
 
-    const link = event.target.closest("a");
+    const link = event.target instanceof Element ? event.target.closest("a") : null;
 
     if (!transitionAllowed(link)) {
       return;
@@ -307,16 +357,27 @@
     }
 
     isNavigating = false;
+    window.clearTimeout(outgoingNavigation);
+    finishIncomingPage();
 
     document.documentElement.classList.remove(
-      "cv-transition-v8-leaving"
+      "cv-transition-leaving"
     );
 
     if (outgoingOverlay) {
       outgoingOverlay.remove();
     }
+    if (outgoingAnimation) outgoingAnimation.cancel();
+    outgoingAnimation = null;
 
     outgoingOverlay = null;
+  });
+
+  window.addEventListener("pagehide", () => {
+    window.clearTimeout(outgoingNavigation);
+    if (outgoingAnimation) outgoingAnimation.cancel();
+    outgoingAnimation = null;
+    finishIncomingPage();
   });
 
   if (document.readyState === "loading") {
