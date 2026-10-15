@@ -14,8 +14,8 @@
     "gonzalez-reeds.html"
   ]);
 
-  const OUT_DURATION = 800;
-  const IN_DURATION = 1080;
+  const OUT_DURATION = 680;
+  const IN_DURATION = 920;
   const MAX_ASSET_WAIT = 420;
   const MAX_INTENT_AGE = 12000;
 
