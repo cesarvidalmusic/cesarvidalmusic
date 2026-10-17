@@ -70,16 +70,18 @@
     .cv-hero-img {
       position: absolute;
 
-      top: -8px;
-      right: 0;
-      bottom: -8px;
-      left: -0.7cm;
+      /* Use the photo's full right edge while keeping the balanced crop. */
+      top: -32px;
+      right: auto;
+      bottom: auto;
+      left: -14%;
 
-      width: calc(100% + 0.7cm);
-      height: calc(100% + 16px);
+      width: 114%;
+      height: calc(100% + 64px);
+      max-width: none;
 
       object-fit: cover;
-      object-position: 50% 56%;
+      object-position: 50% 74%;
 
       display: block;
       animation: heroBlur 50s ease-in-out infinite;

@@ -69,9 +69,12 @@
     }
 
     .cv-mp-stage {
+      --cv-mp-stage-height: calc(100vh - (var(--nav-height) * 2) - 52px);
+      --cv-mp-frame-color: #E0E0E0;
+      --cv-mp-frame-width: calc(4px / 3);
       flex: none;
       min-height: 0;
-      height: calc(100vh - (var(--nav-height) * 2) - 52px);
+      height: var(--cv-mp-stage-height);
       padding: 0 var(--pad-x);
       display: flex;
       gap: 0;
@@ -81,12 +84,11 @@
     .cv-mp-col {
       flex: 1;
       position: relative;
-      overflow: hidden;
-      border-left: 0.5px solid #E0E0E0;
+      overflow: visible;
     }
 
-    .cv-mp-col:last-child {
-      border-right: 0.5px solid #E0E0E0;
+    .cv-mp-col:hover {
+      z-index: 2;
     }
 
     .cv-mp-track {
@@ -102,8 +104,10 @@
       flex-direction: column;
       align-items: flex-start;
       padding: 1rem 1rem 1.15rem;
-      border-bottom: 0.5px solid #E0E0E0;
+      background: #ffffff;
       height: 75vh;
+      /* At most two reserved cards per column, including the 5% hover growth. */
+      min-height: calc((var(--cv-mp-stage-height) + 5px) / 0.95);
       box-sizing: border-box;
       text-decoration: none;
       color: #0A0A0A;
@@ -116,8 +120,31 @@
 
     .cv-mp-card:hover {
       background: var(--hover-color);
-      transform: scale(1.03);
+      transform: scale(1.05);
       z-index: 2;
+    }
+
+    .cv-mp-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      /* Shared edges belong to one card, avoiding doubled horizontal lines. */
+      box-shadow:
+        inset var(--cv-mp-frame-width) 0 0 var(--cv-mp-frame-color),
+        inset 0 var(--cv-mp-frame-width) 0 var(--cv-mp-frame-color);
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+
+    .cv-mp-col:last-child .cv-mp-card::after {
+      box-shadow:
+        inset var(--cv-mp-frame-width) 0 0 var(--cv-mp-frame-color),
+        inset 0 var(--cv-mp-frame-width) 0 var(--cv-mp-frame-color),
+        inset calc(-1 * var(--cv-mp-frame-width)) 0 0 var(--cv-mp-frame-color);
+    }
+
+    .cv-mp-card:hover::after {
+      opacity: 0;
     }
 
     .cv-mp-card--coming-soon {
@@ -406,7 +433,9 @@
     const offsets = [0, 0, 0, 0];
 
     let cardHeight = 0;
+    let stageHeight = 0;
     let lastTime = null;
+    let reservedCards = new Set();
 
     function preloadProjectImages() {
       const loaders = PROJECTS.map(project => {
@@ -478,11 +507,11 @@
       setCardProject(card, project);
       addHover(card);
 
-      if (project.comingSoon) {
-        card.addEventListener("click", event => {
+      card.addEventListener("click", event => {
+        if (card.classList.contains("cv-mp-card--coming-soon")) {
           event.preventDefault();
-        });
-      }
+        }
+      });
 
       return card;
     }
@@ -527,36 +556,38 @@
       });
     }
 
-    function getVisibleCards() {
-      const stageRect = stageEl.getBoundingClientRect();
+    function reserveVisibleProjects() {
+      // Reserve just before entry, including the maximum hover overhang.
+      // Use layout coordinates so page fades and current hover transforms
+      // cannot change which projects are protected.
+      const margin = cardHeight * 0.025 + 2;
+      const entering = trackEls.flatMap((track, i) => {
+        const direction = DIRS[i] === 1 ? -1 : 1;
+        const y = -2 * cardHeight + direction * offsets[i];
 
-      return Array
-        .from(document.querySelectorAll(".cv-mp-card"))
-        .filter(card => {
-          const rect = card.getBoundingClientRect();
-
-          return (
-            rect.top < stageRect.bottom &&
-            rect.bottom > stageRect.top
-          );
+        return Array.from(track.children).filter((card, index) => {
+          const top = y + index * cardHeight;
+          return top < stageHeight + margin && top + cardHeight > -margin;
         });
-    }
+      });
 
-    function getVisibleProjectTitles(excludeCard = null) {
-      return getVisibleCards()
-        .filter(card => card !== excludeCard)
-        .map(card => card.dataset.project)
-        .filter(Boolean);
+      // Keep projects already on screen. Only an incoming, offscreen card
+      // may receive a different project; future buffer cards reserve nothing.
+      entering.sort((a, b) => Number(reservedCards.has(b)) - Number(reservedCards.has(a)));
+      const blocked = [];
+      entering.forEach(card => {
+        if (blocked.includes(card.dataset.project)) {
+          setCardProject(card, pickProject(blocked));
+        }
+        blocked.push(card.dataset.project);
+      });
+      reservedCards = new Set(entering);
     }
 
     function pickProject(blockedTitles = []) {
-      let available = PROJECTS.filter(project => {
+      const available = PROJECTS.filter(project => {
         return !blockedTitles.includes(project.title);
       });
-
-      if (available.length === 0) {
-        available = PROJECTS;
-      }
 
       return available[
         Math.floor(Math.random() * available.length)
@@ -576,23 +607,34 @@
 
       trackEls[0].appendChild(testCard);
 
-      cardHeight = testCard.offsetHeight;
+      // Keep fractional CSS pixels, even during the incoming page transform.
+      cardHeight = parseFloat(getComputedStyle(testCard).height);
+      stageHeight = parseFloat(getComputedStyle(stageEl).height);
 
       trackEls[0].removeChild(testCard);
 
-      if (!cardHeight || cardHeight < 100) {
-        cardHeight = Math.round(window.innerHeight * 0.75);
+      if (!Number.isFinite(cardHeight) || cardHeight < 100) {
+        cardHeight = window.innerHeight * 0.75;
       }
     }
 
     function buildInitialGallery() {
       const deck = shuffle(PROJECTS);
+      const visibleSlots = Math.max(2, Math.ceil(stageEl.clientHeight / cardHeight));
       let index = 0;
 
       trackEls.forEach((track, i) => {
         track.innerHTML = "";
 
-        for (let j = 0; j < 2; j++) {
+        // Two leading cards keep newly recycled nodes outside the viewport,
+        // including downward motion and fractional-frame overshoot.
+        for (let j = 2; j > 0; j--) {
+          track.appendChild(
+            createCard(deck[(index + deck.length - j) % deck.length])
+          );
+        }
+
+        for (let j = 0; j < visibleSlots; j++) {
           const project = deck[index % deck.length];
           index++;
 
@@ -601,63 +643,46 @@
           );
         }
 
+        track.appendChild(
+          createCard(deck[index % deck.length])
+        );
+
         offsets[i] = 0;
 
         applyTransform(i);
       });
+
+      reserveVisibleProjects();
     }
 
     function applyTransform(i) {
-      let y;
-
-      if (DIRS[i] === 1) {
-        y = -offsets[i];
-      } else {
-        y = offsets[i] - cardHeight;
-      }
+      const direction = DIRS[i] === 1 ? -1 : 1;
+      const y = -2 * cardHeight + direction * offsets[i];
 
       trackEls[i].style.transform = `translateY(${y}px)`;
     }
 
     function recycleColumn(i) {
       const track = trackEls[i];
+      const departingCard = DIRS[i] === 1
+        ? track.firstElementChild
+        : track.lastElementChild;
+      // Buffers are assigned provisionally; reserve their project near entry.
+      const newCard = createCard(pickProject());
+
+      if (departingCard) departingCard.remove();
 
       if (DIRS[i] === 1) {
-        const firstCard = track.firstElementChild;
-
-        if (firstCard) {
-          track.removeChild(firstCard);
-        }
-
-        const blocked = getVisibleProjectTitles();
-        const newProject = pickProject(blocked);
-
-        track.appendChild(
-          createCard(newProject)
-        );
-
-        offsets[i] -= cardHeight;
+        track.appendChild(newCard);
       } else {
-        const lastCard = track.lastElementChild;
-
-        if (lastCard) {
-          track.removeChild(lastCard);
-        }
-
-        const blocked = getVisibleProjectTitles();
-        const newProject = pickProject(blocked);
-
-        track.insertBefore(
-          createCard(newProject),
-          track.firstElementChild
-        );
-
-        offsets[i] -= cardHeight;
+        track.insertBefore(newCard, track.firstElementChild);
       }
+
+      offsets[i] -= cardHeight;
     }
 
     function animate(ts) {
-      if (!lastTime) {
+      if (lastTime === null) {
         lastTime = ts;
       }
 
@@ -674,12 +699,27 @@
         applyTransform(i);
       });
 
+      reserveVisibleProjects();
+
       requestAnimationFrame(animate);
+    }
+
+    function resizeGallery() {
+      const previousHeight = cardHeight;
+      measureCardHeight();
+
+      trackEls.forEach((track, i) => {
+        offsets[i] = offsets[i] * cardHeight / previousHeight;
+        applyTransform(i);
+      });
+
+      reserveVisibleProjects();
     }
 
     function startGallery() {
       measureCardHeight();
       buildInitialGallery();
+      window.addEventListener("resize", resizeGallery);
       requestAnimationFrame(animate);
     }
 
