@@ -1,13 +1,27 @@
 /*
- * César Vidal — page transition v10
+ * César Vidal — page transition v13
  * Transición compartida para todas las páginas del sitio.
- * Wash oscuro idéntico en ambos sentidos, sin capturas ni iframes.
+ * Wash oscuro compartido y colores de fondo entre la galería y sus siete proyectos.
  */
 
 (function () {
   "use strict";
 
   const STORAGE_KEY = "cv-page-transition";
+  const GALLERY_THEMES = {
+    "des-visages.html": "des-visages",
+    "spam.html": "spam",
+    "des-visages-ep.html": "black",
+    "nubes.html": "black",
+    "flor-de-loto.html": "black",
+    "aleas.html": "black",
+    "artikulation-band.html": "black"
+  };
+  const RETURN_TRANSITION_CLASS = "cv-transition-project-to-gallery";
+  const COLOR_TRANSITION_CLASSES = [RETURN_TRANSITION_CLASS, ...["des-visages", "spam", "black"].map(
+    (theme) => "cv-transition-gallery-to-" + theme
+  )];
+  const CSS_FALLBACK_CLASS = "cv-transition-css-fallback";
 
   const SITE_ROOT = new URL(".", document.currentScript.src).pathname;
   const ALLOWED_PAGES = new Set([
@@ -29,7 +43,7 @@
   const root = document.documentElement;
   const settings = getComputedStyle(root);
   if (settings.getPropertyValue("--cv-transition-ready").trim() !== "1") {
-    root.classList.remove("cv-transition-incoming");
+    root.classList.remove("cv-transition-incoming", ...COLOR_TRANSITION_CLASSES, CSS_FALLBACK_CLASS);
     return;
   }
 
@@ -68,8 +82,17 @@
     const clear = { filter: "blur(0px) brightness(1)", transform: "scale(1)" };
     const blurred = { filter: "blur(7px) brightness(0.90)", transform: "scale(1.008)" };
     const timing = { duration, easing: "cubic-bezier(0.40, 0, 0.22, 1)", fill: "both" };
+    const overlayFrames = closing
+      ? [{ opacity: 0 }, { opacity: 1 }]
+      : [{ opacity: 1 }, { opacity: 0 }];
+    const destinationColor = getComputedStyle(root).getPropertyValue("--cv-transition-destination-color").trim();
+    if (destinationColor) {
+      const sourceColor = getComputedStyle(root).getPropertyValue("--cv-transition-source-color").trim() || "#ffffff";
+      overlayFrames[0].backgroundColor = closing ? sourceColor : destinationColor;
+      overlayFrames[1].backgroundColor = destinationColor;
+    }
     const animations = [
-      overlay.animate(closing ? [{ opacity: 0 }, { opacity: 1 }] : [{ opacity: 1 }, { opacity: 0 }], timing),
+      overlay.animate(overlayFrames, timing),
       content.animate(closing ? [clear, blurred] : [blurred, clear], timing)
     ];
     return {
@@ -123,13 +146,14 @@
     );
   }
 
-  function saveIntent(destination) {
+  function saveIntent(destination, colorTheme, returningToGallery) {
     try {
       sessionStorage.setItem(
         STORAGE_KEY,
         JSON.stringify({
           target: new URL(destination, location.href).pathname,
-          time: Date.now()
+          time: Date.now(),
+          theme: returningToGallery ? "project-to-gallery" : colorTheme ? "gallery-to-" + colorTheme : undefined
         })
       );
 
@@ -144,15 +168,20 @@
     window.clearTimeout(incomingCleanup);
     incomingCleanup = null;
     document.removeEventListener("transitionend", incomingTransitionEnd);
+    document.removeEventListener("animationend", incomingTransitionEnd);
     incomingTransitionEnd = null;
 
     document.documentElement.classList.remove(
       "cv-transition-incoming",
-      "cv-transition-reveal"
+      "cv-transition-reveal",
+      CSS_FALLBACK_CLASS
     );
+    root.style.removeProperty("--cv-transition-css-duration");
 
     if (incomingAnimation) incomingAnimation.cancel();
     incomingAnimation = null;
+    // Keep the opaque destination color until the new page has painted.
+    if (!isNavigating) root.classList.remove(...COLOR_TRANSITION_CLASSES);
   }
 
   function navigate(destination) {
@@ -160,15 +189,25 @@
       return;
     }
 
+    const sourcePage = pageName(location.href);
+    const destinationPage = pageName(destination);
+    const returningToGallery = destinationPage === "music-projects.html" && Boolean(GALLERY_THEMES[sourcePage]);
+    const colorTheme = sourcePage === "music-projects.html"
+      ? GALLERY_THEMES[destinationPage]
+      : returningToGallery ? GALLERY_THEMES[sourcePage] : undefined;
+
     // Si el navegador bloquea sessionStorage, conservar la navegación normal
     // en lugar de mostrar solamente la mitad de la transición.
-    if (!saveIntent(destination)) {
+    if (!saveIntent(destination, colorTheme, returningToGallery)) {
       location.assign(destination);
       return;
     }
 
     isNavigating = true;
     finishIncomingPage();
+    root.classList.remove(...COLOR_TRANSITION_CLASSES);
+    if (colorTheme) root.classList.add("cv-transition-gallery-to-" + colorTheme);
+    if (returningToGallery) root.classList.add(RETURN_TRANSITION_CLASS);
 
     outgoingOverlay = document.createElement("div");
     outgoingOverlay.className = "cv-transition-curtain";
@@ -311,11 +350,13 @@
       );
     } else {
       incomingTransitionEnd = (event) => {
-        if (event.target === incomingOverlay && event.propertyName === "opacity") {
+        if (event.target === incomingOverlay && event.animationName === "cv-transition-overlay-in") {
           finishIncomingPage();
         }
       };
-      document.addEventListener("transitionend", incomingTransitionEnd);
+      document.addEventListener("animationend", incomingTransitionEnd);
+      root.style.setProperty("--cv-transition-css-duration", duration + "ms");
+      root.classList.add(CSS_FALLBACK_CLASS);
     }
 
     document.documentElement.classList.add(
