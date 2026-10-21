@@ -35,6 +35,10 @@ PAGE_COLORS = {
     'gonzalez-reeds.html': 'rgb(255, 255, 255)',
     'merch.html': 'rgb(255, 255, 255)',
 }
+PHOTO_IMAGES = {
+    'artikulation-band.html': 'artikulation-video-1.webp',
+    'des-visages.html': 'des-visages-transition.webp',
+}
 
 
 def route_color(source, destination):
@@ -61,9 +65,14 @@ new MutationObserver(() => {
     if (seen.has(animation)) continue;
     seen.add(animation);
     const style = getComputedStyle(overlay);
+    const photo = getComputedStyle(overlay, '::before');
+    const content = document.querySelector('[data-page-transition-content]');
+    const contentAnimation = content?.getAnimations()[0];
     const seconds = animation.effect.getTiming().duration / 1000;
     window.fadeRuns.push({duration: seconds, background: style.backgroundColor,
       gradient: style.backgroundImage,
+      photo: photo.backgroundImage, photoBlur: photo.filter,
+      contentFrames: contentAnimation?.effect.getKeyframes().map(frame => frame.filter) || [],
       cards: document.querySelectorAll('.cv-mp-card').length});
     animation.finished.then(() => {
       if (!fadeEnds.includes(seconds)) fadeEnds.push(seconds);
@@ -123,7 +132,7 @@ def check_installation():
     assert (ROOT / 'CNAME').read_text().strip() == 'cesarvidalmusic.art', 'Keep the official Pages domain'
     for name in PAGES:
         html = (ROOT / name).read_text()
-        version = 14
+        version = 16
         assert html.count(f'src="page-transition.js?v={version}"') == 1, name
         assert html.count(f'href="css/page-transition.css?v={version}"') == 1, name
         assert html.count('data-page-transition-content') == 1, name
@@ -182,8 +191,15 @@ async def check_entry(page, destination, *, reduced=False, color=None):
       transform:getComputedStyle(document.querySelector('[data-page-transition-content]')).transform})""")
     duration = 0.1 if reduced else 0.65
     assert len(result['runs']) == 1 and result['ends'] == [duration], (destination, result)
-    assert result['runs'][0]['background'] == color, result
-    assert result['runs'][0]['gradient'] == 'none', result
+    run = result['runs'][0]
+    if destination in PHOTO_IMAGES:
+        assert PHOTO_IMAGES[destination] in run['photo'], result
+        assert run['photoBlur'].startswith('blur(') and run['photoBlur'] != 'blur(0px)', result
+        assert run['contentFrames'][0] == f"blur({0 if reduced else 48}px) brightness(1)", result
+        assert run['contentFrames'][-1] == 'blur(0px) brightness(1)', result
+    else:
+        assert run['background'] == color, result
+        assert run['gradient'] == 'none', result
     assert result['runs'][0]['duration'] == duration, result
     if not reduced:
         assert any(0 < value < 1 for value in result['samples']), result
