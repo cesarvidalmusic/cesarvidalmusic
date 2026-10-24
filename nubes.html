@@ -14,17 +14,15 @@
         const age = state ? Date.now() - Number(state.time) : Infinity;
         if (state && state.target === location.pathname && age >= 0 && age < 60000) {
           document.documentElement.classList.add("cv-transition-incoming");
-          if (state.theme === "black") {
-            document.documentElement.classList.add("cv-transition-to-black");
-          }
+          document.documentElement.classList.add("cv-transition-to-nubes-photo");
         }
       } catch (error) {
         // Navigation remains available when storage is blocked.
       }
     })();
   </script>
-  <link rel="stylesheet" href="css/page-transition.css?v=16" />
-  <script defer src="page-transition.js?v=16" onerror="document.documentElement.classList.remove('cv-transition-incoming', 'cv-transition-to-black')"></script>
+  <link rel="stylesheet" href="css/page-transition.css?v=19" />
+  <script defer src="page-transition.js?v=19" onerror="document.documentElement.classList.remove('cv-transition-incoming', 'cv-transition-to-nubes-photo')"></script>
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="NUBES — César Vidal" />
@@ -34,11 +32,12 @@
   <link rel="preload" href="fonts/Ronzino-Regular.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="preload" href="fonts/Ronzino-Oblique.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="preload" as="image" href="img/cover-nubes.webp" type="image/webp" fetchpriority="high">
+  <link rel="preload" as="image" href="img/title-nubes-v1.png" type="image/png" fetchpriority="high">
   <link rel="icon" href="favicon.ico" sizes="any">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <script defer src="favicon.js?v=6"></script>
-  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/style.css?v=17" />
 
   <style>
     html, body {
@@ -148,9 +147,16 @@
       color: #ffffff;
     }
 
-    .cv-page-title {
-      margin: 0 0 clamp(0.75rem, 1.45vh, 1.1rem);
-      color: #ffffff;
+    .cv-nubes-opening {
+      --run-in-copy-size: clamp(11.4px, .86vw, 13.4px);
+      --run-in-copy-leading: 1.36;
+      --run-in-paragraph-gap: .62rem;
+      --run-in-title-height: clamp(30px, 2.4vw, 42px);
+      --run-in-title-ratio: 3.6;
+      --run-in-art-left: -5.723045%;
+      --run-in-art-top: -47.96748%;
+      --run-in-art-width: 112.723556%;
+      --run-in-art-height: 193.224932%;
     }
 
     .cv-nubes-copy {
@@ -221,6 +227,8 @@
       color: rgba(255,255,255,0.82);
     }
   </style>
+  <link rel="stylesheet" href="css/inline-project-heading.css?v=2" />
+  <link rel="stylesheet" href="css/project-navigation.css?v=2" />
 </head>
 
 <body>
@@ -261,11 +269,17 @@
           </div>
 
           <article class="cv-nubes-text-slot">
-            <h1 class="cv-page-title"><em>NUBES</em></h1>
-
+            <div class="cv-nubes-opening cv-run-in-opening">
+              <h1 class="cv-page-title cv-run-in-title">
+                <span class="cv-run-in-title-label">NUBES</span>
+                <span class="cv-run-in-title-art" aria-hidden="true">
+                  <img src="img/title-nubes-v1.png" alt="" width="2206" height="713" decoding="async" onerror="this.closest('h1').classList.add('cv-run-in-fallback')">
+                </span>
+              </h1>
             <p class="cv-nubes-copy">
-              <em>NUBES</em> is the first duo album by César Vidal and the renowned Chilean guitarist Nicolás Vera, a prolific musician with over 20 years of experience working in Chile and abroad alongside international artists. Released in Chile as the first album of 2025, <em>NUBES</em> features original compositions by both César and Nicolás.
+              is the first duo album by César Vidal and the renowned Chilean guitarist Nicolás Vera, a prolific musician with over 20 years of experience working in Chile and abroad alongside international artists. Released in Chile as the first album of 2025, <em>NUBES</em> features original compositions by both César and Nicolás.
             </p>
+            </div>
 
             <p class="cv-nubes-copy">
               The project was born from a period of remote collaboration that began in 2022, when César moved to Amsterdam. Between ideas and experiments, the two musicians exchanged recordings and explored various approaches, resulting in the ten tracks that make up the album. <em>NUBES</em> represents the first collaboration between two musicians of different generations, yet with similar artistic ambitions.
@@ -288,6 +302,15 @@
                 </iframe>
               </div>
             </div>
+            <nav class="cv-project-nav" aria-label="Project navigation">
+              <a class="cv-project-nav-all" href="music-projects.html">all projects</a>
+              <a class="cv-project-nav-previous" href="des-visages.html" rel="prev" aria-label="Previous project: Des Visages" title="Des Visages">
+                <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M13 8H3m5-5L3 8l5 5"/></svg><span>previous<span class="cv-project-nav-context"> project</span></span>
+              </a>
+              <a class="cv-project-nav-next" href="spam.html" rel="next" aria-label="Next project: SPAM" title="SPAM">
+                <span>next<span class="cv-project-nav-context"> project</span></span><svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M3 8h10M8 3l5 5-5 5"/></svg>
+              </a>
+            </nav>
           </article>
 
         </div>
