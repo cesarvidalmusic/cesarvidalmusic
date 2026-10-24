@@ -36,8 +36,14 @@ PAGE_COLORS = {
     'merch.html': 'rgb(255, 255, 255)',
 }
 PHOTO_IMAGES = {
+    'aleas.html': 'aleas-transition.webp',
+    'bio.html': 'bio-transition.webp',
     'artikulation-band.html': 'artikulation-video-1.webp',
     'des-visages.html': 'des-visages-transition.webp',
+    'spam.html': 'spam-transition.webp',
+    'des-visages-ep.html': 'des-visages-ep-transition.webp',
+    'flor-de-loto.html': 'flor-de-loto-transition.webp',
+    'nubes.html': 'nubes-transition.webp',
 }
 
 
@@ -132,7 +138,7 @@ def check_installation():
     assert (ROOT / 'CNAME').read_text().strip() == 'cesarvidalmusic.art', 'Keep the official Pages domain'
     for name in PAGES:
         html = (ROOT / name).read_text()
-        version = 16
+        version = 19
         assert html.count(f'src="page-transition.js?v={version}"') == 1, name
         assert html.count(f'href="css/page-transition.css?v={version}"') == 1, name
         assert html.count('data-page-transition-content') == 1, name
