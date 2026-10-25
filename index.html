@@ -14,17 +14,16 @@
         const age = state ? Date.now() - Number(state.time) : Infinity;
         if (state && state.target === location.pathname && age >= 0 && age < 60000) {
           document.documentElement.classList.add("cv-transition-incoming");
-          if (state.theme === "black") {
-            document.documentElement.classList.add("cv-transition-to-black");
-          }
+          document.documentElement.classList.add("cv-transition-to-home-photo");
         }
       } catch (error) {
         // Navigation remains available when storage is blocked.
       }
     })();
   </script>
-  <link rel="stylesheet" href="css/page-transition.css?v=19" />
-  <script defer src="page-transition.js?v=19" onerror="document.documentElement.classList.remove('cv-transition-incoming', 'cv-transition-to-black')"></script>
+  <link rel="stylesheet" href="css/page-transition.css?v=21" />
+  <script defer src="gallery-transition.js?v=1"></script>
+  <script defer src="page-transition.js?v=21" onerror="document.documentElement.classList.remove('cv-transition-incoming', 'cv-transition-to-home-photo')"></script>
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="César Vidal — Saxophonist, Composer and Improviser based in Amsterdam." />
@@ -35,14 +34,15 @@
 
   <link rel="preload" as="image" href="img/hero-home.webp" type="image/webp" fetchpriority="high">
 
-  <link rel="icon" href="favicon.ico" sizes="any">
-  <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="apple-touch-icon" href="apple-touch-icon.png">
-  <script defer src="favicon.js?v=6"></script>
+  <link rel="icon" href="favicon.ico?v=7" sizes="any">
+  <link rel="icon" href="favicon.svg?v=7" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png?v=7">
+  <script defer src="favicon.js?v=7"></script>
 
   <link rel="stylesheet" href="css/style.css?v=17" />
-  <link rel="preload" href="fonts/barlowfold.otf" as="font" type="font/otf" crossorigin />
-  <link rel="stylesheet" href="css/title-barlowfold.css?v=3" />
+  <link rel="preload" href="img/title-berlin-index-v1.svg" as="image" type="image/svg+xml" />
+  <link rel="stylesheet" href="css/title-berlin.css?v=3" />
+  <script defer src="home-title.js?v=1"></script>
 
   <style>
     html, body {
@@ -162,6 +162,7 @@
       font-size: clamp(9px, 0.9vw, 11px);
       letter-spacing: 0.16em;
       color: rgba(255,255,255,0.45);
+      text-transform: none;
       z-index: 11;
     }
 
@@ -266,7 +267,7 @@
       </nav>
 
       <div class="cv-hero-content">
-        <div class="cv-hero-name cv-title-barlowfold cv-title-barlowfold--white cv-title-barlowfold--home">CÉSAR VIDAL</div>
+        <div class="cv-hero-name cv-title-berlin cv-title-berlin--white cv-title-berlin--home"><img class="cv-title-berlin-art" src="img/title-berlin-index-v1.svg" alt="CÉSAR VIDAL" width="6507" height="977" style="--cv-berlin-width:6.35449219" fetchpriority="high"></div>
         <div class="cv-hero-spacer"></div>
       </div>
 

@@ -1,0 +1,213 @@
+/* The original photograph stays complete at the right; only its empty backdrop extends. */
+html, body {
+  height: 100%;
+  overflow: hidden;
+  background: #999;
+}
+
+.cv-page {
+  height: 100vh;
+  height: 100svh;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.cv-contact-scene {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.cv-contact-backdrop {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  filter: grayscale(1);
+  pointer-events: none;
+  user-select: none;
+}
+
+.cv-contact-texture {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+  object-position: right center;
+}
+
+.cv-contact-photo {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  object-position: right bottom;
+  /* Blend only the empty left margin; the subject retains the original pixels. */
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 9%);
+  mask-image: linear-gradient(to right, transparent, #000 9%);
+}
+
+.cv-nav {
+  background: transparent;
+}
+
+.cv-nav.cv-nav--dark a {
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0,0,0,.5);
+}
+
+.cv-nav.cv-nav--dark a:hover,
+.cv-nav a.active {
+  color: var(--accent);
+}
+
+.cv-page-content {
+  position: relative;
+  z-index: 2;
+  min-height: 0;
+  padding-top: var(--nav-height);
+  background: transparent;
+}
+
+.cv-page-hero {
+  display: block;
+  border-bottom: 0;
+  background: transparent;
+}
+
+.cv-page-title {
+  color: #fff;
+  text-shadow: 0 1px 8px rgba(0,0,0,.18);
+}
+
+.cv-contact-details {
+  width: min(31rem, calc(100% - 2 * var(--pad-x)));
+  margin: clamp(2.5rem, 7vh, 5rem) var(--pad-x) 0;
+  color: #fff;
+  font-family: 'Ronzino', sans-serif;
+  text-shadow: 0 1px 3px rgba(0,0,0,.5);
+}
+
+.cv-contact-details h2 {
+  margin: 0 0 .75rem;
+  font-size: clamp(23px, 2vw, 30px);
+  font-weight: 400;
+  letter-spacing: -.025em;
+  line-height: 1.15;
+  text-transform: none;
+}
+
+.cv-contact-intro {
+  max-width: 29rem;
+  margin: 0 0 1.25rem;
+  font-size: clamp(13px, 1vw, 15px);
+  line-height: 1.45;
+}
+
+.cv-contact-details a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  color: inherit;
+  text-decoration: none;
+  transition: border-color .25s ease;
+}
+
+.cv-contact-details a:hover,
+.cv-contact-details a:focus-visible {
+  color: #fff;
+  border-color: #fff;
+}
+
+.cv-contact-details a:focus-visible {
+  outline: 1px solid currentColor;
+  outline-offset: 6px;
+}
+
+.cv-contact-link-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.cv-contact-link {
+  padding: .85rem 0;
+  border-bottom: .5px solid rgba(255,255,255,.6);
+  font-size: clamp(13px, 1.15vw, 18px);
+  font-weight: 400;
+  line-height: 1.3;
+  letter-spacing: -.015em;
+}
+
+.cv-contact-link span {
+  overflow-wrap: anywhere;
+}
+
+.cv-contact-details svg {
+  flex: 0 0 auto;
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.2;
+  transition: transform .25s ease;
+}
+
+.cv-contact-details a:hover svg {
+  transform: translate(2px, -2px);
+}
+
+.cv-contact-photo-credit {
+  position: absolute;
+  right: clamp(.75rem, 2vw, 1.25rem);
+  bottom: clamp(.5rem, 1.5vw, 1rem);
+  z-index: 3;
+  font-family: 'Ronzino', sans-serif;
+  font-size: clamp(9px, .9vw, 11px);
+  line-height: normal;
+  letter-spacing: .16em;
+  text-transform: none;
+  color: #fff;
+  text-shadow: 0 1px 4px rgba(0,0,0,.5);
+  pointer-events: none;
+}
+
+.cv-footer {
+  position: relative;
+  z-index: 2;
+  flex-shrink: 0;
+  padding: .55rem clamp(.5rem, 2vw, 1.25rem);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: .5px solid #E0E0E0;
+  background: #fff;
+}
+
+.cv-footer span {
+  font-family: 'Ronzino', sans-serif;
+  font-size: 10px;
+  letter-spacing: .12em;
+  text-transform: lowercase;
+  color: #bbb;
+}
+
+@media (max-aspect-ratio: 5/4) {
+  /* Narrow screens show the full photograph at the bottom without a duplicate figure. */
+  .cv-contact-texture { object-position: left center; }
+  .cv-contact-photo {
+    -webkit-mask-image: linear-gradient(to bottom, transparent, #000 8%);
+    mask-image: linear-gradient(to bottom, transparent, #000 8%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cv-contact-details a,
+  .cv-contact-details svg { transition: none; }
+}

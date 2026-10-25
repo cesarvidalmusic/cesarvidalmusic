@@ -1,5 +1,5 @@
 /*
- * César Vidal — page transition v19
+ * César Vidal — page transition v21
  * Transición compartida para todas las páginas del sitio.
  * Transiciones adaptadas al fondo de origen y destino en todo el sitio.
  */
@@ -24,6 +24,10 @@
     "artikulation-band.html": "black"
   };
   const PHOTO_TRANSITIONS = {
+    "index.html": { theme: "home-photo", image: "img/hero-home.webp" },
+    "music-projects.html": { theme: "music-live", live: true },
+    "gonzalez-reeds.html": { theme: "gonzalez-photo", image: "img/gonzalez-transition.webp" },
+    "contact.html": { theme: "contact-photo", image: "img/contact-transition.webp" },
     "bio.html": { theme: "bio-photo", image: "img/bio-transition.webp" },
     "aleas.html": { theme: "aleas-photo", image: "img/aleas-transition.webp", videoStart: 1.8 },
     "artikulation-band.html": { theme: "artikulation", image: "img/artikulation-video-1.webp" },
@@ -36,7 +40,7 @@
   const PHOTO_TRANSITION_CLASSES = Object.values(PHOTO_TRANSITIONS).map(
     ({ theme }) => "cv-transition-to-" + theme
   );
-  const COLOR_TRANSITION_CLASSES = ["des-visages", "spam", "black", "white", "bio-photo", "aleas-photo", "artikulation", "des-visages-photo", "spam-photo", "des-visages-ep-photo", "flor-photo", "nubes-photo"].flatMap(
+  const COLOR_TRANSITION_CLASSES = ["des-visages", "spam", "black", "white", ...Object.values(PHOTO_TRANSITIONS).map(({ theme }) => theme)].flatMap(
     (theme) => ["cv-transition-from-" + theme, "cv-transition-to-" + theme]
   );
   const CSS_FALLBACK_CLASS = "cv-transition-css-fallback";
@@ -89,6 +93,9 @@
   const photographsReady = new Map();
 
   function warmPhotoColors(destinationPage) {
+    if (PHOTO_TRANSITIONS[destinationPage]?.live) {
+      return window.cvGalleryTransition?.prepare().ready || Promise.resolve();
+    }
     if (photographsReady.has(destinationPage)) return photographsReady.get(destinationPage);
     const image = new Image();
     image.src = new URL(PHOTO_TRANSITIONS[destinationPage].image, SCRIPT_URL).href;
@@ -178,14 +185,15 @@
     );
   }
 
-  function saveIntent(destination, colorTheme) {
+  function saveIntent(destination, colorTheme, scene) {
     try {
       sessionStorage.setItem(
         STORAGE_KEY,
         JSON.stringify({
           target: new URL(destination, location.href).pathname,
           time: Date.now(),
-          theme: colorTheme
+          theme: colorTheme,
+          ...(scene ? { seed: scene.seed, preview: scene.image, width: scene.width, height: scene.height } : {})
         })
       );
 
@@ -213,7 +221,10 @@
     if (incomingAnimation) incomingAnimation.cancel();
     incomingAnimation = null;
     // Keep the opaque destination color until the new page has painted.
-    if (!isNavigating) root.classList.remove(...COLOR_TRANSITION_CLASSES);
+    if (!isNavigating) {
+      root.classList.remove(...COLOR_TRANSITION_CLASSES);
+      root.style.removeProperty('--cv-transition-live-image');
+    }
   }
 
   async function navigate(destination) {
@@ -225,10 +236,11 @@
     const destinationPage = pageName(destination);
     const sourceTheme = PAGE_THEMES[sourcePage];
     const colorTheme = PHOTO_TRANSITIONS[destinationPage]?.theme || PAGE_THEMES[destinationPage];
+    const scene = PHOTO_TRANSITIONS[destinationPage]?.live ? window.cvGalleryTransition?.prepare() : null;
 
     // Si el navegador bloquea sessionStorage, conservar la navegación normal
     // en lugar de mostrar solamente la mitad de la transición.
-    if (!saveIntent(destination, colorTheme)) {
+    if (!saveIntent(destination, colorTheme, scene)) {
       location.assign(destination);
       return;
     }
@@ -243,6 +255,10 @@
       ]).finally(() => window.clearTimeout(timeout));
     }
     if (!isNavigating) return;
+    if (scene) {
+      saveIntent(destination, colorTheme, scene);
+      if (scene.image) root.style.setProperty('--cv-transition-live-image', `url("${scene.image}")`);
+    }
     root.classList.remove(...COLOR_TRANSITION_CLASSES);
     if (sourceTheme) root.classList.add("cv-transition-from-" + sourceTheme);
     if (colorTheme) root.classList.add("cv-transition-to-" + colorTheme);
@@ -500,6 +516,7 @@
   });
 
   window.addEventListener("pagehide", () => {
+    window.cvGalleryTransition?.clear();
     window.clearTimeout(outgoingNavigation);
     if (outgoingAnimation) outgoingAnimation.cancel();
     outgoingAnimation = null;
