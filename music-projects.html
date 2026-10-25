@@ -7,6 +7,13 @@
   <script>
     (function () {
       try {
+        const previewSeed = Number(new URL(location.href).searchParams.get('cv-scene-preview'));
+        if (Number.isInteger(previewSeed) && previewSeed > 0 && previewSeed <= 0xffffffff) {
+          // Preparing the layout must not consume the real navigation's intent.
+          window.cvMusicTransitionSeed = previewSeed;
+          window.cvMusicTransitionPreview = true;
+          return;
+        }
         const key = "cv-page-transition";
         const raw = sessionStorage.getItem(key);
         sessionStorage.removeItem(key);
@@ -14,8 +21,13 @@
         const age = state ? Date.now() - Number(state.time) : Infinity;
         if (state && state.target === location.pathname && age >= 0 && age < 60000) {
           document.documentElement.classList.add("cv-transition-incoming");
-          if (state.theme === "white") {
-            document.documentElement.classList.add("cv-transition-to-white");
+          document.documentElement.classList.add("cv-transition-to-music-live");
+          if (Number.isInteger(state.seed) && state.seed > 0 && state.seed <= 0xffffffff) {
+            window.cvMusicTransitionSeed = state.seed;
+          }
+          if (typeof state.preview === 'string' && state.preview.length < 1500000 &&
+              /^data:image\/(?:webp|png);base64,[A-Za-z0-9+/=]+$/.test(state.preview)) {
+            document.documentElement.style.setProperty('--cv-transition-live-image', `url("${state.preview}")`);
           }
         }
       } catch (error) {
@@ -23,8 +35,9 @@
       }
     })();
   </script>
-  <link rel="stylesheet" href="css/page-transition.css?v=19" />
-  <script defer src="page-transition.js?v=19" onerror="document.documentElement.classList.remove('cv-transition-incoming', 'cv-transition-to-white')"></script>
+  <link rel="stylesheet" href="css/page-transition.css?v=21" />
+  <script defer src="gallery-transition.js?v=1"></script>
+  <script defer src="page-transition.js?v=21" onerror="document.documentElement.classList.remove('cv-transition-incoming', 'cv-transition-to-music-live'); document.documentElement.style.removeProperty('--cv-transition-live-image')"></script>
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Music & Projects — César Vidal." />
@@ -34,10 +47,10 @@
   <link rel="preload" href="fonts/Ronzino-Regular.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="preload" href="fonts/Ronzino-Oblique.woff2" as="font" type="font/woff2" crossorigin />
 
-  <link rel="icon" href="favicon.ico" sizes="any">
-  <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="apple-touch-icon" href="apple-touch-icon.png">
-  <script defer src="favicon.js?v=6"></script>
+  <link rel="icon" href="favicon.ico?v=7" sizes="any">
+  <link rel="icon" href="favicon.svg?v=7" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png?v=7">
+  <script defer src="favicon.js?v=7"></script>
 
   <link rel="preload" as="image" href="img/cover-des-visages.webp" type="image/webp" fetchpriority="high">
   <link rel="preload" as="image" href="img/cover-nubes.webp" type="image/webp" fetchpriority="high">
@@ -49,8 +62,9 @@
   <link rel="preload" as="image" href="img/cover-flor-de-loto.webp" type="image/webp" fetchpriority="high">
 
   <link rel="stylesheet" href="css/style.css?v=17" />
-  <link rel="preload" href="fonts/barlowfold.otf" as="font" type="font/otf" crossorigin />
-  <link rel="stylesheet" href="css/title-barlowfold.css?v=2" />
+  <link rel="preload" href="img/title-berlin-word-music-v1.svg" as="image" type="image/svg+xml" />
+  <link rel="preload" href="img/title-berlin-word-projects-v1.svg" as="image" type="image/svg+xml" />
+  <link rel="stylesheet" href="css/title-berlin.css?v=3" />
   <link rel="stylesheet" href="css/music-projects-views.css?v=6" />
 
   <style>
@@ -317,7 +331,11 @@
     <main class="cv-page-content">
 
       <div class="cv-page-hero">
-        <h1 class="cv-page-title cv-title-barlowfold cv-title-barlowfold--black cv-title-barlowfold--music">MUSIC &amp; PROJECTS</h1>
+        <h1 class="cv-page-title cv-title-berlin cv-title-berlin--black cv-title-berlin--music" aria-label="MUSIC &amp; PROJECTS">
+          <img class="cv-title-berlin-art" src="img/title-berlin-word-music-v1.svg" alt="" aria-hidden="true" width="3305" height="867" style="--cv-berlin-width:3.22753906" fetchpriority="high">
+          <span class="cv-music-ampersand" aria-hidden="true">&amp;</span>
+          <img class="cv-title-berlin-art" src="img/title-berlin-word-projects-v1.svg" alt="" aria-hidden="true" width="4982" height="867" style="--cv-berlin-width:4.86523438" fetchpriority="high">
+        </h1>
         <div class="cv-mp-view-controls" role="group" aria-label="Project view" hidden>
           <button class="cv-mp-view-button" type="button" data-view="moving" aria-label="Moving columns" title="Moving columns" aria-pressed="true" aria-controls="stage">
             <svg viewBox="0 0 28 28" aria-hidden="true" focusable="false"><path d="M1 12h6v14H1zM11 2h6v18h-6zM21 8h6v16h-6z"/></svg>
@@ -358,6 +376,15 @@
 
   <script src="music-projects-views.js?v=5"></script>
   <script>
+    const IS_TRANSITION_PREVIEW = window.cvMusicTransitionPreview === true;
+    let projectSeed = window.cvMusicTransitionSeed;
+    function projectRandom() {
+      if (!Number.isInteger(projectSeed)) return Math.random();
+      projectSeed ^= projectSeed << 13;
+      projectSeed ^= projectSeed >>> 17;
+      projectSeed ^= projectSeed << 5;
+      return (projectSeed >>> 0) / 0x100000000;
+    }
     const SPEEDS = [22, 30, 18, 26];
 
     const DIRS = [1, -1, 1, -1];
@@ -446,7 +473,7 @@
     let stageHeight = 0;
     let lastTime = null;
     let reservedCards = new Set();
-    let motionRunning = true;
+    let motionRunning = !IS_TRANSITION_PREVIEW;
     let motionFrame = null;
     let motionObserver = null;
     let motionPrepared = false;
@@ -472,7 +499,7 @@
       const copy = [...array];
 
       for (let i = copy.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
+        const j = Math.floor(projectRandom() * (i + 1));
         [copy[i], copy[j]] = [copy[j], copy[i]];
       }
 
@@ -614,7 +641,7 @@
       });
 
       return available[
-        Math.floor(Math.random() * available.length)
+        Math.floor(projectRandom() * available.length)
       ];
     }
 
@@ -757,7 +784,7 @@
     }
 
     function resumeGallery() {
-      if (motionRunning) return;
+      if (IS_TRANSITION_PREVIEW || motionRunning) return;
       motionRunning = true;
       lastTime = null;
       motionFrame = requestAnimationFrame(animate);

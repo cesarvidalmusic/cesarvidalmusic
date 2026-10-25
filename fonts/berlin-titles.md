@@ -1,0 +1,24 @@
+# Berlin title artwork
+
+The `img/title-berlin-*.svg` files are static title images typeset
+from the Berlin Lite font supplied by the site owner (Minimalist Art Studio,
+2025). The original font file is not included, embedded, or served here.
+
+The bundled Commercial Lite license allows static images in personal and
+commercial projects, with a limit of 1,000 units or 10,000 digital views/downloads
+per project. It prohibits redistributing the font file and requires an extended
+license for embedding in apps, games, servers, or software. These images do not
+grant an unrestricted font license. Higher-volume use requires an appropriate
+license from the font owner.
+
+Berlin Lite does not contain É or &. The É uses Berlin's E with an acute accent
+from Apfel Grotezk Mittel.
+The current Music & Projects heading uses two separate word images, with their
+letterforms extended vertically by 6%. Its larger ampersand is ordinary HTML
+text in Arial Bold, with Liberation Sans Bold and sans-serif as system
+fallbacks, so an SVG viewport cannot crop it. No additional font file is distributed.
+Apfel is licensed under the SIL Open Font License 1.1; its original copyright
+and license are preserved in `apfel-grotezk-mittel-OFL.txt`.
+
+Font source: https://www.fontspace.com/berlin-font-f151725
+Full version: https://www.creativefabrica.com/product/berlin-9/
